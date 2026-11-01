@@ -104,6 +104,9 @@ function detectCurrency(text: string, decimal: Decimal, totalLine: string | null
   if (n > 0) return { value: code, line: null, confidence: n > 1 ? 0.9 : 0.8 };
   // Indian digit grouping (1,23,456.00) is only used for rupees, even when OCR drops the ₹.
   if (/\b\d{1,2},\d{2},\d{3}\.\d{2}\b/.test(text)) return { value: "INR", line: null, confidence: 0.6, derived: true };
+  // A photographed "¥1,200,000" often comes out as "v1,200,000" or "Y1,200,000": whole
+  // amounts in thousands with a letter stuck in front, more than once.
+  if ((text.match(/(?<![\p{L}\d])[vVY]\d{1,3}(?:,\d{3})+(?![.,]?\d)/gu) ?? []).length >= 2) return { value: "JPY", line: null, confidence: 0.6, derived: true };
   const f = fold(text);
   if (/\bkdv\b/.test(f)) return { value: "TRY", line: null, confidence: 0.6, derived: true };
   if (decimal === "," && /\b(mwst|rechnung|ust)\b/.test(f)) return { value: "EUR", line: null, confidence: 0.6, derived: true };
@@ -114,6 +117,8 @@ function detectCurrency(text: string, decimal: Decimal, totalLine: string | null
 const isNumericToken = (t: string) => {
   // "(500)" in a description is a count; only "(12.00)" with decimals is an accounting negative.
   if (/^\(\d+\)?$/.test(t) || /^\(\d[\d.,]*$/.test(t)) return false;
+  // A currency sign in a cell of its own ("225.00 €"), as spreadsheets print it.
+  if (/^[€$£₺¥₹]$|^(zł|kr|CHF|PLN|EUR|USD|GBP|TRY)$/.test(t)) return true;
   const bare = t.replace(/^[€$£₺¥₹(]+|[€$£₺¥₹)]+$/g, "");
   return /^[-−]?\d[\d.,' ]*%?$/.test(bare) || /^%\d+([.,]\d+)?$/.test(bare) || /^(x|×|eur|usd|gbp|try|tl|pcs|adet|stk|st|h|hrs|hr|ea)$/i.test(bare);
 };
@@ -205,14 +210,20 @@ function afterLabel(lines: OcrLine[], folded: string[], label: RegExp, value: Re
 }
 
 function labelledDate(lines: OcrLine[], folded: string[], label: RegExp, us: boolean, skip?: RegExp): Field<string> {
+  const global = new RegExp(label.source, "g");
   for (let i = 0; i < lines.length; i++) {
     const f = folded[i];
-    const m = f.match(label);
-    if (!m || m.index === undefined) continue;
-    if (skip && skip.test(f.slice(m.index, m.index + m[0].length + 4))) continue;
-    const after = datesIn(lines[i].text, us).filter((d) => d.index >= m.index!);
-    const d = after[0] ?? datesIn(lines[i + 1]?.text ?? "", us)[0];
-    if (d) return { value: d.iso, line: after[0] ? i : i + 1, confidence: conf(lines[i], 0.95) };
+    // Every occurrence: "Son Ödeme Tarihi" contains "tarihi" but is the due date, and a
+    // two-column row can hold both labels.
+    for (const m of f.matchAll(global)) {
+      if (skip && skip.test(f.slice(Math.max(0, m.index - 12), m.index + m[0].length + 4))) continue;
+      const dates = datesIn(lines[i].text, us);
+      const next = [...f.slice(m.index + m[0].length).matchAll(global)][0];
+      const end = next ? m.index + m[0].length + next.index : Infinity;
+      const after = dates.filter((d) => d.index >= m.index && d.index < end);
+      const d = after[0] ?? (dates.length ? undefined : datesIn(lines[i + 1]?.text ?? "", us)[0]);
+      if (d) return { value: d.iso, line: after[0] ? i : i + 1, confidence: conf(lines[i], 0.95) };
+    }
   }
   return empty();
 }
@@ -263,6 +274,8 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
     // Without a column header, keep the address and reference block out of the items.
     if (headerIdx === -1 && (BILL_TO.test(f) || INVOICE_NO.test(f) || DATE_LABEL.test(f) || DUE_LABEL.test(f) || TAX_ID.test(f) || datesIn(lines[i].text).length)) continue;
     const item = parseItem(lines[i].text, decimal, i);
+    // Without a header, a scrap of OCR noise ("in  2") is not an item: it needs a real word.
+    if (item && item !== "continuation" && headerIdx === -1 && !/\p{L}{3,}/u.test(item.description)) continue;
     if (item === "continuation") {
       const prev = items.at(-1);
       if (prev && headerIdx !== -1 && i - prev.line <= 2) prev.description += ` ${lines[i].text.trim()}`;
@@ -310,6 +323,13 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
     if (fixed !== undefined) {
       it.amount = fixed;
       it.repaired = true;
+      continue;
+    }
+    // Or the unit price lost its decimal point: "10  450  45.00" is 10 × 4.50.
+    const price = candidates(it.unitPrice).find((c) => near(it.quantity * c, it.amount, 0.011));
+    if (price !== undefined) {
+      it.unitPrice = price;
+      it.repaired = true;
     }
   }
   // Receipts and invoices carry a checksum: the items must add up to the subtotal (or the total
@@ -321,9 +341,12 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
       const [x, y] = [Math.abs(a).toFixed(2), Math.abs(b).toFixed(2)];
       return x.length === y.length && [...x].filter((ch, k) => ch !== y[k]).length === 1;
     };
-    const fixes = items
+    let fixes = items
       .map((it) => ({ it, want: cents(target - (itemsSum - it.amount)) }))
       .filter(({ it, want }) => want > 0 && oneDigitOff(it.amount, want));
+    // Several items could take the fix: the one whose quantity × price already says so wins.
+    const confirmed = fixes.filter(({ it, want }) => it.quantity !== 1 && near(it.quantity * it.unitPrice, want, 0.011));
+    if (confirmed.length === 1) fixes = confirmed;
     if (fixes.length === 1) {
       const { it, want } = fixes[0];
       it.unitPrice = it.quantity ? cents(want / it.quantity) : want;
@@ -341,10 +364,17 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
       if (vat.length === 1 && v.base !== null) v.base = base;
     }
   }
+  // A VAT line whose rate could not be read ("%20" as "9620") and whose amount lost its
+  // decimal comma: take the reading that is a standard rate of the base and closes the total.
+  if (vat.length === 1 && vat[0].rate === null && subtotal.value && total.value !== null) {
+    const v = vat[0];
+    const fixed = candidates(v.amount).find((c) => near(subtotal.value! + c, total.value!, 0.011) && STANDARD_RATES.some((r) => near(r, (c / subtotal.value!) * 100, 0.05)));
+    if (fixed !== undefined) Object.assign(v, { amount: fixed, base: subtotal.value, rate: STANDARD_RATES.find((r) => near(r, (fixed / subtotal.value!) * 100, 0.05)), rateDerived: true });
+  }
   if (subtotal.value !== null) total = repair(total, cents(subtotal.value + vat.reduce((a, v) => a + v.amount, 0)));
   else if (itemsSum !== null) total = repair(total, itemsSum);
 
-  const dateField = labelledDate(lines, folded, DATE_LABEL, us, /due|vade|fallig/);
+  const dateField = labelledDate(lines, folded, DATE_LABEL, us, /due|vade|fallig|son odeme|scadenza|vencim|echeance|vervaldatum|termin|payment/);
   const firstDate = lines.findIndex((l) => datesIn(l.text, us).length > 0);
   const date: Field<string> =
     dateField.value !== null

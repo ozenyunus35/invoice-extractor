@@ -1,0 +1,38 @@
+From: Billing <billing@vendor.example>
+To: ap@client.example
+Subject: Fatura
+Date: Mon, 2 Nov 2026 09:14:00 +0300
+Message-ID: <xb1@vendor.example>
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="b1"
+
+This is a multi-part message in MIME format.
+--b1
+Content-Type: text/plain; charset=iso-8859-9
+Content-Transfer-Encoding: quoted-printable
+
+Faturan=FDz=20ektedir.
+--b1
+Content-Type: text/html; charset=iso-8859-9
+Content-Transfer-Encoding: quoted-printable
+
+<html><head><style>td{padding:4px}</style></head><body><div=20style=3D"d=
+isplay:none">Your=20invoice=20is=20ready=20-=20view=20it=20online</div><=
+table=20width=3D"100%"><tr><td><table><tr><td><h2>Anadolu=20Mutfak=20Ger=
+e=E7leri=20Ltd.=20=DEti.</h2></td><td=20align=3D"right"><h1>FATURA</h1>F=
+atura=20No:=202026/88813<br>Fatura=20Tarihi:=2015.09.2026<br>Son=20=D6de=
+me=20Tarihi:=2030.10.2026</td></tr></table></td></tr><tr><td><table><tr>=
+<th>A=E7=FDklama</th><th>Miktar</th><th>Birim=20Fiyat</th><th>Tutar</th>=
+</tr><tr><td>Dan=FD=FEmanl=FDk=20saati</td><td>25</td><td>18,00</td><td>=
+450,00</td></tr><tr><td>Y=FDll=FDk=20yaz=FDl=FDm=20lisans=FD</td><td>1</=
+td><td>4,50</td><td>4,50</td></tr><tr><td>Bro=FE=FCr=20bask=FDs=FD=20(50=
+0=20adet)</td><td>10</td><td>12,90</td><td>129,00</td></tr><tr><td>Toner=
+=20kartu=FEu</td><td>10</td><td>18,00</td><td>180,00</td></tr><tr><td>Ka=
+myonet=20kiralama</td><td>12</td><td>89,99</td><td>1.079,88</td></tr><tr=
+><td>Tasar=FDm=20revizyonu</td><td>25</td><td>89,99</td><td>2.249,75</td=
+></tr><tr><td>USB-C=20yerle=FEtirme=20istasyonu</td><td>25</td><td>249,0=
+0</td><td>6.225,00</td></tr><tr><td=20colspan=3D3>Ara=20Toplam</td><td>1=
+0.318,13=20TL</td></tr><tr><td=20colspan=3D3>KDV=20%20</td><td>2.063,63=
+=20TL</td></tr><tr><td=20colspan=3D3><b>Genel=20Toplam</b></td><td><b>12=
+.381,76=20TL</b></td></tr></table></td></tr></table></body></html>
+--b1--

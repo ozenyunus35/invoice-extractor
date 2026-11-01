@@ -144,7 +144,7 @@ export function Workbench() {
             const added = makeDoc({
               id,
               name: file.name,
-              kind: scan.source === "pdf-text" ? "PDF · text layer" : "Your document",
+              kind: scan.source === "pdf-text" ? (/\.pdf$/i.test(file.name) ? "PDF · text layer" : (scan.note ?? "Text file")) : "Your document",
               note: scan.note,
               sample: false,
               imageUrl: URL.createObjectURL(scan.image),

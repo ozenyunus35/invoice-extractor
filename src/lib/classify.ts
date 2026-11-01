@@ -35,6 +35,10 @@ export function classifyDocument(lines: OcrLine[]): Classification {
   const report = reportScore(lines) * 2;
   const scores = { statement, invoice, receipt, report };
 
+  // A management report quotes dates in its prose ("30 Eylül 2026 kapanışı"); many
+  // named line items outweigh a few dated rows.
+  const reportFirst = report >= 8 && report > invoice && report > statement * 3;
+  if (reportFirst) return { type: "report", scores, reason: `${report / 2} financial statement line items` };
   if (datedRows >= 4 && statement > invoice) return { type: "statement", scores, reason: `${datedRows} dated rows with amounts` };
   if (report >= 8 && report > invoice) return { type: "report", scores, reason: `${report / 2} financial statement line items` };
   if (Math.max(invoice, receipt) < 3.5) {

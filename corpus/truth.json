@@ -7882,5 +7882,1298 @@
    "pdf_only": false,
    "office": "inv-en-US-classic.eml"
   }
+ },
+ {
+  "name": "hard-word-tabs",
+  "file": "hard-word-tabs.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "hard-word-tabs",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-word-tabs.docx"
+  }
+ },
+ {
+  "name": "hard-word-layout",
+  "file": "hard-word-layout.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "it",
+   "lang": "it",
+   "layout": "hard-word-layout",
+   "vendor": "Tipografia Bianchi S.r.l.",
+   "number": "FV/30616/06/2026",
+   "date": "2026-06-09",
+   "due": "2026-07-09",
+   "currency": "EUR",
+   "subtotal": 4167.3,
+   "vat": [
+    {
+     "rate": 22,
+     "amount": 916.81
+    }
+   ],
+   "total": 5084.11,
+   "items": [
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 3,
+     "unit": 120.0,
+     "amount": 360.0
+    },
+    {
+     "qty": 12,
+     "unit": 12.9,
+     "amount": 154.8
+    },
+    {
+     "qty": 5,
+     "unit": 12.9,
+     "amount": 64.5
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-word-layout.docx"
+  }
+ },
+ {
+  "name": "hard-excel-real-de",
+  "file": "hard-excel-real-de.xlsx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "hard-excel-real-de",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-excel-real-de.xlsx"
+  }
+ },
+ {
+  "name": "hard-excel-real-tr",
+  "file": "hard-excel-real-tr.xlsx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-excel-real-tr",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-excel-real-tr.xlsx"
+  }
+ },
+ {
+  "name": "hard-excel-real-us",
+  "file": "hard-excel-real-us.xlsx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-US",
+   "lang": "en",
+   "layout": "hard-excel-real-us",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "INV-2026-6610",
+   "date": "2026-02-13",
+   "due": "2026-02-27",
+   "currency": "USD",
+   "subtotal": 8312.0,
+   "vat": [
+    {
+     "rate": 8.875,
+     "amount": 737.69
+    }
+   ],
+   "total": 9049.69,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 4.5,
+     "amount": 45.0
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 3,
+     "unit": 18.0,
+     "amount": 54.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-excel-real-us.xlsx"
+  }
+ },
+ {
+  "name": "hard-ods-repeated",
+  "file": "hard-ods-repeated.ods",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-ods-repeated",
+   "vendor": "Anadolu Mutfak Gereçleri Ltd. Şti.",
+   "number": "2026/88813",
+   "date": "2026-09-15",
+   "due": "2026-10-30",
+   "currency": "TRY",
+   "subtotal": 10318.13,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 2063.63
+    }
+   ],
+   "total": 12381.76,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 1,
+     "unit": 4.5,
+     "amount": 4.5
+    },
+    {
+     "qty": 10,
+     "unit": 12.9,
+     "amount": 129.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-ods-repeated.ods"
+  }
+ },
+ {
+  "name": "hard-csv-excel-tr",
+  "file": "hard-csv-excel-tr.csv",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-csv-excel-tr",
+   "vendor": "Marmara Yazılım A.Ş.",
+   "number": "RE-31845",
+   "date": "2026-03-14",
+   "due": "2026-04-28",
+   "currency": "TRY",
+   "subtotal": 2483.75,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 496.75
+    }
+   ],
+   "total": 2980.5,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    },
+    {
+     "qty": 3,
+     "unit": 18.0,
+     "amount": 54.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-csv-excel-tr.csv"
+  }
+ },
+ {
+  "name": "hard-unicode-text",
+  "file": "hard-unicode-text.txt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "hard-unicode-text",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "2026/91725",
+   "date": "2026-05-28",
+   "due": "2026-07-12",
+   "currency": "EUR",
+   "subtotal": 560.1,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 106.42
+    }
+   ],
+   "total": 666.52,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 5,
+     "unit": 4.5,
+     "amount": 22.5
+    },
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 10,
+     "unit": 45.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-unicode-text.txt"
+  }
+ },
+ {
+  "name": "hard-efatura",
+  "file": "hard-efatura.xml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-efatura",
+   "vendor": "Ege Kırtasiye Ltd. Şti.",
+   "number": "FV/4885/05/2026",
+   "date": "2026-05-05",
+   "due": "2026-06-04",
+   "currency": "TRY",
+   "subtotal": 3139.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 609.8
+    },
+    {
+     "rate": 10,
+     "amount": 9.0
+    }
+   ],
+   "total": 3757.8,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 3,
+     "unit": 120.0,
+     "amount": 360.0
+    },
+    {
+     "qty": 12,
+     "unit": 4.5,
+     "amount": 54.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 3,
+     "unit": 45.0,
+     "amount": 135.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-efatura.xml"
+  }
+ },
+ {
+  "name": "hard-xrechnung",
+  "file": "hard-xrechnung.xml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "hard-xrechnung",
+   "vendor": "Schneider Logistik AG",
+   "number": "RE-23461",
+   "date": "2026-02-24",
+   "due": "2026-04-10",
+   "currency": "EUR",
+   "subtotal": 31497.02,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 5984.43
+    }
+   ],
+   "total": 37481.45,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 89.99,
+     "amount": 269.97
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 1,
+     "unit": -1656.95,
+     "amount": -1656.95
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-xrechnung.xml"
+  }
+ },
+ {
+  "name": "hard-facturx",
+  "file": "hard-facturx.xml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "hard-facturx",
+   "vendor": "Atelier Moreau SARL",
+   "number": "INV-2026-29853",
+   "date": "2026-02-23",
+   "due": "2026-03-25",
+   "currency": "EUR",
+   "subtotal": 2819.7,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 473.95
+    },
+    {
+     "rate": 10,
+     "amount": 45.0
+    }
+   ],
+   "total": 3338.65,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 89.99,
+     "amount": 449.95
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-facturx.xml"
+  }
+ },
+ {
+  "name": "hard-rtf-1254",
+  "file": "hard-rtf-1254.rtf",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-rtf-1254",
+   "vendor": "Ege Kırtasiye Ltd. Şti.",
+   "number": "INV-2026-59122",
+   "date": "2026-10-07",
+   "due": "2026-10-21",
+   "currency": "TRY",
+   "subtotal": 1731.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 346.2
+    }
+   ],
+   "total": 2077.2,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    },
+    {
+     "qty": 3,
+     "unit": 18.0,
+     "amount": 54.0
+    },
+    {
+     "qty": 25,
+     "unit": 12.9,
+     "amount": 322.5
+    },
+    {
+     "qty": 5,
+     "unit": 4.5,
+     "amount": 22.5
+    },
+    {
+     "qty": 3,
+     "unit": 249.0,
+     "amount": 747.0
+    },
+    {
+     "qty": 12,
+     "unit": 18.0,
+     "amount": 216.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-rtf-1254.rtf"
+  }
+ },
+ {
+  "name": "hard-eml-quoted-tr",
+  "file": "hard-eml-quoted-tr.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-eml-quoted-tr",
+   "vendor": "Anadolu Mutfak Gereçleri Ltd. Şti.",
+   "number": "2026/88813",
+   "date": "2026-09-15",
+   "due": "2026-10-30",
+   "currency": "TRY",
+   "subtotal": 10318.13,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 2063.63
+    }
+   ],
+   "total": 12381.76,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 1,
+     "unit": 4.5,
+     "amount": 4.5
+    },
+    {
+     "qty": 10,
+     "unit": 12.9,
+     "amount": 129.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-eml-quoted-tr.eml"
+  }
+ },
+ {
+  "name": "hard-textutil-docx",
+  "file": "hard-textutil.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "es",
+   "lang": "es",
+   "layout": "hard-textutil-docx",
+   "vendor": "Gráficas Romero S.L.",
+   "number": "RE-35364",
+   "date": "2026-09-24",
+   "due": "2026-10-24",
+   "currency": "EUR",
+   "subtotal": 244.79,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 51.41
+    }
+   ],
+   "total": 296.2,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 89.99,
+     "amount": 89.99
+    },
+    {
+     "qty": 12,
+     "unit": 12.9,
+     "amount": 154.8
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-textutil.docx"
+  }
+ },
+ {
+  "name": "hard-textutil-odt",
+  "file": "hard-textutil.odt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "hard-textutil-odt",
+   "vendor": "Drukarnia Wiśniewski S.A.",
+   "number": "FV/54149/07/2026",
+   "date": "2026-07-19",
+   "due": "2026-08-18",
+   "currency": "PLN",
+   "subtotal": 1343.68,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 309.05
+    }
+   ],
+   "total": 1652.73,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-textutil.odt"
+  }
+ },
+ {
+  "name": "hard-textutil-rtf",
+  "file": "hard-textutil.rtf",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "hard-textutil-rtf",
+   "vendor": "Boulangerie Lefèvre SAS",
+   "number": "F2026094077",
+   "date": "2026-10-24",
+   "due": "2026-11-23",
+   "currency": "EUR",
+   "subtotal": 4169.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 833.8
+    }
+   ],
+   "total": 5002.8,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-textutil.rtf"
+  }
+ },
+ {
+  "name": "hard-erp-export",
+  "file": "hard-erp-export.xls",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-erp-export",
+   "vendor": "Ege Kırtasiye Ltd. Şti.",
+   "number": "FV/4885/05/2026",
+   "date": "2026-05-05",
+   "due": "2026-06-04",
+   "currency": "TRY",
+   "subtotal": 3139.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 609.8
+    },
+    {
+     "rate": 10,
+     "amount": 9.0
+    }
+   ],
+   "total": 3757.8,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 3,
+     "unit": 120.0,
+     "amount": 360.0
+    },
+    {
+     "qty": 12,
+     "unit": 4.5,
+     "amount": 54.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 3,
+     "unit": 45.0,
+     "amount": 135.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-erp-export.xls"
+  }
+ },
+ {
+  "name": "hard-eml-pdf",
+  "file": "hard-eml-pdf.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-US",
+   "lang": "en",
+   "layout": "hard-eml-pdf",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "F2026016024",
+   "date": "2026-10-10",
+   "due": "2026-11-09",
+   "currency": "USD",
+   "subtotal": 46128.24,
+   "vat": [
+    {
+     "rate": 8.875,
+     "amount": 4093.88
+    }
+   ],
+   "total": 50222.12,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    },
+    {
+     "qty": 12,
+     "unit": 1250.0,
+     "amount": 15000.0
+    },
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    },
+    {
+     "qty": 1,
+     "unit": 4.5,
+     "amount": 4.5
+    },
+    {
+     "qty": 1,
+     "unit": -2427.01,
+     "amount": -2427.01
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-eml-pdf.eml"
+  }
+ },
+ {
+  "name": "hard-eml-docx",
+  "file": "hard-eml-docx.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "hard-eml-docx",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-eml-docx.eml"
+  }
+ },
+ {
+  "name": "hard-earsiv-zip",
+  "file": "hard-earsiv.zip",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "hard-earsiv-zip",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-earsiv.zip"
+  }
+ },
+ {
+  "name": "hard-pdf-named-docx",
+  "file": "hard-pdf-named.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "hard-pdf-named-docx",
+   "vendor": "Bakkerij Jansen V.O.F.",
+   "number": "INV-2026-61855",
+   "date": "2026-09-03",
+   "due": "2026-10-18",
+   "currency": "EUR",
+   "subtotal": 179.99,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 37.8
+    }
+   ],
+   "total": 217.79,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 89.99,
+     "amount": 89.99
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-pdf-named.docx"
+  }
+ },
+ {
+  "name": "hard-photo-no-extension",
+  "file": "IMG-20261101-WA0003",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "hard-photo-no-extension",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "2026/91725",
+   "date": "2026-05-28",
+   "due": "2026-07-12",
+   "currency": "EUR",
+   "subtotal": 560.1,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 106.42
+    }
+   ],
+   "total": 666.52,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 5,
+     "unit": 4.5,
+     "amount": 22.5
+    },
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 10,
+     "unit": 45.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "IMG-20261101-WA0003"
+  }
+ },
+ {
+  "name": "hard-word-picture",
+  "file": "hard-word-picture.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "hard-word-picture",
+   "vendor": "Boulangerie Lefèvre SAS",
+   "number": "RE-03753",
+   "date": "2026-07-04",
+   "due": "2026-07-18",
+   "currency": "EUR",
+   "subtotal": 2319.73,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 463.95
+    }
+   ],
+   "total": 2783.68,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 3,
+     "unit": 89.99,
+     "amount": 269.97
+    },
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 5,
+     "unit": 12.9,
+     "amount": 64.5
+    }
+   ],
+   "pdf_only": false,
+   "office": "hard-word-picture.docx"
+  }
  }
 ]

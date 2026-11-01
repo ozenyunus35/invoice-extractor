@@ -1,0 +1,20 @@
+From: Billing <billing@vendor.example>
+To: ap@client.example
+Subject: Invoice
+Date: Mon, 2 Nov 2026 09:14:00 +0300
+Message-ID: <xb9@vendor.example>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="b9"
+
+This is a multi-part message in MIME format.
+--b9
+Content-Type: text/html; charset=utf-8
+
+<html><head><meta charset="utf-8"><style>td{padding:4px}</style></head><body><h2>Copperline Studio Inc.</h2><h1>INVOICE</h1><p>Invoice No: RE-69802</p><p>Invoice Date: 05/02/2026</p><p>Due Date: 22/03/2026</p><table><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Amount</th></tr><tr><td>Consulting hours</td><td>25</td><td>4.50</td><td>112.50</td></tr><tr><td>Annual software licence</td><td>2</td><td>45.00</td><td>90.00</td></tr><tr><td>Printed brochures (500)</td><td>1</td><td>18.00</td><td>18.00</td></tr><tr><td>Toner cartridge</td><td>1</td><td>1,250.00</td><td>1,250.00</td></tr><tr><td colspan=3>Subtotal</td><td>£1,470.50</td></tr><tr><td colspan=3>VAT 20%</td><td>£294.10</td></tr><tr><td colspan=3><b>Total Due</b></td><td><b>£1,764.60</b></td></tr></table></body></html>
+--b9
+Content-Type: application/pdf; name=x.pdf
+Content-Disposition: attachment; filename=x.pdf
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjQKJ!!!not base64!!!
+--b9--

@@ -7,8 +7,6 @@ import { statementTotals } from "@/lib/statement";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
-const ACCEPT = "application/pdf,image/*,.heic,.heif,.docx,.xlsx,.odt,.ods,.csv,.tsv,.txt,.md,.html,.htm,.eml";
-
 function Status({ doc }: { doc: Doc }) {
   if (doc.type === "unknown")
     return (
@@ -53,7 +51,8 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
 
   return (
     <nav aria-label="Documents" className="flex shrink-0 flex-col border-b border-border lg:w-[264px] lg:border-r lg:border-b-0">
-      <input ref={input} type="file" accept={ACCEPT} multiple className="hidden" onChange={(e) => pick(e.target.files)} data-testid="file-input" />
+      {/* No accept filter: what a file is comes from its contents, so a WhatsApp download without an extension works too. */}
+      <input ref={input} type="file" multiple className="hidden" onChange={(e) => pick(e.target.files)} data-testid="file-input" />
       <input ref={camera} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => pick(e.target.files)} data-testid="camera-input" />
 
       <div
@@ -81,7 +80,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
           </span>
           <span>
             <span className="block font-medium">Add documents</span>
-            <span className="block text-[12px] text-muted">Photo, PDF, Word, Excel, CSV or e-mail · read on this device</span>
+            <span className="block text-[12px] text-muted">Photo, PDF, Word, Excel, e-mail or e-invoice · read on this device</span>
           </span>
         </button>
         {/* On a phone, the camera is the quickest way in: lay the receipt flat and shoot from above. */}
@@ -172,7 +171,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
                   <span className="block truncate text-[12px] text-muted">
                     {d.type === "statement" ? `Statement · ${d.statement.transactions.length} transactions` : d.type === "report" ? `Financial report · ${d.report.tables.length} tables` : d.kind}
                   </span>
-                  {d.note && <span className="block truncate text-[11px] text-warning">{d.note}</span>}
+                  {d.note && d.note !== d.kind && <span className={`block truncate text-[11px] ${/first \d+/.test(d.note) ? "text-warning" : "text-faint"}`}>{d.note}</span>}
                   <span className="mt-0.5 flex items-center justify-between gap-2">
                     <span className="truncate font-mono text-[12px] tabular-nums">
                       {d.type === "statement"

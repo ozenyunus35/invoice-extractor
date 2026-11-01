@@ -32,9 +32,14 @@ for (const job of jobs) {
   const b64 = readFileSync(job.file).toString("base64");
   const scan = await page.evaluate(async ({ b64, name, type }) => {
     const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
-    const s = await window.__tallyScan(new File([bytes], name, { type }));
-    return { words: s.words, width: s.width, height: s.height, note: s.note ?? null };
+    try {
+      const s = await window.__tallyScan(new File([bytes], name, { type }));
+      return { words: s.words, width: s.width, height: s.height, note: s.note ?? null };
+    } catch (err) {
+      return { words: [], error: String(err?.message ?? err) };
+    }
   }, { b64, name: job.name, type: job.type });
+  if (scan.error) console.log(`${job.name}: ${scan.error}`);
   writeFileSync(job.out, JSON.stringify(scan));
   if (++done % 10 === 0) console.log(`${done}/${jobs.length}`);
 }

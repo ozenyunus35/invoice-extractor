@@ -54,10 +54,10 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, onAddP
         <span className="min-w-0 truncate font-medium">{doc.name}</span>
         <span className="hidden shrink-0 items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[12px] whitespace-nowrap text-muted sm:inline-flex">
           <ScanText className="size-3.5" aria-hidden />
-          {doc.source === "pdf-text" ? "PDF text layer" : `OCR${avgConfidence !== null ? ` · ${avgConfidence}% confidence` : ""}`}
+          {doc.source === "pdf-text" ? (/\.pdf$/i.test(doc.name) ? "PDF text layer" : "Text read from the file") : `OCR${avgConfidence !== null ? ` · ${avgConfidence}% confidence` : ""}`}
           {` · ${doc.lines.length} lines`}
         </span>
-        {doc.note && <span className="hidden max-w-[240px] truncate rounded-full bg-warning-soft px-2 py-0.5 text-[12px] whitespace-nowrap text-warning md:inline" title={doc.note}>{doc.note}</span>}
+        {doc.note && <span className={`hidden max-w-[240px] truncate rounded-full px-2 py-0.5 text-[12px] whitespace-nowrap md:inline ${/first \d+/.test(doc.note) ? "bg-warning-soft text-warning" : "bg-surface-2 text-muted"}`} title={doc.note}>{doc.note}</span>}
         <div className="ml-auto flex items-center gap-0.5">
           {!doc.sample && (
             <>

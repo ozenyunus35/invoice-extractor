@@ -61,9 +61,16 @@ export function wordsToLines(words: OcrWord[], page = 0): OcrLine[] {
   // Straighten a tilted photo before grouping: compare heights as if the page were level.
   const skew = estimateSkew(clean);
   const mid = (b: Box) => center(b) - ((b.x0 + b.x1) / 2) * skew;
+  // The OCR engine sometimes gives a word in a photo a box two or three lines
+  // tall; grouped by its middle it would pull the line below into this one
+  // ("18 luglio 2026" + "17 agosto 2026"). Such words join the row that holds
+  // the rest of their own OCR line instead.
+  const heights = clean.map((w) => height(w.bbox)).sort((a, b) => a - b);
+  const typical = heights[Math.floor(heights.length / 2)] ?? 0;
+  const tall = (w: OcrWord) => w.ln !== undefined && height(w.bbox) > typical * 1.8;
   const sorted = [...clean].sort((a, b) => mid(a.bbox) - mid(b.bbox));
   const rows: { words: OcrWord[]; mid: number; h: number }[] = [];
-  for (const w of sorted) {
+  const add = (w: OcrWord) => {
     const h = height(w.bbox);
     const row = rows.find((r) => Math.abs(r.mid - mid(w.bbox)) < Math.min(r.h, h) * 0.5);
     if (row) {
@@ -71,6 +78,23 @@ export function wordsToLines(words: OcrWord[], page = 0): OcrLine[] {
       row.mid = (row.mid * (row.words.length - 1) + mid(w.bbox)) / row.words.length;
       row.h = Math.max(row.h, h);
     } else rows.push({ words: [w], mid: mid(w.bbox), h });
+  };
+  for (const w of sorted) if (!tall(w)) add(w);
+  const xMid = (b: Box) => (b.x0 + b.x1) / 2;
+  for (const w of sorted) {
+    if (!tall(w)) continue;
+    const top = w.bbox.y0 - ((w.bbox.x0 + w.bbox.x1) / 2) * skew;
+    const bottom = top + height(w.bbox);
+    let best: { row: (typeof rows)[number]; dist: number } | null = null;
+    for (const row of rows) {
+      if (row.mid < top || row.mid > bottom) continue;
+      const kin = row.words.filter((o) => o.ln === w.ln && !tall(o));
+      if (!kin.length) continue;
+      const dist = Math.min(...kin.map((o) => Math.abs(xMid(o.bbox) - xMid(w.bbox))));
+      if (!best || dist < best.dist) best = { row, dist };
+    }
+    if (best) best.row.words.push(w);
+    else add(w);
   }
   return rows
     .sort((a, b) => a.mid - b.mid)

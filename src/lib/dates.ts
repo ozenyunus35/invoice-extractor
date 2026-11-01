@@ -56,13 +56,14 @@ export function datesIn(line: string, usFormat = false): DateMatch[] {
     if (v) out.push({ iso: v, index: m.index });
   }
   // "31 Oct 2026", "31. Oktober 2026", "31 Ekim 2026", "5 de octubre de 2026", "5 października 2026"
-  for (const m of line.matchAll(/(?<![\p{L}\d])(\d{1,2})\.?\s+(?:de\s+)?(\p{L}{3,})\.?,?\s+(?:de\s+)?(\d{4})\b/gu)) {
+  // A phone photo can lose the spaces: "14 Mart2026", "27 de maio de2026".
+  for (const m of line.matchAll(/(?<![\p{L}\d])(\d{1,2})\.?\s*(?:de\s+)?(\p{L}{3,})\.?,?\s*(?:de\s*)?(\d{4})\b/gu)) {
     const month = monthFromName(m[2]);
     const v = month && iso(+m[3], month, +m[1]);
     if (v) out.push({ iso: v, index: m.index });
   }
   // "Oct 31, 2026", "October 31 2026"
-  for (const m of line.matchAll(/(?<!\p{L})(\p{L}{3,})\.?\s+(\d{1,2}),?\s*(\d{4})\b/gu)) {
+  for (const m of line.matchAll(/(?<!\p{L})(\p{L}{3,})\.?\s*(\d{1,2}),?\s*(\d{4})\b/gu)) {
     const month = monthFromName(m[1]);
     const v = month && iso(+m[3], month, +m[2]);
     if (v) out.push({ iso: v, index: m.index });

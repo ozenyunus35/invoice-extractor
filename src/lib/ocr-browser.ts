@@ -1,7 +1,7 @@
 "use client";
 
 import { estimateSkew, wordsFromBlocks, type OcrWord } from "./layout";
-import { OFFICE, officeRows } from "./office";
+import { extractContent, isEncryptedOffice, sniff, zipEntries, type Extracted, type Sniffed } from "./office";
 import { crop, flatten, looksLikePhoto, paperBox, type Pixels } from "./preprocess";
 
 export type Progress = { stage: string; value: number };
@@ -137,12 +137,12 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   return new Promise((resolve, reject) => canvas.toBlob((b) => (b ? resolve(b) : reject(new Error("Could not render the page"))), "image/png"));
 }
 
-async function scanImage(file: File, onProgress: (p: Progress) => void): Promise<Scan> {
+async function scanImage(file: Blob, onProgress: (p: Progress) => void, kind: Sniffed): Promise<Scan> {
   let bitmap: ImageBitmap;
   try {
     bitmap = await createImageBitmap(file);
   } catch {
-    throw new FileProblem(/\.(heic|heif|tiff?)$/i.test(file.name) ? "This browser can't open HEIC or TIFF images. Export the photo as JPG or PNG, or open Tally in Safari, and try again." : "This image could not be opened. It may be damaged or in a format browsers don't support.");
+    throw new FileProblem(kind === "heic" ? "This browser can't open HEIC or TIFF images. Export the photo as JPG or PNG, or open Tally in Safari, and try again." : "This image could not be opened. It may be damaged or in a format browsers don't support.");
   }
   const { width, height } = bitmap;
   if (width < 200 || height < 200) {
@@ -237,72 +237,165 @@ async function scanPdf(file: File, onProgress: (p: Progress) => void): Promise<S
   return { words: ocrWords, image, width, height, source: "ocr", note: ocrNote };
 }
 
-const KIND_OF: [RegExp, string][] = [
-  [/\.docx$/i, "Word document"],
-  [/\.xlsx$/i, "Excel workbook"],
-  [/\.odt$/i, "OpenDocument text"],
-  [/\.ods$/i, "OpenDocument spreadsheet"],
-  [/\.(csv|tsv)$/i, "CSV file"],
-  [/\.eml$/i, "E-mail"],
-  [/\.html?$/i, "Web page"],
-];
-
 /**
  * A text document drawn as a page: each row on its own line, table cells a
  * wide gap apart, so the viewer can show it and the readers see the same
  * rows they get from a PDF.
  */
-async function scanText(file: File): Promise<Scan> {
-  let rows: string[];
-  try {
-    rows = (await officeRows(file)).map((r) => r.replace(/\s+$/, ""));
-  } catch {
-    throw new FileProblem("This file could not be opened. It may be damaged, password-protected or an older format (.doc, .xls): save it as .docx, .xlsx or PDF and try again.");
-  }
+async function drawRows(rows: string[], kind: string): Promise<Scan> {
   while (rows.length && !rows[0].trim()) rows.shift();
   const kept = rows.slice(0, 400);
-  if (!kept.some((r) => /\p{L}/u.test(r))) throw new FileProblem("This file has no text to read.");
   const width = 1240;
   const lineH = 34;
   const font = '20px "Helvetica Neue", Arial, sans-serif';
   const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = Math.min(30_000, 120 + kept.length * lineH);
   const ctx = canvas.getContext("2d")!;
+  ctx.font = font;
+  const space = ctx.measureText(" ").width;
+  // Lay the rows out first: a paragraph longer than the page wraps onto the
+  // next lines (each its own OCR line), as Word would show it, instead of
+  // being cut at the right edge.
+  const placed: { text: string; x: number; y: number; w: number; ln: number }[] = [];
+  let line = 0;
+  for (const row of kept) {
+    let x = 60;
+    for (const cellText of row.split(/ {2,}|\t/)) {
+      for (const word of cellText.split(/ +/).filter(Boolean)) {
+        const w = ctx.measureText(word).width;
+        if (x + w > width - 40 && x > 60) {
+          line++;
+          x = 60;
+        }
+        placed.push({ text: word, x, y: 70 + line * lineH, w, ln: line });
+        x += w + space;
+      }
+      x += 36;
+    }
+    line++;
+  }
+  canvas.width = width;
+  canvas.height = Math.min(30_000, 120 + line * lineH);
   ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   ctx.fillStyle = "#1d1f23";
   ctx.font = font;
   ctx.textBaseline = "alphabetic";
   const words: OcrWord[] = [];
-  const space = ctx.measureText(" ").width;
-  kept.forEach((row, r) => {
-    const y = 70 + r * lineH;
-    let x = 60;
-    for (const cellText of row.split(/ {2,}|\t/)) {
-      for (const word of cellText.split(/ +/).filter(Boolean)) {
-        const w = ctx.measureText(word).width;
-        if (x + w > width - 40) break;
-        ctx.fillText(word, x, y);
-        words.push({ text: word, bbox: { x0: x, y0: y - 18, x1: x + w, y1: y + 5 }, confidence: 100, ln: r });
-        x += w + space;
-      }
-      x += 36;
-    }
-  });
-  const kind = KIND_OF.find(([re]) => re.test(file.name))?.[1] ?? "Text file";
+  for (const p of placed) {
+    if (p.y > canvas.height - 30) break;
+    ctx.fillText(p.text, p.x, p.y);
+    words.push({ text: p.text, bbox: { x0: p.x, y0: p.y - 18, x1: p.x + p.w, y1: p.y + 5 }, confidence: 100, ln: p.ln });
+  }
   return { words, image: await canvasToBlob(canvas), width: canvas.width, height: canvas.height, source: "pdf-text", note: rows.length > 400 ? `${kind}: first 400 rows read` : kind };
 }
 
-export function scanFile(file: File, onProgress: (p: Progress) => void): Promise<Scan> {
-  if (file.size === 0) return Promise.reject(new FileProblem("This file is empty."));
-  if (file.size > MAX_BYTES) return Promise.reject(new FileProblem("Files up to 50 MB are supported."));
-  if (file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")) return scanPdf(file, onProgress);
-  if (OFFICE.test(file.name)) return scanText(file);
-  if (/\.(doc|xls|ppt|pptx|pages|numbers|key)$/i.test(file.name))
-    return Promise.reject(new FileProblem("This format can't be read in the browser. Save it as PDF (or .docx / .xlsx) and try again."));
-  if (file.type.startsWith("image/") || /\.(jpe?g|png|webp|gif|bmp|avif|heic|heif|tiff?)$/i.test(file.name)) return scanImage(file, onProgress);
-  return Promise.reject(new FileProblem("This file type isn't supported. Use a PDF, a photo or scan, a Word or Excel file, CSV, text or a saved e-mail."));
+/** The best document to read among several: an e-invoice, then a PDF, an Office file, a web page, a photo. */
+async function pickDocument(files: File[]): Promise<File | undefined> {
+  const ranked = await Promise.all(
+    files.map(async (a) => {
+      const k = await sniff(a);
+      const head = k === "text" ? await a.slice(0, 600).text() : "";
+      const rank =
+        /<(\w+:)?(Invoice|CreditNote|CrossIndustryInvoice)\b/.test(head) ? 6 : k === "pdf" ? 5 : k === "zip" ? 4 : k === "text" && /\.(html?|csv|xml)$/i.test(a.name) ? 3 : k === "rtf" ? 3 : k === "image" && a.size > 40_000 ? 2 : 0;
+      return { a, rank };
+    }),
+  );
+  return ranked.filter((r) => r.rank > 0).sort((x, y) => y.rank - x.rank || y.a.size - x.a.size)[0]?.a;
+}
+
+async function scanArchive(file: File, onProgress: (p: Progress) => void, depth: number): Promise<Scan> {
+  let entries: File[];
+  try {
+    entries = await zipEntries(file);
+  } catch (err) {
+    if ((err as Error).message === "encrypted zip") throw new FileProblem("This ZIP archive is password-protected. Unzip it and add the documents inside.");
+    throw new FileProblem("This ZIP archive could not be opened. It may be damaged or only partly downloaded.");
+  }
+  const best = depth < 2 ? await pickDocument(entries) : undefined;
+  if (!best) throw new FileProblem("This ZIP archive has no document Tally can read. Unzip it and add the documents inside.");
+  const scan = await scanFile(best, onProgress, depth + 1);
+  const docs = entries.filter((e) => /\.(pdf|xml|html?|docx|xlsx|jpe?g|png)$/i.test(e.name)).length;
+  return { ...scan, note: `${best.name} from the ZIP archive${docs > 1 ? ` (${docs} files inside)` : ""}` };
+}
+
+const hasText = (rows: string[]) => rows.some((r) => /\p{L}{2,}/u.test(r));
+
+async function scanText(file: File, kind: Sniffed, onProgress: (p: Progress) => void, depth: number): Promise<Scan> {
+  let content: Extracted;
+  try {
+    content = await extractContent(file, kind);
+  } catch (err) {
+    const msg = (err as Error).message;
+    if (msg === "encrypted zip") throw new FileProblem("This file is password-protected. Save a copy without the password and try again.");
+    if (msg === "zip archive") return scanArchive(file, onProgress, depth);
+    if (msg === "xml") throw new FileProblem("This XML file is not an e-invoice Tally knows (UBL, e-Fatura, XRechnung, Factur-X/ZUGFeRD).");
+    throw new FileProblem("This file could not be opened. It may be damaged or only partly downloaded: open it, save it again (or as PDF) and try again.");
+  }
+  // An e-mail that carries the invoice as an attachment: read the attachment.
+  if (content.attachments.length && depth < 2) {
+    const best = await pickDocument(content.attachments);
+    // A picture only wins when the message itself is not the invoice.
+    const bodyIsInvoice = content.rows.filter((r) => /\d[\d.,]*\d/.test(r)).length >= 6;
+    if (best && (!best.type.startsWith("image/") || !bodyIsInvoice)) {
+      try {
+        const scan = await scanFile(best, onProgress, depth + 1);
+        return { ...scan, note: `${scan.note ? `${scan.note} · ` : ""}attached to the e-mail (${best.name})` };
+      } catch {
+        // A broken attachment: fall back to the message text.
+      }
+    }
+  }
+  if (!hasText(content.rows)) {
+    // A photo of the invoice pasted into Word or Excel: read the picture.
+    if (content.images.length) {
+      const scan = await scanImage(new File([content.images[0]], "picture", { type: content.images[0].type }), onProgress, "image");
+      return { ...scan, note: `Picture inside the ${content.kind}, read with OCR` };
+    }
+    throw new FileProblem("This file has no text to read.");
+  }
+  return drawRows(content.rows, content.kind);
+}
+
+const ext = (name: string) => name.toLowerCase().match(/\.([a-z0-9]+)$/)?.[1] ?? "";
+const TEXT_EXT = /^(|txt|md|csv|tsv|html?|eml|xml|log|prn|text|mht|mhtml)$/;
+const OFFICE_EXT = /^(docx|xlsx|pptx|odt|ods|odp|docm|xlsm)$/;
+const OLD_EXT = /^(doc|xls|ppt|msg|pages|numbers|key|wps|xlsb)$/;
+const IMAGE_EXT = /^(jpe?g|png|webp|gif|bmp|avif|heic|heif|tiff?)$/;
+
+/**
+ * Reads any file: what it is comes from its first bytes, so a PDF saved as
+ * ".docx", a photo without an extension or an Excel "export" that is really
+ * a web page still open. The name only decides the advice when it can't be read.
+ */
+export async function scanFile(file: File, onProgress: (p: Progress) => void, depth = 0): Promise<Scan> {
+  if (file.size === 0) throw new FileProblem("This file is empty.");
+  if (file.size > MAX_BYTES) throw new FileProblem("Files up to 50 MB are supported.");
+  const kind = await sniff(file);
+  const e = ext(file.name);
+  if (kind === "pdf") return scanPdf(file, onProgress);
+  if (kind === "image" || kind === "heic") return scanImage(file, onProgress, kind);
+  if (kind === "zip" || kind === "rtf") return scanText(file, kind, onProgress, depth);
+  if (kind === "ole") {
+    if (await isEncryptedOffice(file)) throw new FileProblem("This Office file is password-protected. Save a copy without the password and try again.");
+    throw new FileProblem(
+      e === "msg"
+        ? "Outlook .msg files can't be read in the browser. Save the e-mail as .eml, or save its attachment, and try again."
+        : "This is an older Office file (.doc, .xls, .ppt), which can't be read in the browser. Save it as PDF (or .docx / .xlsx) and try again.",
+    );
+  }
+  if (kind === "text") {
+    const head = await file.slice(0, 1024).text();
+    const markup = /^\s*(<|\{\\rtf)/.test(head);
+    // Old ERP "Excel exports" are web pages named .xls; Word can save a web page as .doc.
+    if (TEXT_EXT.test(e) || ((OLD_EXT.test(e) || OFFICE_EXT.test(e)) && markup)) return scanText(file, kind, onProgress, depth);
+    if (OLD_EXT.test(e)) throw new FileProblem("This format can't be read in the browser. Save it as PDF (or .docx / .xlsx) and try again.");
+    if (OFFICE_EXT.test(e)) throw new FileProblem("This file could not be opened. It may be damaged or only partly downloaded: open it, save it again (or as PDF) and try again.");
+  }
+  if (e === "pdf") throw new FileProblem("This file is not a valid PDF, or it is damaged.");
+  if (IMAGE_EXT.test(e)) return scanImage(file, onProgress, /^(heic|heif|tiff?)$/.test(e) ? "heic" : "image");
+  if (OFFICE_EXT.test(e)) throw new FileProblem("This file could not be opened. It may be damaged or only partly downloaded: open it, save it again (or as PDF) and try again.");
+  if (OLD_EXT.test(e)) throw new FileProblem("This format can't be read in the browser. Save it as PDF (or .docx / .xlsx) and try again.");
+  throw new FileProblem("This file type isn't supported. Use a PDF, a photo or scan, a Word, Excel or PowerPoint file, CSV, text, a saved e-mail or an e-invoice XML.");
 }
 
 /** Re-runs OCR on an image already on the page, e.g. a sample. */
