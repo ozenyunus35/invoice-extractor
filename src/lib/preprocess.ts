@@ -188,3 +188,45 @@ export function looksLikePhoto(p: Pixels): boolean {
     }
   return n > 0 && dark / n > 0.25;
 }
+
+/** Box blur of a grayscale channel (running sums along rows, then columns). */
+function boxBlur(src: Float32Array, w: number, h: number, r: number): Float32Array {
+  const tmp = new Float32Array(w * h);
+  const out = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) {
+    let acc = 0;
+    for (let x = -r; x <= r; x++) acc += src[y * w + Math.min(w - 1, Math.max(0, x))];
+    for (let x = 0; x < w; x++) {
+      tmp[y * w + x] = acc / (2 * r + 1);
+      acc += src[y * w + Math.min(w - 1, x + r + 1)] - src[y * w + Math.max(0, x - r)];
+    }
+  }
+  for (let x = 0; x < w; x++) {
+    let acc = 0;
+    for (let y = -r; y <= r; y++) acc += tmp[Math.min(h - 1, Math.max(0, y)) * w + x];
+    for (let y = 0; y < h; y++) {
+      out[y * w + x] = acc / (2 * r + 1);
+      acc += tmp[Math.min(h - 1, y + r + 1) * w + x] - tmp[Math.max(0, y - r) * w + x];
+    }
+  }
+  return out;
+}
+
+/**
+ * Unsharp mask on a grayscale page: the difference to a blurred copy is added
+ * back, so soft, out-of-focus strokes get edges again. Used only when a first
+ * reading shows the photo is blurred or small.
+ */
+export function sharpen(p: Pixels, radius: number, amount: number): Pixels {
+  const { width: w, height: h, data } = p;
+  const gray = new Float32Array(w * h);
+  for (let i = 0; i < w * h; i++) gray[i] = luminance(data, i * 4);
+  const soft = boxBlur(boxBlur(gray, w, h, radius), w, h, radius);
+  const out = new Uint8ClampedArray(w * h * 4);
+  for (let i = 0; i < w * h; i++) {
+    const v = gray[i] + amount * (gray[i] - soft[i]);
+    out[i * 4] = out[i * 4 + 1] = out[i * 4 + 2] = v;
+    out[i * 4 + 3] = 255;
+  }
+  return { width: w, height: h, data: out };
+}

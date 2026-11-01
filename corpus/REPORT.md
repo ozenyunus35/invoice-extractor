@@ -10,7 +10,7 @@ Documents: 176 · readings: 480
 | image | 79 | 100% | 97% | 97% | 95% | 100% | 96% | 94% | 92% | 99% | 100% | 100% | 81% |
 | photo | 27 | 100% | 100% | 100% | 96% | 100% | 100% | 96% | 96% | 100% | 100% | 100% | 93% |
 | office | 51 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% |
-| conditions | 90 | 88% | 84% | 81% | 88% | 72% | 74% | 74% | 68% | 76% | 80% | 71% | 53% |
+| conditions | 90 | 92% | 83% | 89% | 93% | 82% | 78% | 77% | 68% | 78% | 89% | 73% | 53% |
 
 ## receipt
 
@@ -28,7 +28,7 @@ Documents: 176 · readings: 480
 | pdf | 16 | 100% | 100% | 100% | 100% | 100% | 100% |
 | image | 16 | 100% | 100% | 94% | 100% | 94% | 94% |
 | photo | 6 | 100% | 83% | 83% | 83% | 83% | 83% |
-| conditions | 15 | 80% | 80% | 73% | 80% | 73% | 73% |
+| conditions | 15 | 87% | 80% | 73% | 80% | 80% | 73% |
 
 ## report
 
@@ -52,9 +52,9 @@ Invoices, receipts and a bank statement, each photographed under every condition
 | dark | 10 | 90% | 100% | 100% | 100% |
 | overexposed | 10 | 100% | 100% | 100% | 100% |
 | flash | 10 | 50% | 60% | 100% | 100% |
-| blur | 10 | 0% | 20% | 10% | 70% |
-| shake | 10 | 0% | 0% | 0% | 50% |
-| low-res | 10 | 30% | 30% | 30% | 80% |
+| blur | 10 | 0% | 50% | 30% | 70% |
+| shake | 10 | 0% | 0% | 0% | 40% |
+| low-res | 10 | 30% | 90% | 80% | 80% |
 | whatsapp | 10 | 100% | 100% | 100% | 100% |
 | perspective | 10 | 100% | 100% | 100% | 100% |
 | curled | 10 | 80% | 100% | 100% | 90% |
@@ -69,16 +69,13 @@ Invoices, receipts and a bank statement, each photographed under every condition
 
 - **inv-en-US-classic** (image): date
   - date: got `"2026-02-18"`, want `"2026-02-13"`
-- **inv-en-US-classic** (cond:blur): date, total, vat, items, no false alarm, number, due, subtotal
-  - vendor: got `"Harbor & Finch Supply Co £"`, want `"Harbor & Finch Supply Co."`
+- **inv-en-US-classic** (cond:blur): date, vat, items, no false alarm, number, subtotal
   - number: got `null`, want `"INV-2026-6610"`
-  - date: got `"2008-02-13"`, want `"2026-02-13"`
-  - due: got `null`, want `"2026-02-27"`
-  - subtotal: got `-920808060.4`, want `8312`
-  - total: got `9049.6`, want `9049.69`
-  - vat: got `[3,920817107]`, want `[737.69]`
-  - items: got `[]`, want `[18,45,54,120,600,1250,6225]`
-  - failed checks: VAT matches its rate
+  - date: got `"2026-02-27"`, want `"2026-02-13"`
+  - subtotal: got `8980.69`, want `8312`
+  - vat: got `[69]`, want `[737.69]`
+  - items: got `[0,0,1.25,18,4500,12000,622500,831200]`, want `[18,45,54,120,600,1250,6225]`
+  - failed checks: Line items add up; VAT matches its rate; Quantity × price per line
 - **inv-en-US-classic** (cond:shake): type, date, currency, total, vat, items, no false alarm, number, due, subtotal
   - vendor: got `"Harbor& Finch Supply Co. ) VOICE"`, want `"Harbor & Finch Supply Co."`
   - number: got `null`, want `"INV-2026-6610"`
@@ -90,15 +87,12 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - vat: got `[]`, want `[737.69]`
   - items: got `[8]`, want `[18,45,54,120,600,1250,6225]`
   - failed checks: Required fields
-- **inv-en-US-classic** (cond:low-res): date, total, vat, items, no false alarm, number, due, subtotal
+- **inv-en-US-classic** (cond:low-res): vat, items, no false alarm, number, due
   - number: got `null`, want `"INV-2026-6610"`
-  - date: got `null`, want `"2026-02-13"`
   - due: got `null`, want `"2026-02-27"`
-  - subtotal: got `null`, want `8312`
-  - total: got `9040.69`, want `9049.69`
-  - vat: got `[]`, want `[737.69]`
-  - items: got `[1200]`, want `[18,45,54,120,600,1250,6225]`
-  - failed checks: Required fields; Line items add up
+  - vat: got `[737]`, want `[737.69]`
+  - items: got `[18,45,54,120,225,600,7250]`, want `[18,45,54,120,600,1250,6225]`
+  - failed checks: Subtotal + VAT = total; VAT matches its rate; Quantity × price per line
 - **inv-en-US-classic** (cond:sideways): vendor, number
   - vendor: got `"Harbor & Finch Supply Go. INVUIVE"`, want `"Harbor & Finch Supply Co."`
   - number: got `null`, want `"INV-2026-6610"`
@@ -113,17 +107,14 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - total: got `null`, want `6485.09`
   - items: got `[-283.64,15,180,225,404.24,1079.88,1200,2988]`, want `[-283.64,15,180,225,1079.88,1200,2988]`
   - failed checks: Required fields; Quantity × price per line
-- **inv-tr-discount** (cond:blur): vendor, date, currency, total, vat, items, no false alarm, number, due, subtotal
+- **inv-tr-discount** (cond:blur): vendor, total, vat, items, no false alarm, number, subtotal
   - vendor: got `"Kuzeyriizgan Danışmanlık A.Ş."`, want `"Kuzeyrüzgarı Danışmanlık A.Ş."`
-  - number: got `null`, want `"F2026053898"`
-  - date: got `null`, want `"2026-07-18"`
-  - due: got `null`, want `"2026-08-17"`
-  - currency: got `null`, want `"TRY"`
-  - subtotal: got `null`, want `5404.24`
-  - total: got `6`, want `6485.09`
-  - vat: got `[]`, want `[1080.85]`
-  - items: got `[17,120,160,229,2000,2026,28364,98800,6602110068]`, want `[-283.64,15,180,225,1079.88,1200,2988]`
-  - failed checks: Required fields; Line items add up; Quantity × price per line
+  - number: got `"F2020053808"`, want `"F2026053898"`
+  - subtotal: got `540424`, want `5404.24`
+  - total: got `6.48509`, want `6485.09`
+  - vat: got `[1.08085]`, want `[1080.85]`
+  - items: got `[1.07068,1.2,15,180,225,283.64,2988]`, want `[-283.64,15,180,225,1079.88,1200,2988]`
+  - failed checks: Line items add up; Subtotal + VAT = total; Quantity × price per line
 - **inv-tr-discount** (cond:shake): type, vendor, date, currency, total, vat, items, no false alarm, number, due, subtotal
   - vendor: got `"Kizeyrizgan DarismanikAS CATURA"`, want `"Kuzeyrüzgarı Danışmanlık A.Ş."`
   - number: got `null`, want `"F2026053898"`
@@ -135,17 +126,14 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - vat: got `[]`, want `[1080.85]`
   - items: got `[]`, want `[-283.64,15,180,225,1079.88,1200,2988]`
   - failed checks: Required fields
-- **inv-tr-discount** (cond:low-res): vendor, date, currency, total, vat, items, no false alarm, number, due, subtotal
+- **inv-tr-discount** (cond:low-res): vendor, vat, items, no false alarm, number, subtotal
   - vendor: got `"Kuzeyriizgan Danışmanlık A.Ş."`, want `"Kuzeyrüzgarı Danışmanlık A.Ş."`
-  - number: got `null`, want `"F2026053898"`
-  - date: got `null`, want `"2026-07-18"`
-  - due: got `null`, want `"2026-08-17"`
-  - currency: got `null`, want `"TRY"`
-  - subtotal: got `null`, want `5404.24`
-  - total: got `6485`, want `6485.09`
+  - number: got `"F2026053808"`, want `"F2026053898"`
+  - subtotal: got `540424`, want `5404.24`
+  - total: got `6485.08`, want `6485.09`
   - vat: got `[]`, want `[1080.85]`
-  - items: got `[1000,1800,2026,2028,22500,120000,290800]`, want `[-283.64,15,180,225,1079.88,1200,2988]`
-  - failed checks: Required fields; Line items add up; Quantity × price per line
+  - items: got `[15,180,225,283.64,1079.88,1200,2988]`, want `[-283.64,15,180,225,1079.88,1200,2988]`
+  - failed checks: Line items add up; Subtotal + VAT = total; Quantity × price per line
 - **inv-tr-discount** (cond:curled): vendor
   - vendor: got `"Kuzeyriizgan Danışmanlık A.Ş."`, want `"Kuzeyrüzgarı Danışmanlık A.Ş."`
 - **inv-tr-discount** (cond:upside-down): vendor
@@ -158,14 +146,12 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - vendor: got `"Kuzeyriizgan Danışmanlık A.Ş."`, want `"Kuzeyrüzgarı Danışmanlık A.Ş."`
 - **inv-de-multi-vat** (cond:flash): no false alarm
   - failed checks: Line items add up
-- **inv-de-multi-vat** (cond:blur): type, total, vat, items, no false alarm, number, due, subtotal
-  - number: got `null`, want `"INV-2026-75819"`
+- **inv-de-multi-vat** (cond:blur): total, vat, no false alarm, due, subtotal
   - due: got `null`, want `"2026-08-10"`
-  - subtotal: got `null`, want `15394.78`
+  - subtotal: got `15.39478`, want `15394.78`
   - total: got `18.08221`, want `18082.21`
-  - vat: got `[]`, want `[138.58,2548.85]`
-  - items: got `[0,0,15.390478,25,1070.08,2026,12500,254805]`, want `[90,225,600,899.9,1079.88,12500]`
-  - failed checks: Line items add up; Quantity × price per line
+  - vat: got `[2548.05,13858,129686394]`, want `[138.58,2548.85]`
+  - failed checks: Line items add up; Subtotal + VAT = total; Quantity × price per line
 - **inv-de-multi-vat** (cond:shake): type, date, total, vat, items, no false alarm, number, due, subtotal
   - number: got `null`, want `"INV-2026-75819"`
   - date: got `null`, want `"2026-07-11"`
@@ -175,15 +161,12 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - vat: got `[]`, want `[138.58,2548.85]`
   - items: got `[7]`, want `[90,225,600,899.9,1079.88,12500]`
   - failed checks: Required fields
-- **inv-de-multi-vat** (cond:low-res): type, date, total, vat, items, no false alarm, number, due, subtotal
+- **inv-de-multi-vat** (cond:low-res): vat, items, no false alarm, number, subtotal
   - number: got `null`, want `"INV-2026-75819"`
-  - date: got `"2026-08-10"`, want `"2026-07-11"`
-  - due: got `null`, want `"2026-08-10"`
-  - subtotal: got `null`, want `15394.78`
-  - total: got `18.08221`, want `18082.21`
-  - vat: got `[]`, want `[138.58,2548.85]`
-  - items: got `[0,225]`, want `[90,225,600,899.9,1079.88,12500]`
-  - failed checks: Line items add up; Quantity × price per line
+  - subtotal: got `15304.78`, want `15394.78`
+  - vat: got `[2548.85]`, want `[138.58,2548.85]`
+  - items: got `[90,99.98,225,600,1079.88,12500]`, want `[90,225,600,899.9,1079.88,12500]`
+  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate; Quantity × price per line
 - **inv-de-multi-vat** (cond:sideways): vendor, no false alarm
   - vendor: got `null`, want `"Alpenblick Druck GmbH"`
   - failed checks: Required fields
@@ -202,37 +185,26 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - vat: got `[]`, want `[463.95]`
   - items: got `[0,12.9,64.5,112.5,179.98,269.97,600,1079.88]`, want `[12.9,64.5,112.5,179.98,269.97,600,1079.88]`
   - failed checks: Required fields
-- **inv-fr-modern** (cond:blur): date, total, vat, items, no false alarm, number, due, subtotal
+- **inv-fr-modern** (cond:blur): vat, items, no false alarm
   - vendor: got `"Boulangerie Lefévre SAS"`, want `"Boulangerie Lefèvre SAS"`
-  - number: got `null`, want `"RE-03753"`
-  - date: got `"2006-07-04"`, want `"2026-07-04"`
-  - due: got `null`, want `"2026-07-18"`
-  - subtotal: got `null`, want `2319.73`
-  - total: got `null`, want `2783.68`
-  - vat: got `[463.05]`, want `[463.95]`
-  - items: got `[0,0,112.4,1280,20097,1231621144]`, want `[12.9,64.5,112.5,179.98,269.97,600,1079.88]`
-  - failed checks: Required fields
-- **inv-fr-modern** (cond:shake): type, date, currency, total, vat, items, no false alarm, number, due, subtotal
-  - vendor: got `"Bouftangerie Lefeèvre SAS"`, want `"Boulangerie Lefèvre SAS"`
-  - number: got `null`, want `"RE-03753"`
-  - date: got `null`, want `"2026-07-04"`
-  - due: got `null`, want `"2026-07-18"`
-  - currency: got `"GBP"`, want `"EUR"`
-  - subtotal: got `null`, want `2319.73`
-  - total: got `null`, want `2783.68`
-  - vat: got `[]`, want `[463.95]`
-  - items: got `[72,235,725,2125]`, want `[12.9,64.5,112.5,179.98,269.97,600,1079.88]`
-  - failed checks: Required fields
-- **inv-fr-modern** (cond:low-res): date, total, vat, items, no false alarm, number, due, subtotal
-  - vendor: got `"Boulangerie Lefévre SAS"`, want `"Boulangerie Lefèvre SAS"`
+  - vat: got `[46305]`, want `[463.95]`
+  - items: got `[112.5,179.08,600,1290,6450,20097,107968]`, want `[12.9,64.5,112.5,179.98,269.97,600,1079.88]`
+  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate; Quantity × price per line
+- **inv-fr-modern** (cond:shake): type, date, total, vat, items, no false alarm, number, due, subtotal
   - number: got `null`, want `"RE-03753"`
   - date: got `null`, want `"2026-07-04"`
   - due: got `null`, want `"2026-07-18"`
   - subtotal: got `null`, want `2319.73`
-  - total: got `276368`, want `2783.68`
+  - total: got `null`, want `2783.68`
   - vat: got `[]`, want `[463.95]`
-  - items: got `[18,2028]`, want `[12.9,64.5,112.5,179.98,269.97,600,1079.88]`
-  - failed checks: Required fields; Line items add up
+  - items: got `[220,727,2155]`, want `[12.9,64.5,112.5,179.98,269.97,600,1079.88]`
+  - failed checks: Required fields
+- **inv-fr-modern** (cond:low-res): date, items, no false alarm, number, subtotal
+  - number: got `null`, want `"RE-03753"`
+  - date: got `"2026-07-18"`, want `"2026-07-04"`
+  - subtotal: got `231073`, want `2319.73`
+  - items: got `[12.9,64.5,112.5,179.08,269.97,600,1070.88]`, want `[12.9,64.5,112.5,179.98,269.97,600,1079.88]`
+  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate; Quantity × price per line
 - **inv-fr-modern** (cond:sideways): vendor, no false alarm
   - vendor: got `null`, want `"Boulangerie Lefèvre SAS"`
   - failed checks: Required fields
@@ -255,19 +227,17 @@ Invoices, receipts and a bank statement, each photographed under every condition
 - **inv-es-multi-vat** (image): vat, no false alarm
   - vat: got `[1634]`, want `[603.87,1634]`
   - failed checks: Subtotal + VAT = total; VAT matches its rate
-- **inv-pl-classic** (cond:blur): date, currency, total, vat, items, no false alarm, number, due, subtotal
-  - vendor: got `"Drukarnia Wisniewski S.A. VAT"`, want `"Drukarnia Wiśniewski S.A."`
+- **inv-pl-classic** (cond:blur): date, currency, total, items, no false alarm, number, subtotal
+  - vendor: got `"Drukarnia Wisniewski S.A."`, want `"Drukarnia Wiśniewski S.A."`
   - number: got `null`, want `"FV/54149/07/2026"`
-  - date: got `null`, want `"2026-07-19"`
-  - due: got `null`, want `"2026-08-18"`
+  - date: got `"2006-07-19"`, want `"2026-07-19"`
   - currency: got `null`, want `"PLN"`
-  - subtotal: got `null`, want `1343.68`
+  - subtotal: got `1380680`, want `1343.68`
   - total: got `1652`, want `1652.73`
-  - vat: got `[]`, want `[309.05]`
-  - items: got `[38.7,175,2000]`, want `[38.7,179.98,1125]`
-  - failed checks: Required fields; Line items add up
-- **inv-pl-classic** (cond:shake): type, date, currency, total, vat, items, no false alarm, number, due, subtotal
-  - vendor: got `"Drukarnia- Wisniewski„= = SA Ea \"ai Tm v 18"`, want `"Drukarnia Wiśniewski S.A."`
+  - items: got `[38.7,1125,17998]`, want `[38.7,179.98,1125]`
+  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate; Quantity × price per line
+- **inv-pl-classic** (cond:shake): type, vendor, date, currency, total, vat, items, no false alarm, number, due, subtotal
+  - vendor: got `"Niesie | PWSTZE"`, want `"Drukarnia Wiśniewski S.A."`
   - number: got `null`, want `"FV/54149/07/2026"`
   - date: got `null`, want `"2026-07-19"`
   - due: got `null`, want `"2026-08-18"`
@@ -275,19 +245,12 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - subtotal: got `null`, want `1343.68`
   - total: got `null`, want `1652.73`
   - vat: got `[]`, want `[309.05]`
-  - items: got `[12732]`, want `[38.7,179.98,1125]`
+  - items: got `[]`, want `[38.7,179.98,1125]`
   - failed checks: Required fields
-- **inv-pl-classic** (cond:low-res): type, date, currency, total, vat, items, no false alarm, number, due, subtotal
-  - vendor: got `"Drukarnia Wisniewski S.A."`, want `"Drukarnia Wiśniewski S.A."`
+- **inv-pl-classic** (cond:low-res): no false alarm, number, subtotal
   - number: got `null`, want `"FV/54149/07/2026"`
-  - date: got `"2038-08-18"`, want `"2026-07-19"`
-  - due: got `null`, want `"2026-08-18"`
-  - currency: got `null`, want `"PLN"`
-  - subtotal: got `null`, want `1343.68`
-  - total: got `1652`, want `1652.73`
-  - vat: got `[]`, want `[309.05]`
-  - items: got `[112500]`, want `[38.7,179.98,1125]`
-  - failed checks: Line items add up
+  - subtotal: got `1343.08`, want `1343.68`
+  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate; Quantity × price per line
 - **inv-pl-classic** (cond:curled): no false alarm, subtotal
   - subtotal: got `0`, want `1343.68`
   - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate
@@ -329,17 +292,14 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - vat: got `[]`, want `[170.73]`
   - items: got `[0,45,89.99,180,498,812.99,983.72]`, want `[45,89.99,180,498]`
   - failed checks: Required fields
-- **inv-es-leaders** (cond:blur): type, date, currency, total, vat, items, no false alarm, number, due, subtotal
-  - vendor: got `"Graficas Romero S.L. FA RA"`, want `"Gráficas Romero S.L."`
-  - number: got `null`, want `"F2026043698"`
-  - date: got `null`, want `"2026-06-09"`
+- **inv-es-leaders** (cond:blur): date, vat, items, no false alarm, number, due, subtotal
+  - number: got `"F2026043008"`, want `"F2026043698"`
+  - date: got `"2026-08-09"`, want `"2026-06-09"`
   - due: got `null`, want `"2026-07-24"`
-  - currency: got `null`, want `"EUR"`
   - subtotal: got `null`, want `812.99`
-  - total: got `72`, want `983.72`
   - vat: got `[]`, want `[170.73]`
-  - items: got `[0,180]`, want `[45,89.99,180,498]`
-  - failed checks: Required fields; Line items add up
+  - items: got `[45,180,8099,49800,81299,934919407]`, want `[45,89.99,180,498]`
+  - failed checks: Line items add up
 - **inv-es-leaders** (cond:shake): type, date, currency, total, vat, items, no false alarm, number, due, subtotal
   - vendor: got `"Graficas Romero SIL"`, want `"Gráficas Romero S.L."`
   - number: got `null`, want `"F2026043698"`
@@ -351,15 +311,13 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - vat: got `[]`, want `[170.73]`
   - items: got `[]`, want `[45,89.99,180,498]`
   - failed checks: Required fields
-- **inv-es-leaders** (cond:low-res): date, total, vat, items, no false alarm, number, due, subtotal
+- **inv-es-leaders** (cond:low-res): vat, items, no false alarm, number, due, subtotal
   - number: got `null`, want `"F2026043698"`
-  - date: got `null`, want `"2026-06-09"`
   - due: got `null`, want `"2026-07-24"`
-  - subtotal: got `null`, want `812.99`
-  - total: got `372`, want `983.72`
-  - vat: got `[]`, want `[170.73]`
-  - items: got `[]`, want `[45,89.99,180,498]`
-  - failed checks: Required fields
+  - subtotal: got `99`, want `812.99`
+  - vat: got `[884.72]`, want `[170.73]`
+  - items: got `[45,180,498,8999]`, want `[45,89.99,180,498]`
+  - failed checks: Line items add up
 - **inv-es-leaders** (cond:sideways): vendor
   - vendor: got `"varia nuinero S.L."`, want `"Gráficas Romero S.L."`
 - **inv-it-leaders** (image): items
@@ -372,7 +330,8 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - failed checks: Line items add up
 - **inv-pl-credit** (image): vendor
   - vendor: got `"Kowalski Hurtownia Sp. z 0.0. KORYGUJACA"`, want `"Kowalski Hurtownia Sp. z o.o."`
-- **rcp-en-GB** (cond:blur): type, date, vat, items, no false alarm
+- **rcp-en-GB** (cond:blur): date, vat, items, no false alarm
+  - vendor: got `"NORTHGATE ANALYTICSLIC"`, want `"NORTHGATE ANALYTICS LLC"`
   - number: got `null`, want `undefined`
   - date: got `null`, want `"2026-03-17"`
   - due: got `null`, want `undefined`
@@ -438,17 +397,17 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - number: got `null`, want `undefined`
   - due: got `null`, want `undefined`
   - subtotal: got `93.07`, want `undefined`
-- **rcp-de** (cond:blur): date, currency, total, vat, items, no false alarm
-  - vendor: got `"SCHNEIDER LOGISTINAG"`, want `"SCHNEIDER LOGISTIK AG"`
+- **rcp-de** (cond:blur): type, date, currency, total, vat, items, no false alarm
+  - vendor: got `"SCHNEIDER LOGISTIEAG"`, want `"SCHNEIDER LOGISTIK AG"`
   - number: got `null`, want `undefined`
-  - date: got `null`, want `"2026-09-13"`
+  - date: got `"2046-09-23"`, want `"2026-09-13"`
   - due: got `null`, want `undefined`
   - currency: got `null`, want `"EUR"`
   - subtotal: got `null`, want `undefined`
-  - total: got `3.2`, want `43.2`
+  - total: got `4320`, want `43.2`
   - vat: got `[]`, want `[2.83]`
-  - items: got `[14,55,169]`, want `[5.5,7.2,14,16.5]`
-  - failed checks: Required fields; Line items add up
+  - items: got `[1,14,16.5,256]`, want `[5.5,7.2,14,16.5]`
+  - failed checks: Line items add up
 - **rcp-de** (cond:shake): type, vendor, date, currency, total, vat, items, no false alarm
   - vendor: got `"Secraumpsso unter =F"`, want `"SCHNEIDER LOGISTIK AG"`
   - number: got `null`, want `undefined`
@@ -489,10 +448,10 @@ Invoices, receipts and a bank statement, each photographed under every condition
   - failed checks: VAT matches its rate
 - **stm-tr-1** (cond:flash): amounts, no false alarm
   - amounts: got `[-825.57,764,968,-1729.09,8.73,-1566.69,1348.26,329.07,-162.59]`, want `[-825.57,-1305.74,-363.51,-1729.09,8.73,-1566.69,1348.26,329.07,-162.59]`
-- **stm-tr-1** (cond:blur): type, transaction count, amounts, dates, no false alarm
-  - n: got `0`, want `9`
-  - amounts: got `[]`, want `[-825.57,-1305.74,-363.51,-1729.09,8.73,-1566.69,1348.26,329.07,-162.59]`
-  - dates: got `[]`, want `["2026-05-03","2026-05-05","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-14","2026-05-15","2026-05-17"]`
+- **stm-tr-1** (cond:blur): transaction count, amounts, dates
+  - n: got `3`, want `9`
+  - amounts: got `[968,60,400024]`, want `[-825.57,-1305.74,-363.51,-1729.09,8.73,-1566.69,1348.26,329.07,-162.59]`
+  - dates: got `["2020-05-07","2006-05-11","2026-05-15"]`, want `["2026-05-03","2026-05-05","2026-05-07","2026-05-08","2026-05-11","2026-05-12","2026-05-14","2026-05-15","2026-05-17"]`
 - **stm-tr-1** (cond:shake): type, transaction count, amounts, dates, no false alarm
   - n: got `0`, want `9`
   - amounts: got `[]`, want `[-825.57,-1305.74,-363.51,-1729.09,8.73,-1566.69,1348.26,329.07,-162.59]`

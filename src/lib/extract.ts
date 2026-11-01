@@ -356,6 +356,12 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
   }
   const itemsTotal = items.length ? cents(items.reduce((a, it) => a + it.amount, 0)) : null;
   subtotal = repair(subtotal, itemsTotal);
+  // Or the subtotal is the one misread, and the total minus VAT says what it was:
+  // accepted only when each VAT amount matches its rate on that corrected base.
+  if (total.value !== null && subtotal.value !== null && vat.length && vat.every((v) => v.rate !== null)) {
+    const fixed = repair(subtotal, cents(total.value - vat.reduce((a, v) => a + v.amount, 0)));
+    if (fixed.value !== subtotal.value && (vat.length > 1 || near(cents((fixed.value! * vat[0].rate!) / 100), vat[0].amount, 0.02))) subtotal = fixed;
+  }
   for (const v of vat) {
     const base = vat.length === 1 && subtotal.value !== null ? subtotal.value : v.base;
     if (v.rate !== null && base !== null) {

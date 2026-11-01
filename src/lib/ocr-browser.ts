@@ -2,7 +2,7 @@
 
 import { estimateSkew, wordsFromBlocks, type OcrWord } from "./layout";
 import { extractContent, isEncryptedOffice, sniff, zipEntries, type Extracted, type Sniffed } from "./office";
-import { crop, flatten, looksLikePhoto, paperBox, type Pixels } from "./preprocess";
+import { crop, flatten, looksLikePhoto, paperBox, sharpen, type Pixels } from "./preprocess";
 
 export type Progress = { stage: string; value: number };
 
@@ -116,6 +116,18 @@ function turn(canvas: HTMLCanvasElement, quarters: number): HTMLCanvasElement {
   return c;
 }
 
+/** Up to twice the size, smoothly, until the longer side reaches `side`. */
+function enlarge(canvas: HTMLCanvasElement, side: number): HTMLCanvasElement {
+  const k = Math.min(2, Math.max(1, side / Math.max(canvas.width, canvas.height)));
+  const c = document.createElement("canvas");
+  c.width = Math.round(canvas.width * k);
+  c.height = Math.round(canvas.height * k);
+  const ctx = c.getContext("2d")!;
+  ctx.imageSmoothingQuality = "high";
+  ctx.drawImage(canvas, 0, 0, c.width, c.height);
+  return c;
+}
+
 function shrink(canvas: HTMLCanvasElement, side: number): HTMLCanvasElement {
   const k = Math.min(1, side / Math.max(canvas.width, canvas.height));
   const c = document.createElement("canvas");
@@ -167,17 +179,31 @@ async function ocrPage(source: HTMLCanvasElement, onProgress: (p: Progress) => v
     page = turn(page, quarters);
     first = await recognize(page, "eng");
   }
+  // A blurred, shaken or small photo: read a copy enlarged and sharpened as well,
+  // and keep whichever reads more real words. Sharp photos skip this.
+  let enhanced = false;
+  if (legible(first) < Math.max(25, first.length * 0.6)) {
+    const big = enlarge(page, 2600);
+    const c = big.getContext("2d", { willReadFrequently: true })!;
+    const sharp = toCanvas(sharpen({ width: big.width, height: big.height, data: c.getImageData(0, 0, big.width, big.height).data }, Math.max(2, Math.round(big.width / 600)), 1.6));
+    const second = await recognize(sharp, "eng");
+    if (legible(second) > legible(first) * 1.15) {
+      page = sharp;
+      first = second;
+      enhanced = true;
+    }
+  }
   const lang = guessLanguage(first);
   const angle = Math.atan(estimateSkew(first));
   const tilted = Math.abs(angle) > (0.6 * Math.PI) / 180;
   if (!lang && !tilted) {
     onProgress({ stage: "Done", value: 1 });
-    return { words: first, page, cleaned: photo || quarters > 0 };
+    return { words: first, page, cleaned: photo || quarters > 0 || enhanced };
   }
   if (tilted) page = rotate(page, -angle);
   report = (p) => onProgress({ stage: p.stage === "Reading text" ? "Reading text (2 of 2)" : p.stage, value: 0.5 + p.value * 0.5 });
   const words = await recognize(page, lang ? `eng+${lang}` : "eng");
-  return { words, page, cleaned: photo || tilted || quarters > 0 };
+  return { words, page, cleaned: photo || tilted || quarters > 0 || enhanced };
 }
 
 function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {

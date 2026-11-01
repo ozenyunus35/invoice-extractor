@@ -22,6 +22,10 @@ export function detectDecimal(text: string): Decimal {
 /** Parses one numeric token ("1.234,56", "1,234.56", "12", "-3.5") with the document's separator. */
 export function parseNumber(token: string, decimal: Decimal): number | null {
   let t = token.replace(/[−–]/g, "-").replace(/['  ]/g, "");
+  // A blurred photo reads "6.485,09" as "6.485.09": one separator throughout and two
+  // digits at the end can only be thousands followed by cents.
+  const same = t.match(/^(-?\d{1,3})([.,])(\d{3}(?:\2\d{3})*)\2(\d{2})$/);
+  if (same) return Number(`${same[1]}${same[3].replace(/[.,]/g, "")}.${same[4]}`);
   t = decimal === "," ? t.replace(/\./g, "").replace(",", ".") : t.replace(/,/g, "");
   if (!/^-?\d+(\.\d+)?$/.test(t)) return null;
   const n = Number(t);
