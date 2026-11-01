@@ -107,7 +107,7 @@ function scoreReport(t: Truth, lines: ReturnType<typeof wordsToLines>) {
   const r = extractReport(lines);
   const a = analyseReport(r);
   const failed = a.checks.filter((c) => c.status === "fail").map((c) => c.label);
-  const kinds = r.tables.map((x) => x.kind);
+  const kinds: string[] = r.tables.map((x) => x.kind);
   const score: Score = {
     type: type === "report",
     tables: (t.kinds as string[]).every((k) => kinds.includes(k)),
