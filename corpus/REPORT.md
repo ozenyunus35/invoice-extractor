@@ -1,6 +1,6 @@
 # Corpus evaluation
 
-Documents: 125 · readings: 250
+Documents: 125 · readings: 272
 
 ## invoice
 
@@ -8,7 +8,7 @@ Documents: 125 · readings: 250
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pdf | 83 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% |
 | image | 79 | 100% | 97% | 99% | 94% | 99% | 96% | 95% | 90% | 92% | 92% | 100% | 72% |
-| photo | 14 | 100% | 100% | 93% | 93% | 93% | 93% | 100% | 86% | 86% | 93% | 100% | 64% |
+| photo | 27 | 100% | 100% | 96% | 96% | 93% | 93% | 100% | 89% | 89% | 93% | 100% | 70% |
 
 ## receipt
 
@@ -16,6 +16,7 @@ Documents: 125 · readings: 250
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pdf | 10 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% |
 | image | 10 | 100% | 100% | 100% | 80% | 100% | 100% | 100% | 90% | 80% |
+| photo | 3 | 100% | 100% | 100% | 67% | 100% | 33% | 0% | 67% | 0% |
 
 ## statement
 
@@ -23,6 +24,7 @@ Documents: 125 · readings: 250
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | pdf | 16 | 100% | 100% | 100% | 100% | 100% | 100% |
 | image | 16 | 100% | 100% | 100% | 100% | 100% | 100% |
+| photo | 6 | 100% | 100% | 100% | 100% | 100% | 100% |
 
 ## report
 
@@ -68,6 +70,11 @@ Documents: 125 · readings: 250
 - **inv-pl-multi-vat** (image): due
   - vendor: got `"Nowak Serwis Sp. z 0.0."`, want `"Nowak Serwis Sp. z o.o."`
   - due: got `null`, want `"2026-02-07"`
+- **inv-pl-multi-vat** (photo): total, vat, no false alarm
+  - vendor: got `"Nowak Serwis Sp. z 0.0."`, want `"Nowak Serwis Sp. z o.o."`
+  - total: got `1479506.8`, want `7877.9`
+  - vat: got `[1473102]`, want `[1473.1]`
+  - failed checks: VAT matches its rate
 - **inv-pl-discount** (image): due
   - vendor: got `"Kowalski Hurtownia Sp. z 0.0."`, want `"Kowalski Hurtownia Sp. z o.o."`
   - due: got `null`, want `"2026-02-15"`
@@ -112,6 +119,8 @@ Documents: 125 · readings: 250
   - vendor: got `"Van Dijk Kantoorartikelen B.V. CREDITNOTA"`, want `"Van Dijk Kantoorartikelen B.V."`
   - vat: got `[]`, want `[-383.04]`
   - failed checks: Subtotal + VAT = total
+- **inv-pt-leaders** (photo): number
+  - number: got `null`, want `"FV/56840/05/2026"`
 - **inv-pl-credit** (image): vendor, due
   - vendor: got `"Kowalski Hurtownia Sp. z 0.0. KORYGUJACA"`, want `"Kowalski Hurtownia Sp. z o.o."`
   - due: got `null`, want `"2026-01-31"`
@@ -119,6 +128,30 @@ Documents: 125 · readings: 250
   - vendor: got `"Nowak Serwis Sp. z 0.0."`, want `"Nowak Serwis Sp. z o.o."`
   - due: got `null`, want `"2026-07-24"`
   - items: got `[0,18]`, want `[18,89.99,90]`
+  - failed checks: Line items add up
+- **inv-pl-leaders** (photo): due
+  - vendor: got `"Nowak Serwis Sp.z o.o."`, want `"Nowak Serwis Sp. z o.o."`
+  - due: got `null`, want `"2026-07-24"`
+- **rcp-tr** (photo): vat, items
+  - vendor: got `"MARMARA YAZILIM A.Ş"`, want `"MARMARA YAZILIM A.Ş."`
+  - number: got `null`, want `undefined`
+  - due: got `null`, want `undefined`
+  - subtotal: got `null`, want `undefined`
+  - vat: got `[]`, want `[0.93]`
+  - items: got `[]`, want `[14,14,16.5,19.8,29.7]`
+- **rcp-es** (photo): currency, vat, items
+  - vendor: got `"GRÁFICAS ROMERO S.L"`, want `"GRÁFICAS ROMERO S.L."`
+  - number: got `null`, want `undefined`
+  - due: got `null`, want `undefined`
+  - currency: got `null`, want `"EUR"`
+  - subtotal: got `69`, want `undefined`
+  - vat: got `[1]`, want `[6.36]`
+  - items: got `[]`, want `[28,42]`
+- **rcp-pt** (photo): items, no false alarm
+  - number: got `null`, want `undefined`
+  - due: got `null`, want `undefined`
+  - subtotal: got `33.58`, want `undefined`
+  - items: got `[4.8,5,5.5,19.8]`, want `[4.8,5.5,5.5,19.8]`
   - failed checks: Line items add up
 - **rcp-pl** (image): currency
   - vendor: got `"DRUKARNIA WISNIEWSKI S.A."`, want `"DRUKARNIA WIŚNIEWSKI S.A."`
