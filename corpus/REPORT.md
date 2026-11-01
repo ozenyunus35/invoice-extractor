@@ -7,8 +7,8 @@ Documents: 84 · readings: 194
 | source | n | type | vendor | date | currency | total | vat | items | no false alarm | number | due | subtotal | all fields |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pdf | 52 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% |
-| image | 52 | 100% | 96% | 100% | 90% | 94% | 87% | 100% | 85% | 94% | 92% | 87% | 69% |
-| photo | 18 | 100% | 100% | 89% | 94% | 94% | 100% | 100% | 89% | 83% | 94% | 100% | 61% |
+| image | 52 | 100% | 96% | 100% | 90% | 98% | 92% | 100% | 92% | 94% | 92% | 100% | 71% |
+| photo | 18 | 100% | 100% | 89% | 94% | 100% | 100% | 100% | 94% | 83% | 94% | 100% | 61% |
 
 ## receipt
 
@@ -74,46 +74,27 @@ Documents: 84 · readings: 194
 - **inv-pl-discount** (image): due
   - vendor: got `"Kowalski Hurtownia Sp. z 0.0."`, want `"Kowalski Hurtownia Sp. z o.o."`
   - due: got `null`, want `"2026-05-17"`
-- **inv-en-IN-classic** (image): currency, total, vat, no false alarm, subtotal
+- **inv-en-IN-classic** (image): currency
   - currency: got `null`, want `"INR"`
-  - subtotal: got `36988.38`, want `6988.38`
-  - total: got `246.29`, want `8246.29`
-  - vat: got `[71257.91]`, want `[1257.91]`
-  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate
-- **inv-en-IN-modern** (image): currency, vat, no false alarm, subtotal
+- **inv-en-IN-modern** (image): currency
   - currency: got `null`, want `"INR"`
-  - subtotal: got `71227.9`, want `1227.9`
-  - vat: got `[7221.02]`, want `[221.02]`
-  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate
-- **inv-en-IN-modern** (photo): currency, total, no false alarm
+- **inv-en-IN-modern** (photo): currency
   - currency: got `null`, want `"INR"`
-  - total: got `448.92`, want `1448.92`
-  - failed checks: Subtotal + VAT = total
-- **inv-en-IN-multi-vat** (image): currency, total, vat, no false alarm, subtotal
+- **inv-en-IN-multi-vat** (image): currency, total, vat, no false alarm
   - currency: got `null`, want `"INR"`
-  - subtotal: got `971.23`, want `2971.23`
   - total: got `73500.65`, want `3500.65`
   - vat: got `[310.8,3518.62]`, want `[10.8,518.62]`
-  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate
-- **inv-en-IN-discount** (image): currency, vat, no false alarm, subtotal
+  - failed checks: Subtotal + VAT = total; VAT matches its rate
+- **inv-en-IN-discount** (image): currency, vat, no false alarm
   - currency: got `null`, want `"INR"`
-  - subtotal: got `3141.25`, want `141.25`
   - vat: got `[725.43]`, want `[25.43]`
-  - failed checks: Line items add up; Subtotal + VAT = total
-- **inv-en-JP-classic** (image): no false alarm, subtotal
-  - subtotal: got `480`, want `969480`
-  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate
-- **inv-en-JP-modern** (image): vat, no false alarm, number, subtotal
+  - failed checks: Subtotal + VAT = total
+- **inv-en-JP-modern** (image): number
   - number: got `null`, want `"RE-29038"`
-  - subtotal: got `647500`, want `1647500`
-  - vat: got `[750]`, want `[164750]`
-  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate
-- **inv-en-JP-multi-vat** (image): currency, total, vat, no false alarm, subtotal
+- **inv-en-JP-multi-vat** (image): currency, vat, no false alarm
   - currency: got `null`, want `"JPY"`
-  - subtotal: got `390`, want `95390`
-  - total: got `821`, want `104821`
-  - vat: got `[999]`, want `[432,8999]`
-  - failed checks: Line items add up; Subtotal + VAT = total; VAT matches its rate
+  - vat: got `[8999]`, want `[432,8999]`
+  - failed checks: Subtotal + VAT = total; VAT matches its rate
 - **rcp-it** (photo): vat, items, no false alarm
   - number: got `null`, want `undefined`
   - due: got `null`, want `undefined`

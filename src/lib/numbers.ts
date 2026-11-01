@@ -47,7 +47,11 @@ export function joinSpacedThousands(line: string): string {
 
 /** Every number on a line, left to right, ignoring dates and percentages. */
 export function numbersIn(line: string, decimal: Decimal): NumberToken[] {
-  const clean = joinSpacedThousands(line).replace(DATE_LIKE, " ").replace(PERCENT, " ");
+  const clean = joinSpacedThousands(line)
+    // A currency sign OCR could not read sticks to the amount as a letter: "T8,246.29", "Y969,480".
+    .replace(/(^|\s)[A-Za-z%](?=\d{1,3}(?:[.,]\d{3})+(?:[.,]\d{2})?(?![\d.,]))/g, "$1")
+    .replace(DATE_LIKE, " ")
+    .replace(PERCENT, " ");
   const out: NumberToken[] = [];
   for (const m of clean.matchAll(/(?<![\w])[-−]?\d+(?:[.,' ]\d+)*(?![\w])/g)) {
     const value = parseNumber(m[0], decimal);

@@ -288,6 +288,34 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
     }
   }
 
+  // OCR reads a currency sign it does not know (₹, ¥) as a digit: "₹6,988.38" becomes 36988.38.
+  // When dropping that first digit makes the arithmetic agree, use it, at lower confidence.
+  const unprefix = (v: number) => {
+    const t = Math.abs(v).toFixed(2);
+    return t.length > 4 ? Math.sign(v) * Number(t.slice(1)) : null;
+  };
+  const repair = (f: Field<number>, expected: number | null): Field<number> => {
+    if (f.value === null || expected === null || near(f.value, expected, 0.011)) return f;
+    const fixed = unprefix(f.value);
+    return fixed !== null && near(fixed, expected, 0.011) ? { ...f, value: fixed, confidence: Math.min(f.confidence, 0.6) } : f;
+  };
+  const itemsSum = items.length ? cents(items.reduce((a, it) => a + it.amount, 0)) : null;
+  for (const it of items) {
+    const fixed = unprefix(it.amount);
+    if (fixed !== null && !near(it.quantity * it.unitPrice, it.amount, 0.011) && near(it.quantity * it.unitPrice, fixed, 0.011)) it.amount = fixed;
+  }
+  subtotal = repair(subtotal, itemsSum);
+  for (const v of vat) {
+    const base = vat.length === 1 && subtotal.value !== null ? subtotal.value : v.base;
+    if (v.rate !== null && base !== null) {
+      const fixed = repair({ value: v.amount, line: v.line, confidence: 1 }, cents((base * v.rate) / 100)).value;
+      if (fixed !== null) v.amount = fixed;
+      if (vat.length === 1 && v.base !== null) v.base = base;
+    }
+  }
+  if (subtotal.value !== null) total = repair(total, cents(subtotal.value + vat.reduce((a, v) => a + v.amount, 0)));
+  else if (itemsSum !== null) total = repair(total, itemsSum);
+
   const dateField = labelledDate(lines, folded, DATE_LABEL, us, /due|vade|fallig/);
   const firstDate = lines.findIndex((l) => datesIn(l.text, us).length > 0);
   const date: Field<string> =
