@@ -70,14 +70,31 @@ Each one is read as a text PDF, as a page image and as a tilted, blurred, shadow
 
 | Every field right | Text PDF | Page image (OCR) | Phone photo (OCR) |
 | --- | --- | --- | --- |
-| Invoices (83) | 100% | 81% | 67% |
+| Invoices (83) | 100% | 81% | 93% |
 | Receipts (10) | 100% | 80% | 100% |
 | Bank statements (16) | 100% | 94% | 83% |
 | Financial reports (10, incl. broken ones caught) | 100% | – | – |
 | Documents to refuse (6) | 100% | 100% | – |
-| Invoices as Word, Excel, OpenDocument, CSV, text, web page, e-mail (28) | 96% | | |
+| Word, Excel, OpenDocument, RTF, CSV, text, web page, e-mail, e-invoice XML, ZIP, misnamed files (51) | 100% | | |
 
-Field by field, OCR'd invoices are 90–100% right. The misses come from the scan itself: a ₹ or ¥ sign OCR cannot read leaves the currency blank, and blurred thermal receipt photos lose digits (a single misread digit is repaired when the receipt's own total proves it). The checks and the "worth a quick look" hint show exactly which values to confirm. Damaged, empty, password-protected, oversized and unsupported files each get a plain message (`tests/e2e/robustness.spec.ts`).
+### Phone photos, condition by condition
+
+Ten invoices, receipts and a statement are each photographed under fifteen conditions (`scripts/corpus/conditions.py`); the share read with every field right:
+
+| Condition | Every field | Total | Condition | Every field | Total |
+| --- | --- | --- | --- | --- | --- |
+| Dark room, sensor noise | 100% | 100% | Steep angle | 100% | 100% |
+| Too much light | 90% | 100% | Curled, folded page | 100% | 100% |
+| Flash hot spot | 30% | 60% | Upside down | 90% | 100% |
+| Out of focus | 0% | 30% | Sideways | 80% | 100% |
+| Shaky hand | 0% | 0% | Yellow bulb | 90% | 100% |
+| Old low-res camera | 30% | 80% | Hand shadow across text | 20% | 70% |
+| Heavy WhatsApp compression | 80% | 100% | Far away on a patterned table | 90% | 100% |
+| | | | Close-up, edges cut | 90% | 100% |
+
+Blur, camera shake, flash glare and hard shadows are the open problems: the app flags the values it is unsure of rather than guessing, and a retake fixes them.
+
+Field by field, OCR'd invoices are 90–100% right. The misses come from the scan itself: a ₹ or ¥ sign OCR cannot read leaves the currency blank, and blurred thermal receipt photos lose digits (a single misread digit is repaired when the receipt's own total proves it). The checks and the "worth a quick look" hint show exactly which values to confirm. Damaged, half-downloaded, empty, password-protected, old binary Office, Outlook .msg, oversized and unsupported files each get a plain message (`tests/e2e/robustness.spec.ts`, `tests/e2e/hard-files.spec.ts`).
 
 ## Run it locally
 

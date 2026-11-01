@@ -43,8 +43,9 @@ CONDITIONS = ["dark", "overexposed", "flash", "blur", "shake", "low-res", "whats
 
 def on_table(im: Image.Image, rnd: random.Random, angle: float, margin=0.12, bg=None) -> Image.Image:
     bg = bg or (rnd.randint(70, 110), rnd.randint(60, 95), rnd.randint(50, 80))
-    canvas = Image.new("RGB", (int(im.width * (1 + margin * 2)), int(im.height * (1 + margin * 2))), bg)
     rot = im.rotate(angle, expand=True, fillcolor=bg, resample=Image.BICUBIC)
+    # The table is sized around the turned page, so a sideways photo keeps the whole sheet.
+    canvas = Image.new("RGB", (int(rot.width * (1 + margin * 2)), int(rot.height * (1 + margin * 2))), bg)
     canvas.paste(rot, ((canvas.width - rot.width) // 2, (canvas.height - rot.height) // 2))
     return canvas
 
