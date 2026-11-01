@@ -1,0 +1,20 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1240px; height: 1754px; background: #fff; }
+body { font-family: "Helvetica Neue", Arial, sans-serif; color: #1d1f23; font-size: 22px; line-height: 1.45; padding: 96px 104px; }
+.top { display: flex; justify-content: space-between; align-items: flex-start; }
+.brand { font-size: 44px; font-weight: 700; letter-spacing: -0.5px; }
+.brand-sub { color: #555a63; font-size: 20px; margin-top: 6px; }
+.doc { font-size: 44px; font-weight: 300; letter-spacing: 6px; color: #3a3f47; text-transform: uppercase; }
+.meta { margin-top: 64px; display: flex; justify-content: space-between; }
+.meta table td { padding: 2px 0; }
+.meta table td:first-child { color: #555a63; padding-right: 28px; }
+.label { color: #555a63; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; }
+table.items { width: 100%; border-collapse: collapse; margin-top: 72px; }
+table.items th { text-align: left; font-size: 18px; text-transform: uppercase; letter-spacing: 1.5px; color: #555a63; border-bottom: 2px solid #1d1f23; padding: 12px 0; }
+table.items td { padding: 18px 0; border-bottom: 1px solid #e3e5e8; vertical-align: top; }
+table.items .n { text-align: right; padding-left: 24px; white-space: nowrap; }
+table.items th.n { text-align: right; }
+.sum { margin-top: 36px; margin-left: auto; width: 520px; }
+.sum div { display: flex; justify-content: space-between; padding: 8px 0; }
+.sum .grand { border-top: 2px solid #1d1f23; margin-top: 8px; padding-top: 16px; font-size: 28px; font-weight: 700; }
+.foot { position: absolute; left: 104px; right: 104px; bottom: 96px; color: #555a63; font-size: 18px; border-top: 1px solid #e3e5e8; padding-top: 20px; }
