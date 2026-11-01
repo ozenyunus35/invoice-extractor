@@ -51,3 +51,8 @@ next-env.d.ts
 # local tooling
 /.claude/
 *.traineddata
+
+# corpus: rendered files are regenerated with npm run corpus
+/corpus/pdf/
+/corpus/png/
+/corpus/photo/

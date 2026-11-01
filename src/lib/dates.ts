@@ -1,20 +1,31 @@
-/** Month names in English, German and Turkish, lowercase, first three or more letters. */
+/**
+ * Month names in nine languages, as the start of the folded word (no accents).
+ * Prefixes are long enough not to collide: "mar" (March) vs "maj" (Polish May).
+ */
 const MONTHS: [RegExp, number][] = [
-  [/^(jan|ocak|jän)/, 1],
-  [/^(feb|şub|sub)/, 2],
-  [/^(mar|mär|mart)/, 3],
-  [/^(apr|nis)/, 4],
-  [/^(may|mai|mayıs)/, 5],
-  [/^(jun|haz)/, 6],
-  [/^(jul|tem)/, 7],
-  [/^(aug|ağu|agu)/, 8],
-  [/^(sep|eyl)/, 9],
-  [/^(oct|okt|eki)/, 10],
-  [/^(nov|kas)/, 11],
-  [/^(dec|dez|ara)/, 12],
+  [/^(jan|ocak|janv|ene|genn|stycz|jän)/, 1],
+  [/^(feb|sub|fev|febr|lut)/, 2],
+  [/^(mar|maart|marz|marc)/, 3],
+  [/^(apr|nis|avr|abr|kwie)/, 4],
+  [/^(may|mai|mei|mag|maj)/, 5],
+  [/^(jun|haz|juin|giu|czerw)/, 6],
+  [/^(jul|tem|juil|lug|lip)/, 7],
+  [/^(aug|agu|aou|ago|sierp)/, 8],
+  [/^(sep|eyl|set|wrze)/, 9],
+  [/^(oct|okt|eki|ott|out|pazdz)/, 10],
+  [/^(nov|kas|listop)/, 11],
+  [/^(dec|dez|ara|dic|grud)/, 12],
 ];
 
-const monthFromName = (name: string) => MONTHS.find(([re]) => re.test(name.toLowerCase()))?.[1] ?? null;
+const foldName = (s: string) =>
+  s
+    .toLowerCase()
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/ł/g, "l")
+    .replace(/ı/g, "i");
+
+const monthFromName = (name: string) => MONTHS.find(([re]) => re.test(foldName(name)))?.[1] ?? null;
 
 const iso = (y: number, m: number, d: number) => {
   if (y < 100) y += 2000;
@@ -33,7 +44,7 @@ export type DateMatch = { iso: string; index: number };
  */
 export function datesIn(line: string, usFormat = false): DateMatch[] {
   const out: DateMatch[] = [];
-  for (const m of line.matchAll(/\b(\d{4})-(\d{1,2})-(\d{1,2})\b/g)) {
+  for (const m of line.matchAll(/\b(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})\b/g)) {
     const v = iso(+m[1], +m[2], +m[3]);
     if (v) out.push({ iso: v, index: m.index });
   }
@@ -44,14 +55,14 @@ export function datesIn(line: string, usFormat = false): DateMatch[] {
     const v = iso(+m[4], b, a);
     if (v) out.push({ iso: v, index: m.index });
   }
-  // "31 Oct 2026", "31. Oktober 2026", "31 Ekim 2026"
-  for (const m of line.matchAll(/\b(\d{1,2})\.?\s+([A-Za-zÄÖÜäöüŞşĞğİıÇç]{3,})\.?,?\s+(\d{4})\b/g)) {
+  // "31 Oct 2026", "31. Oktober 2026", "31 Ekim 2026", "5 de octubre de 2026", "5 października 2026"
+  for (const m of line.matchAll(/(?<![\p{L}\d])(\d{1,2})\.?\s+(?:de\s+)?(\p{L}{3,})\.?,?\s+(?:de\s+)?(\d{4})\b/gu)) {
     const month = monthFromName(m[2]);
     const v = month && iso(+m[3], month, +m[1]);
     if (v) out.push({ iso: v, index: m.index });
   }
   // "Oct 31, 2026", "October 31 2026"
-  for (const m of line.matchAll(/\b([A-Za-z]{3,})\.?\s+(\d{1,2}),?\s*(\d{4})\b/g)) {
+  for (const m of line.matchAll(/(?<!\p{L})(\p{L}{3,})\.?\s+(\d{1,2}),?\s*(\d{4})\b/gu)) {
     const month = monthFromName(m[1]);
     const v = month && iso(+m[3], month, +m[2]);
     if (v) out.push({ iso: v, index: m.index });

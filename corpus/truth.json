@@ -1,0 +1,4109 @@
+[
+ {
+  "name": "inv-en-US-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-US",
+   "lang": "en",
+   "layout": "classic",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "INV-2026-6610",
+   "date": "2026-02-13",
+   "due": "2026-02-27",
+   "currency": "USD",
+   "subtotal": 2131.1,
+   "vat": [
+    {
+     "rate": 8.875,
+     "amount": 189.14
+    }
+   ],
+   "total": 2320.24,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 12,
+     "unit": 12.9,
+     "amount": 154.8
+    },
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 10,
+     "unit": 45.0,
+     "amount": 450.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-US-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-US",
+   "lang": "en",
+   "layout": "modern",
+   "vendor": "Bluewater Print Ltd",
+   "number": "FV/6296/04/2026",
+   "date": "2026-04-15",
+   "due": "2026-05-15",
+   "currency": "USD",
+   "subtotal": 34337.4,
+   "vat": [
+    {
+     "rate": 6.0,
+     "amount": 2060.24
+    }
+   ],
+   "total": 36397.64,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 1250.0,
+     "amount": 2500.0
+    },
+    {
+     "qty": 25,
+     "unit": 12.9,
+     "amount": 322.5
+    },
+    {
+     "qty": 12,
+     "unit": 18.0,
+     "amount": 216.0
+    },
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-US-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-US",
+   "lang": "en",
+   "layout": "multi-vat",
+   "vendor": "Northgate Analytics LLC",
+   "number": "RE-91324",
+   "date": "2026-05-13",
+   "due": "2026-06-27",
+   "currency": "USD",
+   "subtotal": 12210.99,
+   "vat": [
+    {
+     "rate": 6.0,
+     "amount": 732.66
+    }
+   ],
+   "total": 12943.65,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 89.99,
+     "amount": 89.99
+    },
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    },
+    {
+     "qty": 2,
+     "unit": 4.5,
+     "amount": 9.0
+    },
+    {
+     "qty": 12,
+     "unit": 120.0,
+     "amount": 1440.0
+    },
+    {
+     "qty": 3,
+     "unit": 249.0,
+     "amount": 747.0
+    },
+    {
+     "qty": 2,
+     "unit": 1250.0,
+     "amount": 2500.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-US-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-US",
+   "lang": "en",
+   "layout": "discount",
+   "vendor": "Ashford Office Partners Ltd",
+   "number": "RE-91592",
+   "date": "2026-02-21",
+   "due": "2026-04-07",
+   "currency": "USD",
+   "subtotal": 32697.85,
+   "vat": [
+    {
+     "rate": 7.25,
+     "amount": 2370.59
+    }
+   ],
+   "total": 35068.44,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 2,
+     "unit": 4.5,
+     "amount": 9.0
+    },
+    {
+     "qty": 12,
+     "unit": 120.0,
+     "amount": 1440.0
+    },
+    {
+     "qty": 2,
+     "unit": 4.5,
+     "amount": 9.0
+    },
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    },
+    {
+     "qty": 1,
+     "unit": -1720.15,
+     "amount": -1720.15
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-GB-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "classic",
+   "vendor": "Copperline Studio Inc.",
+   "number": "INV-2026-0672",
+   "date": "2026-04-02",
+   "due": "2026-05-02",
+   "currency": "GBP",
+   "subtotal": 7765.8,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1553.16
+    }
+   ],
+   "total": 9318.96,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 12,
+     "unit": 45.0,
+     "amount": 540.0
+    },
+    {
+     "qty": 1,
+     "unit": 45.0,
+     "amount": 45.0
+    },
+    {
+     "qty": 5,
+     "unit": 1250.0,
+     "amount": 6250.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-GB-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "modern",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "RE-03015",
+   "date": "2026-08-09",
+   "due": "2026-09-08",
+   "currency": "GBP",
+   "subtotal": 1620.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 324.1
+    }
+   ],
+   "total": 1944.6,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 2,
+     "unit": 120.0,
+     "amount": 240.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-GB-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "multi-vat",
+   "vendor": "Copperline Studio Inc.",
+   "number": "FV/33786/08/2026",
+   "date": "2026-08-25",
+   "due": "2026-09-24",
+   "currency": "GBP",
+   "subtotal": 7114.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 105.9
+    },
+    {
+     "rate": 5,
+     "amount": 329.25
+    }
+   ],
+   "total": 7549.65,
+   "items": [
+    {
+     "qty": 12,
+     "unit": 18.0,
+     "amount": 216.0
+    },
+    {
+     "qty": 3,
+     "unit": 120.0,
+     "amount": 360.0
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    },
+    {
+     "qty": 10,
+     "unit": 12.9,
+     "amount": 129.0
+    },
+    {
+     "qty": 1,
+     "unit": 4.5,
+     "amount": 4.5
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-GB-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "discount",
+   "vendor": "Bluewater Print Ltd",
+   "number": "FV/92508/01/2026",
+   "date": "2026-01-08",
+   "due": "2026-01-22",
+   "currency": "GBP",
+   "subtotal": 6914.53,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1382.91
+    }
+   ],
+   "total": 8297.44,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 120.0,
+     "amount": 240.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 12,
+     "unit": 12.9,
+     "amount": 154.8
+    },
+    {
+     "qty": 2,
+     "unit": 1250.0,
+     "amount": 2500.0
+    },
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 1,
+     "unit": -363.13,
+     "amount": -363.13
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-tr-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "classic",
+   "vendor": "Anadolu Mutfak Gereçleri Ltd. Şti.",
+   "number": "INV-2026-29735",
+   "date": "2026-06-06",
+   "due": "2026-07-21",
+   "currency": "TRY",
+   "subtotal": 1374.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 274.8
+    }
+   ],
+   "total": 1648.8,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 12.9,
+     "amount": 129.0
+    },
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-tr-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "modern",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "FV/49457/09/2026",
+   "date": "2026-09-05",
+   "due": "2026-10-20",
+   "currency": "TRY",
+   "subtotal": 109.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 21.9
+    }
+   ],
+   "total": 131.4,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 45.0,
+     "amount": 45.0
+    },
+    {
+     "qty": 5,
+     "unit": 12.9,
+     "amount": 64.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-tr-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "multi-vat",
+   "vendor": "Anadolu Mutfak Gereçleri Ltd. Şti.",
+   "number": "2026/92646",
+   "date": "2026-02-11",
+   "due": "2026-03-28",
+   "currency": "TRY",
+   "subtotal": 17189.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 333.0
+    },
+    {
+     "rate": 10,
+     "amount": 1552.4
+    }
+   ],
+   "total": 19074.4,
+   "items": [
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 12,
+     "unit": 45.0,
+     "amount": 540.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-tr-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "discount",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026078337",
+   "date": "2026-09-20",
+   "due": "2026-10-20",
+   "currency": "TRY",
+   "subtotal": 312.82,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 62.56
+    }
+   ],
+   "total": 375.38,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    },
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 1,
+     "unit": -15.68,
+     "amount": -15.68
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "classic",
+   "vendor": "Weber & Söhne GmbH",
+   "number": "FV/71526/02/2026",
+   "date": "2026-02-05",
+   "due": "2026-02-19",
+   "currency": "EUR",
+   "subtotal": 3400.7,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 646.13
+    }
+   ],
+   "total": 4046.83,
+   "items": [
+    {
+     "qty": 12,
+     "unit": 12.9,
+     "amount": 154.8
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    },
+    {
+     "qty": 3,
+     "unit": 120.0,
+     "amount": 360.0
+    },
+    {
+     "qty": 2,
+     "unit": 249.0,
+     "amount": 498.0
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "modern",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-53247",
+   "date": "2026-09-22",
+   "due": "2026-11-06",
+   "currency": "EUR",
+   "subtotal": 7891.75,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 1499.43
+    }
+   ],
+   "total": 9391.18,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 89.99,
+     "amount": 449.95
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 12,
+     "unit": 120.0,
+     "amount": 1440.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "multi-vat",
+   "vendor": "Weber & Söhne GmbH",
+   "number": "RE-94552",
+   "date": "2026-06-12",
+   "due": "2026-07-12",
+   "currency": "EUR",
+   "subtotal": 5654.5,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 1045.0
+    },
+    {
+     "rate": 7,
+     "amount": 10.82
+    }
+   ],
+   "total": 6710.32,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 12.9,
+     "amount": 64.5
+    },
+    {
+     "qty": 2,
+     "unit": 1250.0,
+     "amount": 2500.0
+    },
+    {
+     "qty": 25,
+     "unit": 120.0,
+     "amount": 3000.0
+    },
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "discount",
+   "vendor": "Fischer Haustechnik KG",
+   "number": "FV/3599/02/2026",
+   "date": "2026-02-26",
+   "due": "2026-03-12",
+   "currency": "EUR",
+   "subtotal": 501.21,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 95.23
+    }
+   ],
+   "total": 596.44,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 10,
+     "unit": 45.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    },
+    {
+     "qty": 1,
+     "unit": -25.59,
+     "amount": -25.59
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-CH-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de-CH",
+   "lang": "de",
+   "layout": "classic",
+   "vendor": "Schneider Logistik AG",
+   "number": "2026/70715",
+   "date": "2026-03-19",
+   "due": "2026-04-18",
+   "currency": "CHF",
+   "subtotal": 2382.0,
+   "vat": [
+    {
+     "rate": 8.1,
+     "amount": 192.94
+    }
+   ],
+   "total": 2574.94,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    },
+    {
+     "qty": 3,
+     "unit": 249.0,
+     "amount": 747.0
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-CH-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de-CH",
+   "lang": "de",
+   "layout": "modern",
+   "vendor": "Weber & Söhne GmbH",
+   "number": "F2026059034",
+   "date": "2026-08-05",
+   "due": "2026-09-04",
+   "currency": "CHF",
+   "subtotal": 1380.0,
+   "vat": [
+    {
+     "rate": 8.1,
+     "amount": 111.78
+    }
+   ],
+   "total": 1491.78,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 45.0,
+     "amount": 135.0
+    },
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-CH-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de-CH",
+   "lang": "de",
+   "layout": "multi-vat",
+   "vendor": "Schneider Logistik AG",
+   "number": "F2026081639",
+   "date": "2026-04-21",
+   "due": "2026-05-21",
+   "currency": "CHF",
+   "subtotal": 3017.5,
+   "vat": [
+    {
+     "rate": 8.1,
+     "amount": 218.54
+    },
+    {
+     "rate": 2.6,
+     "amount": 8.31
+    }
+   ],
+   "total": 3244.35,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 3,
+     "unit": 4.5,
+     "amount": 13.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 2,
+     "unit": 1250.0,
+     "amount": 2500.0
+    },
+    {
+     "qty": 12,
+     "unit": 18.0,
+     "amount": 216.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-de-CH-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de-CH",
+   "lang": "de",
+   "layout": "discount",
+   "vendor": "Fischer Haustechnik KG",
+   "number": "FV/9908/01/2026",
+   "date": "2026-01-20",
+   "due": "2026-02-19",
+   "currency": "CHF",
+   "subtotal": 3422.65,
+   "vat": [
+    {
+     "rate": 8.1,
+     "amount": 277.23
+    }
+   ],
+   "total": 3699.88,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    },
+    {
+     "qty": 12,
+     "unit": 45.0,
+     "amount": 540.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 3,
+     "unit": 18.0,
+     "amount": 54.0
+    },
+    {
+     "qty": 2,
+     "unit": 249.0,
+     "amount": 498.0
+    },
+    {
+     "qty": 1,
+     "unit": -179.35,
+     "amount": -179.35
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-fr-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "classic",
+   "vendor": "Atelier Moreau SARL",
+   "number": "RE-29495",
+   "date": "2026-04-21",
+   "due": "2026-06-05",
+   "currency": "EUR",
+   "subtotal": 3802.8,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 760.56
+    }
+   ],
+   "total": 4563.36,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 1,
+     "unit": 45.0,
+     "amount": 45.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 2,
+     "unit": 249.0,
+     "amount": 498.0
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-fr-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "modern",
+   "vendor": "Atelier Moreau SARL",
+   "number": "RE-92027",
+   "date": "2026-02-10",
+   "due": "2026-03-27",
+   "currency": "EUR",
+   "subtotal": 2503.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 500.7
+    }
+   ],
+   "total": 3004.2,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 249.0,
+     "amount": 2490.0
+    },
+    {
+     "qty": 3,
+     "unit": 4.5,
+     "amount": 13.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-fr-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "multi-vat",
+   "vendor": "Atelier Moreau SARL",
+   "number": "F2026015503",
+   "date": "2026-05-15",
+   "due": "2026-06-29",
+   "currency": "EUR",
+   "subtotal": 34574.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 6304.3
+    },
+    {
+     "rate": 10,
+     "amount": 305.25
+    }
+   ],
+   "total": 41183.55,
+   "items": [
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    },
+    {
+     "qty": 5,
+     "unit": 4.5,
+     "amount": 22.5
+    },
+    {
+     "qty": 5,
+     "unit": 12.9,
+     "amount": 64.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-fr-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "discount",
+   "vendor": "Boulangerie Lefèvre SAS",
+   "number": "F2026083046",
+   "date": "2026-03-25",
+   "due": "2026-04-08",
+   "currency": "EUR",
+   "subtotal": 178.59,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 35.72
+    }
+   ],
+   "total": 214.31,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 3,
+     "unit": 4.5,
+     "amount": 13.5
+    },
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 1,
+     "unit": -8.61,
+     "amount": -8.61
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-es-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "es",
+   "lang": "es",
+   "layout": "classic",
+   "vendor": "Talleres Navarro S.A.",
+   "number": "2026/71456",
+   "date": "2026-02-17",
+   "due": "2026-04-03",
+   "currency": "EUR",
+   "subtotal": 2519.9,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 529.18
+    }
+   ],
+   "total": 3049.08,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 120.0,
+     "amount": 1440.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-es-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "es",
+   "lang": "es",
+   "layout": "modern",
+   "vendor": "Talleres Navarro S.A.",
+   "number": "2026/13259",
+   "date": "2026-09-05",
+   "due": "2026-10-20",
+   "currency": "EUR",
+   "subtotal": 1093.38,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 229.61
+    }
+   ],
+   "total": 1322.99,
+   "items": [
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 3,
+     "unit": 4.5,
+     "amount": 13.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-es-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "es",
+   "lang": "es",
+   "layout": "multi-vat",
+   "vendor": "Gráficas Romero S.L.",
+   "number": "2026/49454",
+   "date": "2026-03-28",
+   "due": "2026-04-11",
+   "currency": "EUR",
+   "subtotal": 629.99,
+   "vat": [
+    {
+     "rate": 10,
+     "amount": 63.0
+    }
+   ],
+   "total": 692.99,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 89.99,
+     "amount": 89.99
+    },
+    {
+     "qty": 12,
+     "unit": 45.0,
+     "amount": 540.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-es-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "es",
+   "lang": "es",
+   "layout": "discount",
+   "vendor": "Café Alameda S.L.",
+   "number": "INV-2026-11945",
+   "date": "2026-08-02",
+   "due": "2026-09-16",
+   "currency": "EUR",
+   "subtotal": 2178.02,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 457.38
+    }
+   ],
+   "total": 2635.4,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 89.99,
+     "amount": 89.99
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 1,
+     "unit": 45.0,
+     "amount": 45.0
+    },
+    {
+     "qty": 2,
+     "unit": 4.5,
+     "amount": 9.0
+    },
+    {
+     "qty": 3,
+     "unit": 89.99,
+     "amount": 269.97
+    },
+    {
+     "qty": 1,
+     "unit": -113.84,
+     "amount": -113.84
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-it-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "it",
+   "lang": "it",
+   "layout": "classic",
+   "vendor": "Caffè Ferrari S.n.c.",
+   "number": "INV-2026-45971",
+   "date": "2026-07-18",
+   "due": "2026-09-01",
+   "currency": "EUR",
+   "subtotal": 1394.98,
+   "vat": [
+    {
+     "rate": 22,
+     "amount": 306.9
+    }
+   ],
+   "total": 1701.88,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-it-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "it",
+   "lang": "it",
+   "layout": "modern",
+   "vendor": "Caffè Ferrari S.n.c.",
+   "number": "RE-56816",
+   "date": "2026-08-11",
+   "due": "2026-09-25",
+   "currency": "EUR",
+   "subtotal": 38854.88,
+   "vat": [
+    {
+     "rate": 22,
+     "amount": 8548.07
+    }
+   ],
+   "total": 47402.95,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 2,
+     "unit": 120.0,
+     "amount": 240.0
+    },
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 3,
+     "unit": 1250.0,
+     "amount": 3750.0
+    },
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-it-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "it",
+   "lang": "it",
+   "layout": "multi-vat",
+   "vendor": "Rossi Forniture S.r.l.",
+   "number": "INV-2026-43079",
+   "date": "2026-08-01",
+   "due": "2026-09-15",
+   "currency": "EUR",
+   "subtotal": 5434.6,
+   "vat": [
+    {
+     "rate": 22,
+     "amount": 584.06
+    },
+    {
+     "rate": 10,
+     "amount": 277.98
+    }
+   ],
+   "total": 6296.64,
+   "items": [
+    {
+     "qty": 12,
+     "unit": 12.9,
+     "amount": 154.8
+    },
+    {
+     "qty": 12,
+     "unit": 12.9,
+     "amount": 154.8
+    },
+    {
+     "qty": 2,
+     "unit": 1250.0,
+     "amount": 2500.0
+    },
+    {
+     "qty": 3,
+     "unit": 45.0,
+     "amount": 135.0
+    },
+    {
+     "qty": 10,
+     "unit": 249.0,
+     "amount": 2490.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-it-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "it",
+   "lang": "it",
+   "layout": "discount",
+   "vendor": "Caffè Ferrari S.n.c.",
+   "number": "FV/30259/03/2026",
+   "date": "2026-03-12",
+   "due": "2026-04-11",
+   "currency": "EUR",
+   "subtotal": 6505.87,
+   "vat": [
+    {
+     "rate": 22,
+     "amount": 1431.29
+    }
+   ],
+   "total": 7937.16,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    },
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 3,
+     "unit": 4.5,
+     "amount": 13.5
+    },
+    {
+     "qty": 3,
+     "unit": 18.0,
+     "amount": 54.0
+    },
+    {
+     "qty": 1,
+     "unit": -341.63,
+     "amount": -341.63
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-nl-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "classic",
+   "vendor": "De Vries Installatie B.V.",
+   "number": "F2026076550",
+   "date": "2026-03-08",
+   "due": "2026-04-22",
+   "currency": "EUR",
+   "subtotal": 1089.25,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 228.74
+    }
+   ],
+   "total": 1317.99,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 3,
+     "unit": 4.5,
+     "amount": 13.5
+    },
+    {
+     "qty": 5,
+     "unit": 89.99,
+     "amount": 449.95
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-nl-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "modern",
+   "vendor": "De Vries Installatie B.V.",
+   "number": "F2026077801",
+   "date": "2026-05-23",
+   "due": "2026-06-22",
+   "currency": "EUR",
+   "subtotal": 3813.5,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 800.84
+    }
+   ],
+   "total": 4614.34,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 249.0,
+     "amount": 2490.0
+    },
+    {
+     "qty": 5,
+     "unit": 12.9,
+     "amount": 64.5
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 2,
+     "unit": 4.5,
+     "amount": 9.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-nl-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "multi-vat",
+   "vendor": "Bakkerij Jansen V.O.F.",
+   "number": "F2026002135",
+   "date": "2026-05-17",
+   "due": "2026-07-01",
+   "currency": "EUR",
+   "subtotal": 3185.83,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 333.89
+    },
+    {
+     "rate": 9,
+     "amount": 143.63
+    }
+   ],
+   "total": 3663.35,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 12,
+     "unit": 45.0,
+     "amount": 540.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 5,
+     "unit": 89.99,
+     "amount": 449.95
+    },
+    {
+     "qty": 2,
+     "unit": 249.0,
+     "amount": 498.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-nl-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "discount",
+   "vendor": "De Vries Installatie B.V.",
+   "number": "2026/21350",
+   "date": "2026-02-09",
+   "due": "2026-02-23",
+   "currency": "EUR",
+   "subtotal": 31062.71,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 6523.17
+    }
+   ],
+   "total": 37585.88,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 2,
+     "unit": 12.9,
+     "amount": 25.8
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 1,
+     "unit": -1634.09,
+     "amount": -1634.09
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pt-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pt",
+   "lang": "pt",
+   "layout": "classic",
+   "vendor": "Silva & Ferreira Lda.",
+   "number": "FV/32124/05/2026",
+   "date": "2026-05-06",
+   "due": "2026-06-20",
+   "currency": "EUR",
+   "subtotal": 2839.19,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 653.01
+    }
+   ],
+   "total": 3492.2,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 89.99,
+     "amount": 89.99
+    },
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    },
+    {
+     "qty": 1,
+     "unit": 4.5,
+     "amount": 4.5
+    },
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 10,
+     "unit": 4.5,
+     "amount": 45.0
+    },
+    {
+     "qty": 3,
+     "unit": 89.99,
+     "amount": 269.97
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pt-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pt",
+   "lang": "pt",
+   "layout": "modern",
+   "vendor": "Gráfica Almeida S.A.",
+   "number": "2026/06243",
+   "date": "2026-08-23",
+   "due": "2026-09-22",
+   "currency": "EUR",
+   "subtotal": 90.0,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 20.7
+    }
+   ],
+   "total": 110.7,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 18.0,
+     "amount": 54.0
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pt-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pt",
+   "lang": "pt",
+   "layout": "multi-vat",
+   "vendor": "Silva & Ferreira Lda.",
+   "number": "RE-20432",
+   "date": "2026-04-27",
+   "due": "2026-05-27",
+   "currency": "EUR",
+   "subtotal": 285.0,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 8.28
+    },
+    {
+     "rate": 13,
+     "amount": 32.37
+    }
+   ],
+   "total": 325.65,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pt-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pt",
+   "lang": "pt",
+   "layout": "discount",
+   "vendor": "Papelaria Costa Lda.",
+   "number": "FV/80331/06/2026",
+   "date": "2026-06-28",
+   "due": "2026-08-12",
+   "currency": "EUR",
+   "subtotal": 12181.55,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 2801.76
+    }
+   ],
+   "total": 14983.31,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 45.0,
+     "amount": 45.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 1,
+     "unit": -640.35,
+     "amount": -640.35
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pl-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "classic",
+   "vendor": "Drukarnia Wiśniewski S.A.",
+   "number": "2026/77357",
+   "date": "2026-01-21",
+   "due": "2026-02-20",
+   "currency": "PLN",
+   "subtotal": 179.99,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 41.4
+    }
+   ],
+   "total": 221.39,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 89.99,
+     "amount": 89.99
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pl-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "modern",
+   "vendor": "Kowalski Hurtownia Sp. z o.o.",
+   "number": "RE-28536",
+   "date": "2026-05-24",
+   "due": "2026-07-08",
+   "currency": "PLN",
+   "subtotal": 32325.5,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 7434.87
+    }
+   ],
+   "total": 39760.37,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 2,
+     "unit": 18.0,
+     "amount": 36.0
+    },
+    {
+     "qty": 5,
+     "unit": 12.9,
+     "amount": 64.5
+    },
+    {
+     "qty": 25,
+     "unit": 1250.0,
+     "amount": 31250.0
+    },
+    {
+     "qty": 10,
+     "unit": 4.5,
+     "amount": 45.0
+    },
+    {
+     "qty": 3,
+     "unit": 120.0,
+     "amount": 360.0
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pl-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "multi-vat",
+   "vendor": "Kowalski Hurtownia Sp. z o.o.",
+   "number": "F2026048376",
+   "date": "2026-02-10",
+   "due": "2026-03-12",
+   "currency": "PLN",
+   "subtotal": 850.2,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 112.4
+    },
+    {
+     "rate": 8,
+     "amount": 28.92
+    }
+   ],
+   "total": 991.52,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-pl-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "discount",
+   "vendor": "Kowalski Hurtownia Sp. z o.o.",
+   "number": "FV/80067/04/2026",
+   "date": "2026-04-17",
+   "due": "2026-05-17",
+   "currency": "PLN",
+   "subtotal": 3235.26,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 744.11
+    }
+   ],
+   "total": 3979.37,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 1,
+     "unit": -169.49,
+     "amount": -169.49
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-IN-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-IN",
+   "lang": "en",
+   "layout": "classic",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "INV-2026-76811",
+   "date": "2026-05-28",
+   "due": "2026-07-12",
+   "currency": "INR",
+   "subtotal": 6988.38,
+   "vat": [
+    {
+     "rate": 18,
+     "amount": 1257.91
+    }
+   ],
+   "total": 8246.29,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 18.0,
+     "amount": 450.0
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    },
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 25,
+     "unit": 120.0,
+     "amount": 3000.0
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 3,
+     "unit": 4.5,
+     "amount": 13.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-IN-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-IN",
+   "lang": "en",
+   "layout": "modern",
+   "vendor": "Copperline Studio Inc.",
+   "number": "INV-2026-23159",
+   "date": "2026-07-11",
+   "due": "2026-07-25",
+   "currency": "INR",
+   "subtotal": 1227.9,
+   "vat": [
+    {
+     "rate": 18,
+     "amount": 221.02
+    }
+   ],
+   "total": 1448.92,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-IN-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-IN",
+   "lang": "en",
+   "layout": "multi-vat",
+   "vendor": "Bluewater Print Ltd",
+   "number": "INV-2026-0226",
+   "date": "2026-06-27",
+   "due": "2026-07-11",
+   "currency": "INR",
+   "subtotal": 2971.23,
+   "vat": [
+    {
+     "rate": 18,
+     "amount": 518.62
+    },
+    {
+     "rate": 12,
+     "amount": 10.8
+    }
+   ],
+   "total": 3500.65,
+   "items": [
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 25,
+     "unit": 89.99,
+     "amount": 2249.75
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 25,
+     "unit": 12.9,
+     "amount": 322.5
+    },
+    {
+     "qty": 1,
+     "unit": 4.5,
+     "amount": 4.5
+    },
+    {
+     "qty": 1,
+     "unit": 4.5,
+     "amount": 4.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-IN-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-IN",
+   "lang": "en",
+   "layout": "discount",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "F2026054513",
+   "date": "2026-08-13",
+   "due": "2026-08-27",
+   "currency": "INR",
+   "subtotal": 141.25,
+   "vat": [
+    {
+     "rate": 18,
+     "amount": 25.43
+    }
+   ],
+   "total": 166.68,
+   "items": [
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 1,
+     "unit": 12.9,
+     "amount": 12.9
+    },
+    {
+     "qty": 1,
+     "unit": -6.65,
+     "amount": -6.65
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-JP-classic",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-JP",
+   "lang": "en",
+   "layout": "classic",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "2026/29348",
+   "date": "2026-09-01",
+   "due": "2026-10-01",
+   "currency": "JPY",
+   "subtotal": 969480.0,
+   "vat": [
+    {
+     "rate": 10,
+     "amount": 96948
+    }
+   ],
+   "total": 1066428.0,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 24900,
+     "amount": 622500
+    },
+    {
+     "qty": 2,
+     "unit": 12000,
+     "amount": 24000
+    },
+    {
+     "qty": 2,
+     "unit": 1290,
+     "amount": 2580
+    },
+    {
+     "qty": 12,
+     "unit": 24900,
+     "amount": 298800
+    },
+    {
+     "qty": 12,
+     "unit": 1800,
+     "amount": 21600
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-JP-modern",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-JP",
+   "lang": "en",
+   "layout": "modern",
+   "vendor": "Northgate Analytics LLC",
+   "number": "RE-29038",
+   "date": "2026-02-06",
+   "due": "2026-03-08",
+   "currency": "JPY",
+   "subtotal": 1647500.0,
+   "vat": [
+    {
+     "rate": 10,
+     "amount": 164750
+    }
+   ],
+   "total": 1812250.0,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 125000,
+     "amount": 375000
+    },
+    {
+     "qty": 5,
+     "unit": 4500,
+     "amount": 22500
+    },
+    {
+     "qty": 10,
+     "unit": 125000,
+     "amount": 1250000
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-JP-multi-vat",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-JP",
+   "lang": "en",
+   "layout": "multi-vat",
+   "vendor": "Bluewater Print Ltd",
+   "number": "INV-2026-9216",
+   "date": "2026-07-24",
+   "due": "2026-08-23",
+   "currency": "JPY",
+   "subtotal": 95390.0,
+   "vat": [
+    {
+     "rate": 10,
+     "amount": 8999
+    },
+    {
+     "rate": 8,
+     "amount": 432
+    }
+   ],
+   "total": 104821.0,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 8999,
+     "amount": 89990
+    },
+    {
+     "qty": 3,
+     "unit": 1800,
+     "amount": 5400
+    }
+   ]
+  }
+ },
+ {
+  "name": "inv-en-JP-discount",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-JP",
+   "lang": "en",
+   "layout": "discount",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-88153",
+   "date": "2026-03-25",
+   "due": "2026-04-24",
+   "currency": "JPY",
+   "subtotal": 1213358.0,
+   "vat": [
+    {
+     "rate": 10,
+     "amount": 121336
+    }
+   ],
+   "total": 1334694.0,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 1800,
+     "amount": 9000
+    },
+    {
+     "qty": 1,
+     "unit": 1290,
+     "amount": 1290
+    },
+    {
+     "qty": 10,
+     "unit": 1290,
+     "amount": 12900
+    },
+    {
+     "qty": 25,
+     "unit": 24900,
+     "amount": 622500
+    },
+    {
+     "qty": 1,
+     "unit": 4500,
+     "amount": 4500
+    },
+    {
+     "qty": 5,
+     "unit": 125000,
+     "amount": 625000
+    },
+    {
+     "qty": 1,
+     "unit": 450,
+     "amount": 450
+    },
+    {
+     "qty": 1,
+     "unit": -63782,
+     "amount": -63782
+    },
+    {
+     "qty": 1,
+     "unit": 1500.0,
+     "amount": 1500.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-en-GB",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "receipt",
+   "vendor": "HARBOR & FINCH SUPPLY CO.",
+   "date": "2026-02-27",
+   "currency": "GBP",
+   "total": 26.1,
+   "vat": [
+    {
+     "rate": 5,
+     "amount": 1.24
+    }
+   ],
+   "items": [
+    {
+     "qty": 1,
+     "unit": 2.4,
+     "amount": 2.4
+    },
+    {
+     "qty": 3,
+     "unit": 5.5,
+     "amount": 16.5
+    },
+    {
+     "qty": 1,
+     "unit": 2.4,
+     "amount": 2.4
+    },
+    {
+     "qty": 2,
+     "unit": 2.4,
+     "amount": 4.8
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-tr",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "receipt",
+   "vendor": "KUZEYRÜZGARI DANIŞMANLIK A.Ş.",
+   "date": "2026-05-08",
+   "currency": "TRY",
+   "total": 34.7,
+   "vat": [
+    {
+     "rate": 1,
+     "amount": 0.34
+    }
+   ],
+   "items": [
+    {
+     "qty": 1,
+     "unit": 2.4,
+     "amount": 2.4
+    },
+    {
+     "qty": 3,
+     "unit": 5.5,
+     "amount": 16.5
+    },
+    {
+     "qty": 2,
+     "unit": 5.5,
+     "amount": 11.0
+    },
+    {
+     "qty": 2,
+     "unit": 2.4,
+     "amount": 4.8
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-de",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "de",
+   "lang": "de",
+   "layout": "receipt",
+   "vendor": "SCHNEIDER LOGISTIK AG",
+   "date": "2026-07-03",
+   "currency": "EUR",
+   "total": 29.7,
+   "vat": [
+    {
+     "rate": 7,
+     "amount": 1.94
+    }
+   ],
+   "items": [
+    {
+     "qty": 1,
+     "unit": 9.9,
+     "amount": 9.9
+    },
+    {
+     "qty": 2,
+     "unit": 9.9,
+     "amount": 19.8
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-fr",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "receipt",
+   "vendor": "DUPONT CONSEIL SA",
+   "date": "2026-02-08",
+   "currency": "EUR",
+   "total": 41.1,
+   "vat": [
+    {
+     "rate": 5.5,
+     "amount": 2.14
+    }
+   ],
+   "items": [
+    {
+     "qty": 2,
+     "unit": 3.8,
+     "amount": 7.6
+    },
+    {
+     "qty": 2,
+     "unit": 14.0,
+     "amount": 28.0
+    },
+    {
+     "qty": 1,
+     "unit": 5.5,
+     "amount": 5.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-es",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "es",
+   "lang": "es",
+   "layout": "receipt",
+   "vendor": "GRÁFICAS ROMERO S.L.",
+   "date": "2026-04-22",
+   "currency": "EUR",
+   "total": 30.4,
+   "vat": [
+    {
+     "rate": 10,
+     "amount": 2.76
+    }
+   ],
+   "items": [
+    {
+     "qty": 1,
+     "unit": 2.4,
+     "amount": 2.4
+    },
+    {
+     "qty": 2,
+     "unit": 14.0,
+     "amount": 28.0
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-it",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "it",
+   "lang": "it",
+   "layout": "receipt",
+   "vendor": "TIPOGRAFIA BIANCHI S.R.L.",
+   "date": "2026-01-02",
+   "currency": "EUR",
+   "total": 45.9,
+   "vat": [
+    {
+     "rate": 10,
+     "amount": 4.17
+    }
+   ],
+   "items": [
+    {
+     "qty": 2,
+     "unit": 9.9,
+     "amount": 19.8
+    },
+    {
+     "qty": 3,
+     "unit": 3.8,
+     "amount": 11.4
+    },
+    {
+     "qty": 1,
+     "unit": 9.9,
+     "amount": 9.9
+    },
+    {
+     "qty": 2,
+     "unit": 2.4,
+     "amount": 4.8
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-nl",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "receipt",
+   "vendor": "DE VRIES INSTALLATIE B.V.",
+   "date": "2026-08-28",
+   "currency": "EUR",
+   "total": 42.2,
+   "vat": [
+    {
+     "rate": 9,
+     "amount": 3.48
+    }
+   ],
+   "items": [
+    {
+     "qty": 3,
+     "unit": 5.5,
+     "amount": 16.5
+    },
+    {
+     "qty": 1,
+     "unit": 14.0,
+     "amount": 14.0
+    },
+    {
+     "qty": 1,
+     "unit": 2.4,
+     "amount": 2.4
+    },
+    {
+     "qty": 1,
+     "unit": 5.5,
+     "amount": 5.5
+    },
+    {
+     "qty": 1,
+     "unit": 3.8,
+     "amount": 3.8
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-pt",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "pt",
+   "lang": "pt",
+   "layout": "receipt",
+   "vendor": "SILVA & FERREIRA LDA.",
+   "date": "2026-07-02",
+   "currency": "EUR",
+   "total": 60.4,
+   "vat": [
+    {
+     "rate": 6,
+     "amount": 3.42
+    }
+   ],
+   "items": [
+    {
+     "qty": 3,
+     "unit": 2.4,
+     "amount": 7.2
+    },
+    {
+     "qty": 3,
+     "unit": 5.5,
+     "amount": 16.5
+    },
+    {
+     "qty": 2,
+     "unit": 9.9,
+     "amount": 19.8
+    },
+    {
+     "qty": 3,
+     "unit": 3.8,
+     "amount": 11.4
+    },
+    {
+     "qty": 1,
+     "unit": 5.5,
+     "amount": 5.5
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-pl",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "receipt",
+   "vendor": "NOWAK SERWIS SP. Z O.O.",
+   "date": "2026-07-16",
+   "currency": "PLN",
+   "total": 52.2,
+   "vat": [
+    {
+     "rate": 8,
+     "amount": 3.87
+    }
+   ],
+   "items": [
+    {
+     "qty": 1,
+     "unit": 14.0,
+     "amount": 14.0
+    },
+    {
+     "qty": 1,
+     "unit": 5.5,
+     "amount": 5.5
+    },
+    {
+     "qty": 3,
+     "unit": 3.8,
+     "amount": 11.4
+    },
+    {
+     "qty": 1,
+     "unit": 9.9,
+     "amount": 9.9
+    },
+    {
+     "qty": 3,
+     "unit": 3.8,
+     "amount": 11.4
+    }
+   ]
+  }
+ },
+ {
+  "name": "rcp-en-JP",
+  "width": 640,
+  "height": 1100,
+  "truth": {
+   "kind": "receipt",
+   "locale": "en-JP",
+   "lang": "en",
+   "layout": "receipt",
+   "vendor": "COPPERLINE STUDIO INC.",
+   "date": "2026-10-01",
+   "currency": "JPY",
+   "total": 7830.0,
+   "vat": [
+    {
+     "rate": 8,
+     "amount": 580
+    }
+   ],
+   "items": [
+    {
+     "qty": 3,
+     "unit": 550,
+     "amount": 1650
+    },
+    {
+     "qty": 1,
+     "unit": 1400,
+     "amount": 1400
+    },
+    {
+     "qty": 2,
+     "unit": 1400,
+     "amount": 2800
+    },
+    {
+     "qty": 2,
+     "unit": 990,
+     "amount": 1980
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-en-GB-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "statement",
+   "bank": "Thornbury Bank",
+   "newest_first": false,
+   "opening": 916.45,
+   "closing": -3292.46,
+   "transactions": [
+    {
+     "date": "2026-03-02",
+     "amount": -1398.64,
+     "balance": -482.19
+    },
+    {
+     "date": "2026-03-04",
+     "amount": -86.41,
+     "balance": -568.6
+    },
+    {
+     "date": "2026-03-06",
+     "amount": -1381.47,
+     "balance": -1950.07
+    },
+    {
+     "date": "2026-03-09",
+     "amount": -395.34,
+     "balance": -2345.41
+    },
+    {
+     "date": "2026-03-11",
+     "amount": -561.02,
+     "balance": -2906.43
+    },
+    {
+     "date": "2026-03-12",
+     "amount": -386.03,
+     "balance": -3292.46
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-en-GB-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "statement",
+   "bank": "Thornbury Bank",
+   "newest_first": true,
+   "opening": 2085.82,
+   "closing": 1670.77,
+   "transactions": [
+    {
+     "date": "2026-08-02",
+     "amount": -1133.33,
+     "balance": 952.49
+    },
+    {
+     "date": "2026-08-05",
+     "amount": 1769.59,
+     "balance": 2722.08
+    },
+    {
+     "date": "2026-08-08",
+     "amount": -575.48,
+     "balance": 2146.6
+    },
+    {
+     "date": "2026-08-11",
+     "amount": 1427.33,
+     "balance": 3573.93
+    },
+    {
+     "date": "2026-08-14",
+     "amount": -973.23,
+     "balance": 2600.7
+    },
+    {
+     "date": "2026-08-15",
+     "amount": 136.0,
+     "balance": 2736.7
+    },
+    {
+     "date": "2026-08-17",
+     "amount": -1065.93,
+     "balance": 1670.77
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-tr-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "statement",
+   "bank": "Yıldız Katılım Bankası",
+   "newest_first": false,
+   "opening": 8353.09,
+   "closing": 3102.22,
+   "transactions": [
+    {
+     "date": "2026-03-02",
+     "amount": -608.85,
+     "balance": 7744.24
+    },
+    {
+     "date": "2026-03-03",
+     "amount": 1188.74,
+     "balance": 8932.98
+    },
+    {
+     "date": "2026-03-04",
+     "amount": -1228.11,
+     "balance": 7704.87
+    },
+    {
+     "date": "2026-03-07",
+     "amount": -1729.76,
+     "balance": 5975.11
+    },
+    {
+     "date": "2026-03-09",
+     "amount": 744.56,
+     "balance": 6719.67
+    },
+    {
+     "date": "2026-03-11",
+     "amount": 1333.47,
+     "balance": 8053.14
+    },
+    {
+     "date": "2026-03-13",
+     "amount": -1307.15,
+     "balance": 6745.99
+    },
+    {
+     "date": "2026-03-15",
+     "amount": 104.39,
+     "balance": 6850.38
+    },
+    {
+     "date": "2026-03-17",
+     "amount": -1783.59,
+     "balance": 5066.79
+    },
+    {
+     "date": "2026-03-20",
+     "amount": -1393.73,
+     "balance": 3673.06
+    },
+    {
+     "date": "2026-03-23",
+     "amount": -811.77,
+     "balance": 2861.29
+    },
+    {
+     "date": "2026-03-25",
+     "amount": 240.93,
+     "balance": 3102.22
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-tr-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "statement",
+   "bank": "Yıldız Katılım Bankası",
+   "newest_first": true,
+   "opening": 5028.71,
+   "closing": 3499.11,
+   "transactions": [
+    {
+     "date": "2026-02-02",
+     "amount": -1463.54,
+     "balance": 3565.17
+    },
+    {
+     "date": "2026-02-04",
+     "amount": -578.36,
+     "balance": 2986.81
+    },
+    {
+     "date": "2026-02-07",
+     "amount": 700.17,
+     "balance": 3686.98
+    },
+    {
+     "date": "2026-02-09",
+     "amount": 1608.06,
+     "balance": 5295.04
+    },
+    {
+     "date": "2026-02-11",
+     "amount": -485.44,
+     "balance": 4809.6
+    },
+    {
+     "date": "2026-02-12",
+     "amount": 566.84,
+     "balance": 5376.44
+    },
+    {
+     "date": "2026-02-13",
+     "amount": -1333.84,
+     "balance": 4042.6
+    },
+    {
+     "date": "2026-02-14",
+     "amount": -543.49,
+     "balance": 3499.11
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-de-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "de",
+   "lang": "de",
+   "layout": "statement",
+   "bank": "Sparkasse Rheintal",
+   "newest_first": false,
+   "opening": 3550.36,
+   "closing": -6267.96,
+   "transactions": [
+    {
+     "date": "2026-06-02",
+     "amount": -911.0,
+     "balance": 2639.36
+    },
+    {
+     "date": "2026-06-03",
+     "amount": 1571.76,
+     "balance": 4211.12
+    },
+    {
+     "date": "2026-06-06",
+     "amount": -1439.31,
+     "balance": 2771.81
+    },
+    {
+     "date": "2026-06-08",
+     "amount": -1300.78,
+     "balance": 1471.03
+    },
+    {
+     "date": "2026-06-10",
+     "amount": -1766.19,
+     "balance": -295.16
+    },
+    {
+     "date": "2026-06-11",
+     "amount": -1339.18,
+     "balance": -1634.34
+    },
+    {
+     "date": "2026-06-13",
+     "amount": -840.98,
+     "balance": -2475.32
+    },
+    {
+     "date": "2026-06-16",
+     "amount": -963.55,
+     "balance": -3438.87
+    },
+    {
+     "date": "2026-06-18",
+     "amount": -1139.59,
+     "balance": -4578.46
+    },
+    {
+     "date": "2026-06-20",
+     "amount": -1689.5,
+     "balance": -6267.96
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-de-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "de",
+   "lang": "de",
+   "layout": "statement",
+   "bank": "Sparkasse Rheintal",
+   "newest_first": true,
+   "opening": 1192.78,
+   "closing": -290.79,
+   "transactions": [
+    {
+     "date": "2026-02-03",
+     "amount": -267.25,
+     "balance": 925.53
+    },
+    {
+     "date": "2026-02-06",
+     "amount": -1466.37,
+     "balance": -540.84
+    },
+    {
+     "date": "2026-02-07",
+     "amount": 736.41,
+     "balance": 195.57
+    },
+    {
+     "date": "2026-02-08",
+     "amount": -134.7,
+     "balance": 60.87
+    },
+    {
+     "date": "2026-02-10",
+     "amount": 60.22,
+     "balance": 121.09
+    },
+    {
+     "date": "2026-02-11",
+     "amount": -411.88,
+     "balance": -290.79
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-fr-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "statement",
+   "bank": "Banque Delacroix",
+   "newest_first": false,
+   "opening": 2313.87,
+   "closing": 2752.52,
+   "transactions": [
+    {
+     "date": "2026-07-03",
+     "amount": 809.61,
+     "balance": 3123.48
+    },
+    {
+     "date": "2026-07-05",
+     "amount": 224.8,
+     "balance": 3348.28
+    },
+    {
+     "date": "2026-07-08",
+     "amount": -1483.11,
+     "balance": 1865.17
+    },
+    {
+     "date": "2026-07-11",
+     "amount": -1038.33,
+     "balance": 826.84
+    },
+    {
+     "date": "2026-07-12",
+     "amount": 1141.3,
+     "balance": 1968.14
+    },
+    {
+     "date": "2026-07-14",
+     "amount": -1767.89,
+     "balance": 200.25
+    },
+    {
+     "date": "2026-07-15",
+     "amount": -833.36,
+     "balance": -633.11
+    },
+    {
+     "date": "2026-07-17",
+     "amount": 1662.29,
+     "balance": 1029.18
+    },
+    {
+     "date": "2026-07-18",
+     "amount": 1723.34,
+     "balance": 2752.52
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-fr-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "statement",
+   "bank": "Banque Delacroix",
+   "newest_first": true,
+   "opening": 8118.32,
+   "closing": 4728.36,
+   "transactions": [
+    {
+     "date": "2026-01-03",
+     "amount": 1757.23,
+     "balance": 9875.55
+    },
+    {
+     "date": "2026-01-05",
+     "amount": -1233.89,
+     "balance": 8641.66
+    },
+    {
+     "date": "2026-01-08",
+     "amount": -475.15,
+     "balance": 8166.51
+    },
+    {
+     "date": "2026-01-10",
+     "amount": 1069.25,
+     "balance": 9235.76
+    },
+    {
+     "date": "2026-01-12",
+     "amount": -521.69,
+     "balance": 8714.07
+    },
+    {
+     "date": "2026-01-14",
+     "amount": -1383.2,
+     "balance": 7330.87
+    },
+    {
+     "date": "2026-01-17",
+     "amount": -480.77,
+     "balance": 6850.1
+    },
+    {
+     "date": "2026-01-19",
+     "amount": -1649.91,
+     "balance": 5200.19
+    },
+    {
+     "date": "2026-01-20",
+     "amount": -471.83,
+     "balance": 4728.36
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-es-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "es",
+   "lang": "es",
+   "layout": "statement",
+   "bank": "Banco Alcázar",
+   "newest_first": false,
+   "opening": 2555.42,
+   "closing": -321.11,
+   "transactions": [
+    {
+     "date": "2026-08-04",
+     "amount": -327.86,
+     "balance": 2227.56
+    },
+    {
+     "date": "2026-08-07",
+     "amount": -977.64,
+     "balance": 1249.92
+    },
+    {
+     "date": "2026-08-08",
+     "amount": -1335.33,
+     "balance": -85.41
+    },
+    {
+     "date": "2026-08-10",
+     "amount": 161.12,
+     "balance": 75.71
+    },
+    {
+     "date": "2026-08-11",
+     "amount": 1006.9,
+     "balance": 1082.61
+    },
+    {
+     "date": "2026-08-13",
+     "amount": -1403.72,
+     "balance": -321.11
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-es-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "es",
+   "lang": "es",
+   "layout": "statement",
+   "bank": "Banco Alcázar",
+   "newest_first": true,
+   "opening": 4306.67,
+   "closing": 2850.88,
+   "transactions": [
+    {
+     "date": "2026-06-02",
+     "amount": -207.49,
+     "balance": 4099.18
+    },
+    {
+     "date": "2026-06-05",
+     "amount": -455.03,
+     "balance": 3644.15
+    },
+    {
+     "date": "2026-06-07",
+     "amount": -1572.41,
+     "balance": 2071.74
+    },
+    {
+     "date": "2026-06-08",
+     "amount": -551.67,
+     "balance": 1520.07
+    },
+    {
+     "date": "2026-06-10",
+     "amount": 1542.0,
+     "balance": 3062.07
+    },
+    {
+     "date": "2026-06-13",
+     "amount": -601.86,
+     "balance": 2460.21
+    },
+    {
+     "date": "2026-06-15",
+     "amount": -1090.76,
+     "balance": 1369.45
+    },
+    {
+     "date": "2026-06-18",
+     "amount": 1326.06,
+     "balance": 2695.51
+    },
+    {
+     "date": "2026-06-21",
+     "amount": -353.33,
+     "balance": 2342.18
+    },
+    {
+     "date": "2026-06-22",
+     "amount": 508.7,
+     "balance": 2850.88
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-it-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "it",
+   "lang": "it",
+   "layout": "statement",
+   "bank": "Banca Lombarda Nord",
+   "newest_first": false,
+   "opening": 6668.38,
+   "closing": -3798.65,
+   "transactions": [
+    {
+     "date": "2026-08-02",
+     "amount": -1202.91,
+     "balance": 5465.47
+    },
+    {
+     "date": "2026-08-05",
+     "amount": -1487.71,
+     "balance": 3977.76
+    },
+    {
+     "date": "2026-08-06",
+     "amount": -1281.67,
+     "balance": 2696.09
+    },
+    {
+     "date": "2026-08-08",
+     "amount": -1504.59,
+     "balance": 1191.5
+    },
+    {
+     "date": "2026-08-09",
+     "amount": -1198.96,
+     "balance": -7.46
+    },
+    {
+     "date": "2026-08-10",
+     "amount": -1131.85,
+     "balance": -1139.31
+    },
+    {
+     "date": "2026-08-13",
+     "amount": -1035.66,
+     "balance": -2174.97
+    },
+    {
+     "date": "2026-08-15",
+     "amount": -1623.68,
+     "balance": -3798.65
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-it-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "it",
+   "lang": "it",
+   "layout": "statement",
+   "bank": "Banca Lombarda Nord",
+   "newest_first": true,
+   "opening": 4310.97,
+   "closing": -394.72,
+   "transactions": [
+    {
+     "date": "2026-03-02",
+     "amount": -1055.66,
+     "balance": 3255.31
+    },
+    {
+     "date": "2026-03-03",
+     "amount": -1093.71,
+     "balance": 2161.6
+    },
+    {
+     "date": "2026-03-05",
+     "amount": -1272.13,
+     "balance": 889.47
+    },
+    {
+     "date": "2026-03-06",
+     "amount": 281.79,
+     "balance": 1171.26
+    },
+    {
+     "date": "2026-03-09",
+     "amount": 33.09,
+     "balance": 1204.35
+    },
+    {
+     "date": "2026-03-12",
+     "amount": 283.69,
+     "balance": 1488.04
+    },
+    {
+     "date": "2026-03-13",
+     "amount": -1703.25,
+     "balance": -215.21
+    },
+    {
+     "date": "2026-03-15",
+     "amount": -31.54,
+     "balance": -246.75
+    },
+    {
+     "date": "2026-03-17",
+     "amount": -775.85,
+     "balance": -1022.6
+    },
+    {
+     "date": "2026-03-20",
+     "amount": 1049.34,
+     "balance": 26.74
+    },
+    {
+     "date": "2026-03-22",
+     "amount": -414.79,
+     "balance": -388.05
+    },
+    {
+     "date": "2026-03-24",
+     "amount": -6.67,
+     "balance": -394.72
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-nl-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "statement",
+   "bank": "Polderbank",
+   "newest_first": false,
+   "opening": 3128.03,
+   "closing": -1320.35,
+   "transactions": [
+    {
+     "date": "2026-03-04",
+     "amount": -897.83,
+     "balance": 2230.2
+    },
+    {
+     "date": "2026-03-06",
+     "amount": -1124.19,
+     "balance": 1106.01
+    },
+    {
+     "date": "2026-03-07",
+     "amount": 37.85,
+     "balance": 1143.86
+    },
+    {
+     "date": "2026-03-10",
+     "amount": -991.9,
+     "balance": 151.96
+    },
+    {
+     "date": "2026-03-13",
+     "amount": -879.92,
+     "balance": -727.96
+    },
+    {
+     "date": "2026-03-16",
+     "amount": -447.08,
+     "balance": -1175.04
+    },
+    {
+     "date": "2026-03-19",
+     "amount": 1351.16,
+     "balance": 176.12
+    },
+    {
+     "date": "2026-03-22",
+     "amount": -603.43,
+     "balance": -427.31
+    },
+    {
+     "date": "2026-03-25",
+     "amount": -893.04,
+     "balance": -1320.35
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-nl-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "nl",
+   "lang": "nl",
+   "layout": "statement",
+   "bank": "Polderbank",
+   "newest_first": true,
+   "opening": 2922.49,
+   "closing": 229.71,
+   "transactions": [
+    {
+     "date": "2026-09-04",
+     "amount": -236.99,
+     "balance": 2685.5
+    },
+    {
+     "date": "2026-09-06",
+     "amount": -675.1,
+     "balance": 2010.4
+    },
+    {
+     "date": "2026-09-07",
+     "amount": -292.81,
+     "balance": 1717.59
+    },
+    {
+     "date": "2026-09-10",
+     "amount": 855.09,
+     "balance": 2572.68
+    },
+    {
+     "date": "2026-09-11",
+     "amount": -1356.01,
+     "balance": 1216.67
+    },
+    {
+     "date": "2026-09-13",
+     "amount": -372.84,
+     "balance": 843.83
+    },
+    {
+     "date": "2026-09-16",
+     "amount": -614.12,
+     "balance": 229.71
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-pl-0",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "statement",
+   "bank": "Bank Mazowiecki",
+   "newest_first": false,
+   "opening": 4869.01,
+   "closing": 2827.68,
+   "transactions": [
+    {
+     "date": "2026-06-02",
+     "amount": 8.12,
+     "balance": 4877.13
+    },
+    {
+     "date": "2026-06-04",
+     "amount": 1757.41,
+     "balance": 6634.54
+    },
+    {
+     "date": "2026-06-07",
+     "amount": -596.43,
+     "balance": 6038.11
+    },
+    {
+     "date": "2026-06-09",
+     "amount": -1053.28,
+     "balance": 4984.83
+    },
+    {
+     "date": "2026-06-12",
+     "amount": -1354.03,
+     "balance": 3630.8
+    },
+    {
+     "date": "2026-06-15",
+     "amount": -803.12,
+     "balance": 2827.68
+    }
+   ]
+  }
+ },
+ {
+  "name": "stm-pl-1",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "statement",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "statement",
+   "bank": "Bank Mazowiecki",
+   "newest_first": true,
+   "opening": 7850.17,
+   "closing": 5453.21,
+   "transactions": [
+    {
+     "date": "2026-02-02",
+     "amount": -608.16,
+     "balance": 7242.01
+    },
+    {
+     "date": "2026-02-05",
+     "amount": -538.63,
+     "balance": 6703.38
+    },
+    {
+     "date": "2026-02-07",
+     "amount": 660.31,
+     "balance": 7363.69
+    },
+    {
+     "date": "2026-02-09",
+     "amount": -981.18,
+     "balance": 6382.51
+    },
+    {
+     "date": "2026-02-11",
+     "amount": -1718.0,
+     "balance": 4664.51
+    },
+    {
+     "date": "2026-02-13",
+     "amount": 532.39,
+     "balance": 5196.9
+    },
+    {
+     "date": "2026-02-15",
+     "amount": 256.31,
+     "balance": 5453.21
+    }
+   ]
+  }
+ },
+ {
+  "name": "rej-contract",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "reject",
+   "layout": "contract"
+  }
+ },
+ {
+  "name": "rej-cv",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "reject",
+   "layout": "cv"
+  }
+ },
+ {
+  "name": "rej-menu",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "reject",
+   "layout": "menu"
+  }
+ },
+ {
+  "name": "rej-letter",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "reject",
+   "layout": "letter"
+  }
+ },
+ {
+  "name": "rej-notes",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "reject",
+   "layout": "notes"
+  }
+ },
+ {
+  "name": "rej-timetable",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "reject",
+   "layout": "timetable"
+  }
+ }
+]

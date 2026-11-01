@@ -2,7 +2,8 @@
 export type Decimal = "," | ".";
 
 const DATE_LIKE = /\b\d{1,4}[./-]\d{1,2}[./-]\d{2,4}\b/g;
-const PERCENT = /%\s?\d{1,2}(?:[.,]\d{1,3})?|\d{1,2}(?:[.,]\d{1,3})?\s?%/g;
+// "%20" and "20 %", but not "%8,246.29": OCR often reads a ₹ or ¥ sign as "%".
+const PERCENT = /%\s?\d{1,2}(?:[.,]\d{1,3})?(?![\d.,])|\d{1,2}(?:[.,]\d{1,3})?\s?%/g;
 
 /**
  * Guesses the decimal separator from how amounts are written across the whole
@@ -33,9 +34,20 @@ export type NumberToken = {
   money: boolean;
 };
 
+/**
+ * Joins thousands written with spaces: "2 490,00", "12 345", "1 234 567,89".
+ * Narrow and non-breaking spaces always group digits. A plain single space
+ * only does on lines rebuilt from positions, where columns are two spaces apart.
+ */
+export function joinSpacedThousands(line: string): string {
+  const spaced = / {2}/.test(line);
+  const re = spaced ? /(?<![\d.,])(\d{1,3})((?:[ \u00a0\u202f]\d{3})+)(?![\d])/g : /(?<![\d.,])(\d{1,3})((?:[\u00a0\u202f]\d{3})+)(?![\d])/g;
+  return line.replace(re, (_, head: string, groups: string) => head + groups.replace(/[ \u00a0\u202f]/g, ""));
+}
+
 /** Every number on a line, left to right, ignoring dates and percentages. */
 export function numbersIn(line: string, decimal: Decimal): NumberToken[] {
-  const clean = line.replace(DATE_LIKE, " ").replace(PERCENT, " ");
+  const clean = joinSpacedThousands(line).replace(DATE_LIKE, " ").replace(PERCENT, " ");
   const out: NumberToken[] = [];
   for (const m of clean.matchAll(/(?<![\w])[-−]?\d+(?:[.,' ]\d+)*(?![\w])/g)) {
     const value = parseNumber(m[0], decimal);
@@ -46,11 +58,12 @@ export function numbersIn(line: string, decimal: Decimal): NumberToken[] {
 }
 
 /** Percentages on a line, e.g. "KDV %20" or "MwSt 19 %". */
-export function percentsIn(line: string, decimal: Decimal): number[] {
+export function percentsIn(line: string): number[] {
   const out: number[] = [];
-  for (const m of line.matchAll(/%\s?(\d{1,2}(?:[.,]\d{1,3})?)(?!\d)|(\d{1,2}(?:[.,]\d{1,3})?)\s?%/g)) {
-    const v = parseNumber(m[1] ?? m[2], decimal);
-    if (v !== null) out.push(v);
+  // A rate never has a thousands separator, so either mark is the decimal point: "5,5%" and "5.5%".
+  for (const m of line.matchAll(/%\s?(\d{1,2}(?:[.,]\d{1,3})?)(?![\d.,])|(\d{1,2}(?:[.,]\d{1,3})?)\s?%/g)) {
+    const v = Number((m[1] ?? m[2]).replace(",", "."));
+    if (Number.isFinite(v)) out.push(v);
   }
   return out;
 }

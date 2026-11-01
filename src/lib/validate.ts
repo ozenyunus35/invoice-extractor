@@ -10,6 +10,8 @@ const money = (n: number) => n.toFixed(2);
  */
 export function validateInvoice(inv: Invoice): Check[] {
   const checks: Check[] = [];
+  // Currencies without minor units (yen) round VAT to whole units.
+  const unit = inv.currency.value === "JPY" || inv.currency.value === "KRW" ? 1 : 0.02;
   const vatSum = cents(inv.vat.reduce((s, v) => s + v.amount, 0));
   const itemsSum = cents(inv.items.reduce((s, i) => s + i.amount, 0));
   const sub = inv.subtotal.value;
@@ -70,7 +72,7 @@ export function validateInvoice(inv: Invoice): Check[] {
       const base = v.base ?? (rated.length === 1 ? (sub ?? (total !== null ? total - v.amount : null)) : null);
       if (base === null) continue;
       const expected = cents((base * v.rate!) / 100);
-      (near(expected, v.amount, 0.02) ? ok : wrong).push(`${v.rate}% of ${money(base)} = ${money(expected)}${near(expected, v.amount, 0.02) ? "" : `, document says ${money(v.amount)}`}`);
+      (near(expected, v.amount, unit) ? ok : wrong).push(`${v.rate}% of ${money(base)} = ${money(expected)}${near(expected, v.amount, unit) ? "" : `, document says ${money(v.amount)}`}`);
     }
     checks.push({
       id: "vat-rate",

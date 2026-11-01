@@ -76,8 +76,14 @@ export function wordsToLines(words: OcrWord[], page = 0): OcrLine[] {
     .sort((a, b) => a.mid - b.mid)
     .map((r) => {
       const ws = r.words.sort((a, b) => a.bbox.x0 - b.bbox.x0);
-      // PDF text runs can split a word ("Ka" + "ff" + "ee"); only a visible gap means a space.
-      const text = ws.reduce((acc, w, i) => (i === 0 ? w.text : acc + (w.bbox.x0 - ws[i - 1].bbox.x1 > r.h * 0.12 ? " " : "") + w.text), "");
+      // PDF text runs can split a word ("Ka" + "ff" + "ee"): only a visible gap means a space.
+      // A wide gap between columns becomes two spaces, so "10  249,00  2 490,00" keeps the
+      // quantity, the price and a space-grouped amount apart.
+      const text = ws.reduce((acc, w, i) => {
+        if (i === 0) return w.text;
+        const gap = w.bbox.x0 - ws[i - 1].bbox.x1;
+        return acc + (gap > r.h * 1.1 ? "  " : gap > r.h * 0.12 ? " " : "") + w.text;
+      }, "");
       return {
         text: collapseSpacedCaps(text),
         bbox: {

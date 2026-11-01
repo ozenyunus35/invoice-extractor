@@ -26,8 +26,10 @@ describe("numbers", () => {
 
   it("skips dates and percentages when listing numbers", () => {
     expect(numbersIn("VAT 20% on 31.10.2026 4.00", ".").map((n) => n.value)).toEqual([4]);
-    expect(percentsIn("KDV %20", ",")).toEqual([20]);
-    expect(percentsIn("MwSt 7 %", ",")).toEqual([7]);
+    expect(percentsIn("KDV %20")).toEqual([20]);
+    expect(percentsIn("MwSt 7 %")).toEqual([7]);
+    expect(percentsIn("TVA incluse 5.5%")).toEqual([5.5]);
+    expect(percentsIn("Total %8,246.29")).toEqual([]);
   });
 });
 

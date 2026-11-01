@@ -1,5 +1,5 @@
 import { datesIn, isMonthFirst } from "./dates";
-import { cents, detectDecimal, near, numbersIn, percentsIn, type Decimal, type NumberToken } from "./numbers";
+import { cents, detectDecimal, near, numbersIn, percentsIn, type Decimal, type NumberToken, joinSpacedThousands } from "./numbers";
 import type { Field, Invoice, LineItem, OcrLine, VatLine } from "./types";
 
 /*
@@ -8,7 +8,11 @@ import type { Field, Invoice, LineItem, OcrLine, VatLine } from "./types";
  * line it came from so the reviewer can see where it was read.
  */
 
-const FOLD: Record<string, string> = { İ: "i", I: "i", ı: "i", ş: "s", Ş: "s", ğ: "g", Ğ: "g", ü: "u", Ü: "u", ö: "o", Ö: "o", ç: "c", Ç: "c", ä: "a", Ä: "a", â: "a", Â: "a", î: "i", Î: "i", û: "u", Û: "u", é: "e", É: "e", è: "e", ê: "e", á: "a", à: "a", ó: "o", ô: "o", ú: "u", ñ: "n" };
+const FOLD: Record<string, string> = {
+  İ: "i", I: "i", ı: "i", ş: "s", Ş: "s", ğ: "g", Ğ: "g", ü: "u", Ü: "u", ö: "o", Ö: "o", ç: "c", Ç: "c", ä: "a", Ä: "a", â: "a", Â: "a", î: "i", Î: "i", û: "u", Û: "u",
+  é: "e", É: "e", è: "e", È: "e", ê: "e", ë: "e", á: "a", Á: "a", à: "a", À: "a", ã: "a", ó: "o", Ó: "o", ò: "o", ô: "o", õ: "o", ú: "u", ù: "u", í: "i", ì: "i", ï: "i", ñ: "n",
+  ł: "l", Ł: "l", ż: "z", Ż: "z", ź: "z", Ź: "z", ą: "a", Ą: "a", ę: "e", Ę: "e", ć: "c", Ć: "c", ń: "n", Ń: "n", ś: "s", Ś: "s",
+};
 
 /** Lowercase ASCII-ish copy of a line with the same length, so match positions map back. */
 export function fold(text: string): string {
@@ -20,22 +24,24 @@ export function fold(text: string): string {
   return out;
 }
 
-const TOTAL_STRONG = /\b(grand total|total due|amount due|balance due|total payable|genel toplam|odenecek tutar|vergiler dahil toplam|gesamtbetrag|rechnungsbetrag|endbetrag|zu zahlen)\b/;
-const TOTAL_MID = /\b(total amount|invoice total|total incl|total \(incl|gesamtsumme|toplam tutar)\b/;
-const TOTAL_WEAK = /\b(total|toplam|summe|gesamt)\b/;
-const NOT_TOTAL = /(sub ?-?total|ara toplam|mal hizmet|total (vat|tax)|toplam kdv|kdv toplam|net(to)?\b|zwischensumme|mwst|items|qty|quantity|hours|before tax|excl)/;
-const SUBTOTAL = /(sub ?-?total|net amount|net total|total net|total excl|total before tax|ara toplam|mal hizmet toplam|zwischensumme|nettobetrag|summe netto|netto)/;
-const VAT = /\b(vat|kdv|mwst|ust|tax|umsatzsteuer|iva|btw|gst)\b/;
-const NOT_VAT = /(vat (no|number|id|reg)|tax id|tax no|vergi (no|dairesi|numarasi|kimlik)|ust-?id|steuer-?nr|steuernummer|tax invoice)/;
-const BILL_TO = /\b(bill(ed)? to|invoice to|customer|client|sold to|ship to|sayin|alici|musteri|rechnungsempfanger|kunde)\b/;
-const TITLE = /\b(tax invoice|invoice|e-arsiv fatura|e-fatura|fatura|rechnung|receipt|fis|bill|statement)\b/g;
-const COMPANY = /\b(inc|llc|ltd|limited|gmbh|ag|plc|bv|sas|sarl|co|corp|a\.s|sti|ltd\. sti|kg|ohg|ug)\b\.?/;
-const HEADER_WORDS = /\b(description|item|items|qty|quantity|unit|price|amount|rate|hours|aciklama|urun|hizmet|miktar|birim|fiyat|tutar|beschreibung|artikel|leistung|menge|einzelpreis|preis|betrag|pos)\b/g;
+// Labels in English, Turkish, German, French, Spanish, Italian, Dutch, Portuguese and Polish,
+// matched on folded text (no accents, lowercase).
+const TOTAL_STRONG = /\b(grand total|total due|amount due|balance due|total payable|genel toplam|odenecek tutar|vergiler dahil toplam|gesamtbetrag|rechnungsbetrag|endbetrag|zu zahlen|total ttc|net a payer|montant ttc|total factura|importe total|total a pagar|totale fattura|totale documento|totale da pagare|totaal te betalen|te betalen|totaal incl|total a pagar|do zaplaty|razem do zaplaty|kwota do zaplaty)\b/;
+const TOTAL_MID = /\b(total amount|invoice total|total incl|total \(incl|gesamtsumme|toplam tutar|totale|totaal|razem brutto|wartosc brutto|total geral)\b/;
+const TOTAL_WEAK = /\b(total|toplam|summe|gesamt|razem)\b/;
+const NOT_TOTAL = /(sub ?-?total|ara toplam|mal hizmet|total (vat|tax)|toplam kdv|kdv toplam|net(to)?\b|zwischensumme|mwst|items|qty|quantity|hours|before tax|excl|total ht|total h\.t|hors taxe|base imponible|imponibile|subtotaal|sem iva|total iva|total tva|totale iva|razem netto|suma netto|exkl)/;
+const SUBTOTAL = /(sub ?-?total|net amount|net total|total net|total excl|total before tax|ara toplam|mal hizmet toplam|zwischensumme|nettobetrag|summe netto|netto|total ht|total h\.t|montant ht|base ht|base imponible|totale imponibile|imponibile|subtotaal|totaal excl|total sem iva|total liquido|razem netto|suma netto|wartosc netto razem)/;
+const VAT = /\b(vat|kdv|mwst|ust|tax|umsatzsteuer|iva|btw|gst|tva|ptu)\b/;
+const NOT_VAT = /(vat (no|number|id|reg)|tax id|tax no|vergi (no|dairesi|numarasi|kimlik)|ust-?id|steuer-?nr|steuernummer|tax invoice|n[°ºo]\.? ?tva|numero de tva|tva intra|n[°ºo]\.? ?iva|p\. ?iva|partita iva|btw-?n|btw nummer|\bnif\b|\bcif\b|\bnip\b|faktura vat|regime iva)/;
+const BILL_TO = /\b(bill(ed)? to|invoice to|customer|client|sold to|ship to|sayin|alici|musteri|rechnungsempfanger|kunde|facture a|factura a|cliente|destinatario|factuur aan|nabywca|odbiorca)\b/;
+const TITLE = /\b(tax invoice|invoice|e-arsiv fatura|e-fatura|fatura|rechnung|receipt|fis|bill|statement|facture|factura|fattura|factuur|faktura vat|faktura|ticket|scontrino|kassabon|kassenbon|talao|paragon)\b/g;
+const COMPANY = /\b(inc|llc|ltd|limited|gmbh|ag|plc|bv|b\.v|sas|sarl|sa|s\.a|s\.l|sl|srl|s\.r\.l|spa|s\.p\.a|snc|s\.n\.c|lda|vof|v\.o\.f|sp\. z o\.o|co|corp|a\.s|sti|ltd\. sti|kg|ohg|ug)\b\.?/;
+const HEADER_WORDS = /\b(description|item|items|qty|quantity|unit|price|amount|rate|hours|aciklama|urun|hizmet|miktar|birim|fiyat|tutar|beschreibung|artikel|leistung|menge|einzelpreis|preis|betrag|pos|designation|qte|quantite|prix|montant|descripcion|cant|cantidad|precio|importe|descrizione|q\.ta|quantita|prezzo|importo|omschrijving|aantal|prijs|bedrag|descricao|qtd|quantidade|preco|valor|nazwa|ilosc|cena|wartosc|stawka|tarief|aliquota|taux|tipo|satz)\b/g;
 
-const INVOICE_NO = /(invoice\s*(no|number|nr|#)|inv\s*(no|#)|fatura\s*(no|numarasi)|belge\s*no|rechnungs?-?\s*(nr|nummer|no)|receipt\s*(no|#)|fis\s*no|bill\s*no|order\s*(no|#))\.?/;
-const TAX_ID = /(vat\s*(no|number|id|reg(istration)?(\s*no)?)|tax\s*(id|no)|\bein\b|\bvkn\b|vergi\s*(no|numarasi|kimlik\s*no)|ust-?id(-?nr)?|steuer-?nr|steuernummer)\.?/;
-const DATE_LABEL = /(invoice date|date of issue|issue date|issued|fatura tarihi|duzenleme tarihi|tarih|rechnungsdatum|belegdatum|datum|date)/;
-const DUE_LABEL = /(due date|payment due|due|vade|son odeme|fallig|zahlbar bis)/;
+const INVOICE_NO = /(invoice\s*(no|number|nr|#)|inv\s*(no|#)|fatura\s*(no|numarasi)|belge\s*no|rechnungs?-?\s*(nr|nummer|no)|receipt\s*(no|#)|fis\s*no|bill\s*no|order\s*(no|#)|n[°ºo]\.?\s*de\s*(facture|factura)|facture\s*n[°ºo]?|numero de (facture|factura)|n[°ºo]\.?\s*(facture|factura)|factura\s*n[°ºo.]*|fattura\s*(n\.?|nr\.?|numero)|numero fattura|factuurnummer|factuur\s*(nr|nummer)|fatura\s*n\.?\s*[°ºo]?|numer faktury|faktura\s*(vat\s*)?(nr|numer))\.?/;
+const TAX_ID = /(vat\s*(no|number|id|reg(istration)?(\s*no)?)|tax\s*(id|no)|\bein\b|\bvkn\b|vergi\s*(no|numarasi|kimlik\s*no)|ust-?id(-?nr)?|steuer-?nr|steuernummer|n[°ºo]\.?\s*tva|numero de tva|\bnif\b|\bcif\b|p\.\s*iva|partita iva|btw-?(nr|nummer)|\bnip\b)\.?/;
+const DATE_LABEL = /(invoice date|date of issue|issue date|issued|fatura tarihi|duzenleme tarihi|tarih|rechnungsdatum|belegdatum|date de (la )?facture|date d'emission|fecha de (la )?factura|fecha de emision|data (della )?fattura|data di emissione|factuurdatum|data da fatura|data de emissao|data wystawienia|datum|fecha|data|date)/;
+const DUE_LABEL = /(due date|payment due|due|vade|son odeme|fallig|zahlbar bis|echeance|a payer avant|vencimiento|scadenza|vervaldatum|uiterste betaaldatum|vencimento|termin platnosci)/;
 
 /** VAT and sales tax rates in common use, to recover a rate OCR could not read. */
 const STANDARD_RATES = [1, 2.5, 3, 4, 5, 5.5, 6, 7, 8, 8.875, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27];
@@ -71,10 +77,19 @@ function classify(f: string): { kind: Kind; strength: number } {
 }
 
 const CURRENCIES: [string, RegExp][] = [
-  ["USD", /\$\s?\d|\d\s?\$|\bUSD\b/g],
+  ["USD", /(?<![A-Z])\$\s?\d|\d\s?\$|\bUSD\b|\bUS\$/g],
   ["EUR", /€|\bEUR\b/g],
   ["GBP", /£|\bGBP\b/g],
   ["TRY", /₺|\bTL\b|\bTRY\b/g],
+  ["CHF", /\bCHF\b|\bFr\.\s?\d/g],
+  ["PLN", /\bzł|\bPLN\b/g],
+  ["JPY", /¥|円|\bJPY\b/g],
+  ["INR", /₹|\bINR\b|\bRs\.?\s?\d/g],
+  ["SEK", /\bSEK\b/g],
+  ["NOK", /\bNOK\b/g],
+  ["DKK", /\bDKK\b/g],
+  ["CAD", /\bCAD\b|C\$/g],
+  ["AUD", /\bAUD\b|A\$/g],
 ];
 
 /**
@@ -87,6 +102,8 @@ function detectCurrency(text: string, decimal: Decimal, totalLine: string | null
   const counts = CURRENCIES.map(([code, re]) => [code, (text.match(re) ?? []).length] as const);
   const [code, n] = [...counts].sort((a, b) => b[1] - a[1])[0];
   if (n > 0) return { value: code, line: null, confidence: n > 1 ? 0.9 : 0.8 };
+  // Indian digit grouping (1,23,456.00) is only used for rupees, even when OCR drops the ₹.
+  if (/\b\d{1,2},\d{2},\d{3}\.\d{2}\b/.test(text)) return { value: "INR", line: null, confidence: 0.6, derived: true };
   const f = fold(text);
   if (/\bkdv\b/.test(f)) return { value: "TRY", line: null, confidence: 0.6, derived: true };
   if (decimal === "," && /\b(mwst|rechnung|ust)\b/.test(f)) return { value: "EUR", line: null, confidence: 0.6, derived: true };
@@ -95,12 +112,14 @@ function detectCurrency(text: string, decimal: Decimal, totalLine: string | null
 
 /** A token that belongs to the numeric tail of an item line. */
 const isNumericToken = (t: string) => {
-  const bare = t.replace(/^[€$£₺(]+|[€$£₺)]+$/g, "");
+  // "(500)" in a description is a count; only "(12.00)" with decimals is an accounting negative.
+  if (/^\(\d+\)?$/.test(t) || /^\(\d[\d.,]*$/.test(t)) return false;
+  const bare = t.replace(/^[€$£₺¥₹(]+|[€$£₺¥₹)]+$/g, "");
   return /^[-−]?\d[\d.,' ]*%?$/.test(bare) || /^%\d+([.,]\d+)?$/.test(bare) || /^(x|×|eur|usd|gbp|try|tl|pcs|adet|stk|st|h|hrs|hr|ea)$/i.test(bare);
 };
 
 function parseItem(text: string, decimal: Decimal, line: number): LineItem | "continuation" | null {
-  const tokens = text.trim().split(/\s+/);
+  const tokens = joinSpacedThousands(text).trim().split(/\s+/);
   let cut = tokens.length;
   while (cut > 0 && isNumericToken(tokens[cut - 1])) cut--;
   let description = tokens.slice(0, cut).join(" ");
@@ -148,7 +167,7 @@ function parseItem(text: string, decimal: Decimal, line: number): LineItem | "co
   }
   if (leadQty && v.length >= 2) quantity = leadQty;
 
-  const rates = percentsIn(tail, decimal);
+  const rates = percentsIn(tail);
   return { description: description.replace(/[\s:–-]+$/, ""), quantity, unitPrice, amount, vatRate: rates.at(-1) ?? null, line };
 }
 
@@ -223,7 +242,7 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
     } else if (k.kind === "subtotal" && subtotal.value === null) {
       subtotal = { value: amt.value, line: amt.line, confidence: conf(lines[i], 0.92) };
     } else if (k.kind === "vat") {
-      const rate = percentsIn(lines[i].text, decimal).at(-1) ?? null;
+      const rate = percentsIn(lines[i].text).at(-1) ?? null;
       const nums = numbersIn(lines[i].text, decimal).filter((n) => n.value !== rate);
       let base: number | null = null;
       if (nums.length >= 2 && rate !== null) {

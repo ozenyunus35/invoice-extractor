@@ -1,6 +1,6 @@
 import { datesIn, isMonthFirst } from "./dates";
 import { fold } from "./extract";
-import { cents, detectDecimal, near, numbersIn } from "./numbers";
+import { cents, detectDecimal, near, numbersIn, joinSpacedThousands } from "./numbers";
 import type { Check, Field, OcrLine } from "./types";
 
 /*
@@ -36,11 +36,11 @@ export type Statement = {
 
 const empty = <T,>(): Field<T> => ({ value: null, line: null, confidence: 0 });
 
-const HEADER = /\b(date|tarih|datum|buchungstag|valuta)\b.*\b(amount|tutar|betrag|debit|credit|borc|alacak|soll|haben|balance|bakiye|saldo)\b/;
-const OPENING = /\b(opening balance|previous balance|balance brought forward|devreden bakiye|onceki bakiye|acilis bakiyesi|anfangssaldo|alter saldo|saldo alt)\b/;
-const CLOSING = /\b(closing balance|new balance|ending balance|balance carried forward|kapanis bakiyesi|son bakiye|donem sonu bakiye|endsaldo|neuer saldo|saldo neu)\b/;
-const DEBIT_TOTAL = /^\s*(total debits?|debits?|toplam borc|borc toplami|borc|summe soll|soll)\b/;
-const CREDIT_TOTAL = /^\s*(total credits?|credits?|toplam alacak|alacak toplami|alacak|summe haben|haben)\b/;
+const HEADER = /\b(date|tarih|datum|buchungstag|valuta|fecha|data|data operacji)\b.*\b(amount|tutar|betrag|debit|credit|borc|alacak|soll|haben|balance|bakiye|saldo|solde|cargo|abono|addebiti|accrediti|af|bij|obciazenia|uznania|importe|montant|kwota)\b/;
+const OPENING = /\b(opening balance|previous balance|balance brought forward|devreden bakiye|onceki bakiye|acilis bakiyesi|anfangssaldo|alter saldo|saldo alt|ancien solde|solde precedent|solde initial|saldo anterior|saldo inicial|saldo iniziale|saldo precedente|beginsaldo|vorig saldo|saldo poczatkowe|saldo otwarcia)\b/;
+const CLOSING = /\b(closing balance|new balance|ending balance|balance carried forward|kapanis bakiyesi|son bakiye|donem sonu bakiye|endsaldo|neuer saldo|saldo neu|nouveau solde|solde final|solde au|saldo final|saldo finale|saldo attuale|eindsaldo|nieuw saldo|saldo koncowe|saldo zamkniecia)\b/;
+const DEBIT_TOTAL = /^\s*(total debits?|debits?|toplam borc|borc toplami|borc|summe soll|soll|total (des )?debits?|total cargos|totale addebiti|totaal af|suma obciazen)\b/;
+const CREDIT_TOTAL = /^\s*(total credits?|credits?|toplam alacak|alacak toplami|alacak|summe haben|haben|total (des )?credits?|total abonos|totale accrediti|totaal bij|suma uznan)\b/;
 const BANK = /\b(bank|banka|bankasi|sparkasse|volksbank|credit union|building society)\b/;
 const HOLDER = /\b(customer|account holder|account name|musteri|hesap sahibi|kontoinhaber|name)\b\s*[:：]?\s*(.+)$/;
 const IBAN = /\b([A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){3,7}(?:\s?[A-Z0-9]{1,4})?)\b/;
@@ -69,7 +69,7 @@ function parseTransaction(text: string, decimal: "," | ".", line: number, us: bo
     rest = rest.replace(LEADING_DATE, "");
   }
   rest = rest.trim();
-  const tokens = rest.split(/\s+/);
+  const tokens = joinSpacedThousands(rest).split(/\s+/);
   let cut = tokens.length;
   while (cut > 0 && /^[-−(]?[\d.,'’]+[-−)]?$|^(dr|cr|try|tl|eur|usd|gbp|€|\$|£|₺)$/i.test(tokens[cut - 1])) cut--;
   const tail = tokens.slice(cut).join(" ");

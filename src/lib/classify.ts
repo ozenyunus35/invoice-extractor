@@ -7,8 +7,8 @@ import type { OcrLine } from "./types";
 export type DocType = "invoice" | "receipt" | "statement" | "report" | "unknown";
 
 const STATEMENT_WORDS = /\b(statement|account transactions|transaction history|hesap hareketleri|hesap ozeti|ekstre|kontoauszug|umsatze|iban|balance|bakiye|saldo|opening balance|closing balance|devreden)\b/g;
-const INVOICE_WORDS = /\b(invoice|tax invoice|fatura|e-arsiv|rechnung|bill to|billed to|due date|vade|zahlbar|subtotal|sub-total|ara toplam|zwischensumme|vat|kdv|mwst|sales tax|unit price|birim fiyat|einzelpreis|qty|quantity|miktar|menge)\b/g;
-const RECEIPT_WORDS = /\b(receipt|fis|kassenbon|beleg|cash|card|change|nakit|kredi karti|thank you|tesekkur|danke|table|masa)\b/g;
+const INVOICE_WORDS = /\b(invoice|tax invoice|fatura|e-arsiv|rechnung|bill to|billed to|due date|vade|zahlbar|subtotal|sub-total|ara toplam|zwischensumme|vat|kdv|mwst|sales tax|unit price|birim fiyat|einzelpreis|qty|quantity|miktar|menge|facture|factura|fattura|factuur|faktura|tva|iva|btw|total ttc|total ht|imponibile|base imponible|subtotaal|echeance|vencimiento|scadenza|vervaldatum|vencimento|termin platnosci|prix unitaire|precio unitario|prezzo unitario|prijs|preco unitario|cena netto|designation|descripcion|descrizione|omschrijving|descricao|ilosc|aantal|nabywca)\b/g;
+const RECEIPT_WORDS = /\b(receipt|fis|kassenbon|beleg|cash|card|change|nakit|kredi karti|thank you|tesekkur|danke|table|masa|ticket|scontrino|kassabon|talao|paragon|carte bancaire|tarjeta|carta|pin|cartao|karta|merci|gracias|grazie|bedankt|obrigado|dziekujemy)\b/g;
 const TOTAL_WORDS = /\b(total|toplam|summe|gesamt|amount due|balance due)\b/;
 
 export type Classification = { type: DocType; scores: Record<Exclude<DocType, "unknown">, number>; reason: string };

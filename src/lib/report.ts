@@ -1,5 +1,5 @@
 import { fold } from "./extract";
-import { cents, detectDecimal, near, parseNumber, type Decimal } from "./numbers";
+import { cents, detectDecimal, near, parseNumber, type Decimal, joinSpacedThousands } from "./numbers";
 import type { Check, OcrLine } from "./types";
 
 /*
@@ -39,7 +39,7 @@ function cell(token: string, decimal: Decimal): { value: number; percent: boolea
 
 /** Splits "Net sales 40,500 48,600" into the label and its numeric cells. */
 function splitRow(text: string, decimal: Decimal) {
-  const tokens = text.trim().split(/\s+/);
+  const tokens = joinSpacedThousands(text).trim().split(/\s+/);
   const values: { value: number; percent: boolean }[] = [];
   let cut = tokens.length;
   while (cut > 1) {
