@@ -6,6 +6,7 @@ import northshore from "@/data/ocr/northshore.json";
 import ridgeline from "@/data/ocr/ridgeline.json";
 import { classifyDocument, type Classification, type DocType } from "./classify";
 import { extractInvoice } from "./extract";
+import { analyseReport, extractReport, type Report } from "./report";
 import { extractStatement, validateStatement, type Statement } from "./statement";
 import { validateInvoice } from "./validate";
 import { wordsToLines, type OcrWord } from "./layout";
@@ -25,6 +26,7 @@ export type Doc = {
   /** The reviewer's version; starts as a copy of `extracted`. */
   invoice: Invoice;
   statement: Statement;
+  report: Report;
   /** What the document was detected as, and what it is being read as (the reviewer can switch). */
   detected: Classification;
   type: DocType;
@@ -42,10 +44,10 @@ const base = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 export function readLines(lines: OcrLine[]) {
   const extracted = extractInvoice(lines);
   const detected = classifyDocument(lines);
-  return { lines, extracted, invoice: structuredClone(extracted), statement: extractStatement(lines), detected, type: detected.type };
+  return { lines, extracted, invoice: structuredClone(extracted), statement: extractStatement(lines), report: extractReport(lines), detected, type: detected.type };
 }
 
-export function makeDoc(input: Omit<Doc, "lines" | "extracted" | "invoice" | "statement" | "detected" | "type"> & { words: OcrWord[] }): Doc {
+export function makeDoc(input: Omit<Doc, "lines" | "extracted" | "invoice" | "statement" | "report" | "detected" | "type"> & { words: OcrWord[] }): Doc {
   const { words, ...rest } = input;
   return { ...rest, ...readLines(wordsToLines(words)) };
 }
@@ -80,8 +82,9 @@ export function sampleDocs(): Doc[] {
 /** The checks that apply to what the document is being read as. */
 export function docChecks(doc: Doc): Check[] {
   if (doc.type === "statement") return validateStatement(doc.statement);
+  if (doc.type === "report") return analyseReport(doc.report).checks;
   if (doc.type === "unknown") return [];
   return validateInvoice(doc.invoice);
 }
 
-export const TYPE_LABEL: Record<DocType, string> = { invoice: "Invoice", receipt: "Receipt", statement: "Bank statement", unknown: "Not recognised" };
+export const TYPE_LABEL: Record<DocType, string> = { invoice: "Invoice", receipt: "Receipt", statement: "Bank statement", report: "Financial report", unknown: "Not recognised" };

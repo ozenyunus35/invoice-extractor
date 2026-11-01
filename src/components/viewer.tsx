@@ -29,8 +29,15 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, avgCon
   const [showAll, setShowAll] = useState(false);
   const [actual, setActual] = useState(false);
   const used = useMemo(
-    () => (doc.type === "statement" ? new Set(doc.statement.transactions.map((t) => t.line)) : doc.type === "unknown" ? new Set<number>() : usedLines(doc.invoice)),
-    [doc.type, doc.statement, doc.invoice],
+    () =>
+      doc.type === "statement"
+        ? new Set(doc.statement.transactions.map((t) => t.line))
+        : doc.type === "report"
+          ? new Set(doc.report.tables.flatMap((t) => t.rows.map((r) => r.line)))
+          : doc.type === "unknown"
+            ? new Set<number>()
+            : usedLines(doc.invoice),
+    [doc.type, doc.statement, doc.invoice, doc.report],
   );
   const boxes = useRef<Map<number, HTMLDivElement>>(new Map());
 

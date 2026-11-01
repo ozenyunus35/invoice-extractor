@@ -1,4 +1,5 @@
 import { cents } from "./numbers";
+import type { Report, ReportAnalysis } from "./report";
 import { chronological, type Statement } from "./statement";
 import type { Invoice } from "./types";
 import { validateInvoice } from "./validate";
@@ -89,6 +90,29 @@ export function toXlsx(docs: Exportable[], statements: ExportableStatement[] = [
 }
 
 export const statementXlsx = (statements: ExportableStatement[]) => toXlsx([], statements);
+
+/** One sheet per table found in a financial report, plus the ratios and the checks. */
+export function reportXlsx(r: Report, a: ReportAnalysis): Promise<Blob> {
+  const used = new Set<string>();
+  const sheetName = (title: string) => {
+    let name = title.replace(/[\\/?*[\]:]/g, " ").slice(0, 28).trim() || "Table";
+    for (let k = 2; used.has(name); k++) name = `${name.slice(0, 25)} ${k}`;
+    used.add(name);
+    return name;
+  };
+  const sheets: Sheet[] = r.tables.map((t) => ({
+    name: sheetName(t.title),
+    header: ["Line item", ...t.columns],
+    rows: t.rows.map((row) => [row.label, ...row.values]),
+    money: t.columns.map((_, i) => i + 1),
+  }));
+  if (a.ratios.length) {
+    const columns = [...new Set(a.ratios.flatMap((x) => x.values.map((v) => v.column)))];
+    sheets.push({ name: "Ratios", header: ["Ratio", ...columns], rows: a.ratios.map((x) => [x.label, ...columns.map((c) => x.values.find((v) => v.column === c)?.value ?? null)]), money: [] });
+  }
+  sheets.push({ name: "Checks", header: ["Check", "Result", "Detail"], rows: a.checks.map((c) => [c.label, c.status, c.detail]), money: [] });
+  return workbook(sheets);
+}
 
 export function download(blob: Blob, filename: string) {
   const url = URL.createObjectURL(blob);

@@ -5,13 +5,13 @@ import type { DocType } from "@/lib/classify";
 import { TYPE_LABEL, type Doc } from "@/lib/documents";
 import { cn } from "@/lib/cn";
 
-const OPTIONS: DocType[] = ["invoice", "receipt", "statement"];
+const OPTIONS: DocType[] = ["invoice", "receipt", "statement", "report"];
 
 /** Shows what the document was detected as and lets the reviewer read it as something else. */
 export function TypeSwitch({ doc, onChange }: { doc: Doc; onChange: (t: DocType) => void }) {
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <div className="inline-flex rounded-md border border-border bg-surface-2 p-0.5" role="radiogroup" aria-label="Read this document as">
+      <div className="inline-flex flex-wrap rounded-md border border-border bg-surface-2 p-0.5" role="radiogroup" aria-label="Read this document as">
         {OPTIONS.map((t) => (
           <button
             key={t}

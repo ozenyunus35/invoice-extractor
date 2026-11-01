@@ -10,8 +10,11 @@ const PERCENT = /%\s?\d{1,2}(?:[.,]\d{1,3})?|\d{1,2}(?:[.,]\d{1,3})?\s?%/g;
  */
 export function detectDecimal(text: string): Decimal {
   const clean = text.replace(DATE_LIKE, " ");
-  const comma = clean.match(/\d,\d{2}(?!\d)/g)?.length ?? 0;
-  const dot = clean.match(/\d\.\d{2}(?!\d)/g)?.length ?? 0;
+  // Two decimals after the separator is the strongest sign; a group of three
+  // after the other one ("20.000", "12,480") is thousands and counts half.
+  const count = (re: RegExp) => clean.match(re)?.length ?? 0;
+  const comma = count(/\d,\d{2}(?!\d)/g) + count(/\d\.\d{3}(?![\d,.])/g) * 0.5;
+  const dot = count(/\d\.\d{2}(?!\d)/g) + count(/\d,\d{3}(?![\d,.])/g) * 0.5;
   return comma > dot ? "," : ".";
 }
 

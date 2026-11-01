@@ -8,7 +8,7 @@ import type { Field, Invoice, LineItem, OcrLine, VatLine } from "./types";
  * line it came from so the reviewer can see where it was read.
  */
 
-const FOLD: Record<string, string> = { İ: "i", I: "i", ı: "i", ş: "s", Ş: "s", ğ: "g", Ğ: "g", ü: "u", Ü: "u", ö: "o", Ö: "o", ç: "c", Ç: "c", ä: "a", Ä: "a" };
+const FOLD: Record<string, string> = { İ: "i", I: "i", ı: "i", ş: "s", Ş: "s", ğ: "g", Ğ: "g", ü: "u", Ü: "u", ö: "o", Ö: "o", ç: "c", Ç: "c", ä: "a", Ä: "a", â: "a", Â: "a", î: "i", Î: "i", û: "u", Û: "u", é: "e", É: "e", è: "e", ê: "e", á: "a", à: "a", ó: "o", ô: "o", ú: "u", ñ: "n" };
 
 /** Lowercase ASCII-ish copy of a line with the same length, so match positions map back. */
 export function fold(text: string): string {

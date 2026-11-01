@@ -13,8 +13,11 @@ export type Scan = {
   source: "ocr" | "pdf-text";
 };
 
-const MAX_PAGES = 4;
-const PDF_SCALE = 2;
+/** Text PDFs are read in full up to this many pages; scans are OCR'd up to OCR_PAGES. */
+const MAX_PAGES = 20;
+const OCR_PAGES = 6;
+/** The stacked page image stays under ~16 million pixels, which every browser can draw. */
+const MAX_PIXELS = 16_000_000;
 
 /** Runs tesseract.js in a Web Worker. The engine and language data load from a CDN on first use. */
 async function recognize(image: HTMLCanvasElement | Blob, onProgress: (p: Progress) => void): Promise<OcrWord[]> {
@@ -56,7 +59,13 @@ async function scanPdf(file: File, onProgress: (p: Progress) => void): Promise<S
   pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
   const pdf = await pdfjs.getDocument({ data: new Uint8Array(await file.arrayBuffer()) }).promise;
   const pages = await Promise.all(Array.from({ length: Math.min(pdf.numPages, MAX_PAGES) }, (_, i) => pdf.getPage(i + 1)));
-  const viewports = pages.map((p) => p.getViewport({ scale: PDF_SCALE }));
+  // Sharp at 2× for a few pages; long reports scale down so the stacked image stays drawable.
+  const area = pages.reduce((sum, p) => {
+    const v = p.getViewport({ scale: 1 });
+    return sum + v.width * v.height;
+  }, 0);
+  const scale = Math.max(0.8, Math.min(2, Math.sqrt(MAX_PIXELS / area)));
+  const viewports = pages.map((p) => p.getViewport({ scale }));
   const width = Math.ceil(Math.max(...viewports.map((v) => v.width)));
   const height = Math.ceil(viewports.reduce((s, v) => s + v.height, 0));
 
@@ -83,7 +92,7 @@ async function scanPdf(file: File, onProgress: (p: Progress) => void): Promise<S
       const [a, b, , , e, f] = pdfjs.Util.transform(viewport.transform, item.transform);
       const size = Math.hypot(a, b);
       // A text run can hold several words; keep it as one, the row builder joins runs anyway.
-      words.push({ text: item.str.trim(), bbox: { x0: e, y0: offset + f - size, x1: e + item.width * PDF_SCALE, y1: offset + f + size * 0.2 }, confidence: 100 });
+      words.push({ text: item.str.trim(), bbox: { x0: e, y0: offset + f - size, x1: e + item.width * scale, y1: offset + f + size * 0.2 }, confidence: 100 });
     }
     offset += viewport.height;
     onProgress({ stage: "Rendering pages", value: 0.05 + ((i + 1) / pages.length) * 0.2 });
@@ -91,7 +100,16 @@ async function scanPdf(file: File, onProgress: (p: Progress) => void): Promise<S
 
   const image = await canvasToBlob(canvas);
   if (words.length >= 10) return { words, image, width, height, source: "pdf-text" };
-  return { words: await recognize(canvas, onProgress), image, width, height, source: "ocr" };
+  // A scan: OCR the first pages (each takes a few seconds in the browser).
+  let target: HTMLCanvasElement = canvas;
+  if (pages.length > OCR_PAGES) {
+    const cut = Math.ceil(viewports.slice(0, OCR_PAGES).reduce((sum, v) => sum + v.height, 0));
+    target = document.createElement("canvas");
+    target.width = width;
+    target.height = cut;
+    target.getContext("2d")!.drawImage(canvas, 0, 0);
+  }
+  return { words: await recognize(target, onProgress), image, width, height, source: "ocr" };
 }
 
 export function scanFile(file: File, onProgress: (p: Progress) => void): Promise<Scan> {

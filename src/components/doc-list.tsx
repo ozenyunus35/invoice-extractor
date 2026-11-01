@@ -158,11 +158,17 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
                 {/* eslint-disable-next-line @next/next/no-img-element -- thumbnails of local documents */}
                 <img src={d.imageUrl} alt="" className="h-12 w-9 shrink-0 rounded-sm border border-border bg-white object-cover object-top" />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate font-medium">{(d.type === "statement" ? d.statement.bank.value : d.type === "unknown" ? null : d.invoice.vendor.value) ?? d.name}</span>
-                  <span className="block truncate text-[12px] text-muted">{d.type === "statement" ? `Statement · ${d.statement.transactions.length} transactions` : d.kind}</span>
+                  <span className="block truncate font-medium">{(d.type === "statement" ? d.statement.bank.value : d.type === "report" ? d.report.company : d.type === "unknown" ? null : d.invoice.vendor.value) ?? d.name}</span>
+                  <span className="block truncate text-[12px] text-muted">
+                    {d.type === "statement" ? `Statement · ${d.statement.transactions.length} transactions` : d.type === "report" ? `Financial report · ${d.report.tables.length} tables` : d.kind}
+                  </span>
                   <span className="mt-0.5 flex items-center justify-between gap-2">
                     <span className="truncate font-mono text-[12px] tabular-nums">
-                      {d.type === "statement" ? formatMoney(statementTotals(d.statement).closing, d.statement.currency.value) : d.type === "unknown" ? "—" : formatMoney(d.invoice.total.value, d.invoice.currency.value)}
+                      {d.type === "statement"
+                        ? formatMoney(statementTotals(d.statement).closing, d.statement.currency.value)
+                        : d.type === "unknown" || d.type === "report"
+                          ? "—"
+                          : formatMoney(d.invoice.total.value, d.invoice.currency.value)}
                     </span>
                     <Status doc={d} />
                   </span>

@@ -4,6 +4,7 @@ import { FileSpreadsheet, FileText, ShieldCheck } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DataPanel } from "@/components/data-panel";
 import { DocList } from "@/components/doc-list";
+import { ReportPanel } from "@/components/report-panel";
 import { StatementPanel } from "@/components/statement-panel";
 import { UnknownPanel } from "@/components/unknown-panel";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -53,7 +54,11 @@ export function Workbench() {
           if (r.sample) next = next.map((d) => (d.id === r.id ? { ...d, type: r.type, invoice: r.invoice } : d));
           else if (r.doc && r.image) {
             const image = new Blob([r.image.data], { type: r.image.type });
-            restored.push({ ...r.doc, type: r.type, invoice: r.invoice, image, imageUrl: URL.createObjectURL(image) });
+            // Read the saved text again so improvements to the rules reach older uploads too;
+            // keep the reviewer's edits and any type they chose by hand.
+            const read = readLines(r.doc.lines);
+            const chosen = r.type !== r.doc.detected?.type;
+            restored.push({ ...r.doc, ...read, type: chosen ? r.type : read.type, invoice: r.invoice, image, imageUrl: URL.createObjectURL(image) });
           }
         }
         next = [...restored.sort((a, b) => b.addedAt - a.addedAt), ...next];
@@ -258,7 +263,9 @@ export function Workbench() {
         </main>
 
         <aside className={cn("min-h-0 w-full shrink-0 border-border lg:w-[440px] lg:border-l xl:w-[480px]", showOverview ? "hidden" : mobileTab === "data" ? "flex" : "hidden lg:flex")}>
-          {doc.type === "statement" ? (
+          {doc.type === "report" ? (
+            <ReportPanel key={doc.id} doc={doc} onType={(t) => setType(doc.id, t)} focusLine={focusLine} onFocusLine={setFocusLine} />
+          ) : doc.type === "statement" ? (
             <StatementPanel key={doc.id} doc={doc} onType={(t) => setType(doc.id, t)} focusLine={focusLine} onFocusLine={setFocusLine} />
           ) : doc.type === "unknown" ? (
             <UnknownPanel key={doc.id} doc={doc} onType={(t) => setType(doc.id, t)} onFocusLine={setFocusLine} />

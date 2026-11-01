@@ -1,9 +1,10 @@
 import { datesIn } from "./dates";
 import { fold } from "./extract";
 import { detectDecimal, numbersIn } from "./numbers";
+import { reportScore } from "./report";
 import type { OcrLine } from "./types";
 
-export type DocType = "invoice" | "receipt" | "statement" | "unknown";
+export type DocType = "invoice" | "receipt" | "statement" | "report" | "unknown";
 
 const STATEMENT_WORDS = /\b(statement|account transactions|transaction history|hesap hareketleri|hesap ozeti|ekstre|kontoauszug|umsatze|iban|balance|bakiye|saldo|opening balance|closing balance|devreden)\b/g;
 const INVOICE_WORDS = /\b(invoice|tax invoice|fatura|e-arsiv|rechnung|bill to|billed to|due date|vade|zahlbar|subtotal|sub-total|ara toplam|zwischensumme|vat|kdv|mwst|sales tax|unit price|birim fiyat|einzelpreis|qty|quantity|miktar|menge)\b/g;
@@ -30,9 +31,12 @@ export function classifyDocument(lines: OcrLine[]): Classification {
   const statement = (f.match(STATEMENT_WORDS)?.length ?? 0) + Math.min(datedRows, 12) * 1.5;
   const invoice = (f.match(INVOICE_WORDS)?.length ?? 0) * 1.5 + (TOTAL_WORDS.test(f) ? 2 : 0);
   const receipt = (f.match(RECEIPT_WORDS)?.length ?? 0) * 1.5 + (TOTAL_WORDS.test(f) ? 2 : 0) + (lines.length < 30 ? 1 : 0);
-  const scores = { statement, invoice, receipt };
+  // Financial statements: rows that name line items such as "Net sales" or "Toplam varlıklar".
+  const report = reportScore(lines) * 2;
+  const scores = { statement, invoice, receipt, report };
 
   if (datedRows >= 4 && statement > invoice) return { type: "statement", scores, reason: `${datedRows} dated rows with amounts` };
+  if (report >= 8 && report > invoice) return { type: "report", scores, reason: `${report / 2} financial statement line items` };
   if (Math.max(invoice, receipt) < 3.5) {
     return { type: "unknown", scores, reason: lines.length < 3 ? "Almost no text was found" : "No invoice, receipt or statement structure was found" };
   }
