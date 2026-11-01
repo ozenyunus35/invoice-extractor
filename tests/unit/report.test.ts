@@ -145,4 +145,56 @@ describe("financial reports", () => {
     const failed = analyseReport(extractReport(broken)).checks.filter((c) => c.status === "fail").map((c) => c.label);
     expect(failed).toContain("Balance sheet: assets = liabilities + equity");
   });
+
+  it("rebuilds a balance sheet from a shadowed phone photo's noisy OCR", () => {
+    // What the reader gets from a crooked, half-shadowed photo: specks on lines of their own,
+    // pale first-column figures missed, junk at row ends, "17.100" and "27,900" side by side.
+    const r = extractReport(lines(`NORTHGATE PACKAGING AS | EXAMPLE
+DOCUMENT 02 / 05
+Comparative balance sheet  p  >
+Amounts in TRY thousands
+|
+Cash and cash equivalents  ]
+Trade receivables
+Inventories
+Total current assets  15.200  19,450  ¢€
+Y
+Property, plant and equipment  9,800
+Total assets  »  25.000  29.250
+{
+Trade payables  Sa  =30 J
+]
+{ Total current liabilities  10.100  12,400
+Share capital  6,000  6.000
+Retained earnings  8.900  10,850  |
+Total equity  14.900  16,850
+Total liabilities and equity  25,000  29,250
+The figures are illustrative.`));
+    expect(r.tables).toHaveLength(1);
+    const t = r.tables[0];
+    expect(t.title).toBe("Comparative balance sheet");
+    expect(t.rows.map((x) => [x.label, x.values])).toEqual([
+      ["Cash and cash equivalents", [null, null]],
+      ["Trade receivables", [null, null]],
+      ["Inventories", [null, null]],
+      ["Total current assets", [15200, 19450]],
+      ["Property, plant and equipment", [null, 9800]],
+      ["Total assets", [25000, 29250]],
+      ["Trade payables Sa", [null, null]],
+      ["Total current liabilities", [10100, 12400]],
+      ["Share capital", [6000, 6000]],
+      ["Retained earnings", [8900, 10850]],
+      ["Total equity", [14900, 16850]],
+      ["Total liabilities and equity", [25000, 29250]],
+    ]);
+    expect(analyseReport(r).checks.filter((c) => c.status === "fail")).toEqual([]);
+  });
+
+  it("keeps clean text strict: no figure-less rows, no stray digits", () => {
+    const r = extractReport(lines(`Balance sheet
+Item 2025 2026
+Cash 1,200 1,500
+Receivables 800 950`));
+    expect(r.tables[0].rows.map((x) => x.values)).toEqual([[1200, 1500], [800, 950]]);
+  });
 });

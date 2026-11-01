@@ -18,6 +18,8 @@ say which situation the reader handles and which it does not:
   hand-shadow   the sharp shadow of a hand or phone across the text
   far-away      a small page on a patterned table
   close-up      the page fills the frame, edges cut
+  shadow-fill   the page fills the frame, tilted, a soft diagonal shadow across one side
+  screenshot    a screenshot of the document open in a dark viewer app
 
 Run after render.mjs: python3 scripts/corpus/conditions.py corpus
 """
@@ -38,7 +40,7 @@ PICK = [
     "inv-en-US-classic", "inv-de-multi-vat", "inv-tr-discount", "inv-fr-modern", "inv-es-leaders",
     "inv-pl-classic", "rcp-tr", "rcp-en-GB", "rcp-de", "stm-tr-1",
 ]
-CONDITIONS = ["dark", "overexposed", "flash", "blur", "shake", "low-res", "whatsapp", "perspective", "curled", "upside-down", "sideways", "warm-light", "hand-shadow", "far-away", "close-up"]
+CONDITIONS = ["dark", "overexposed", "flash", "blur", "shake", "low-res", "whatsapp", "perspective", "curled", "upside-down", "sideways", "warm-light", "hand-shadow", "far-away", "close-up", "shadow-fill", "screenshot"]
 
 
 def on_table(im: Image.Image, rnd: random.Random, angle: float, margin=0.12, bg=None) -> Image.Image:
@@ -92,6 +94,33 @@ def photograph(page: Image.Image, cond: str, rnd: random.Random) -> tuple[Image.
         w, h = page.size
         im = page.rotate(tilt, expand=False, fillcolor=(235, 235, 230), resample=Image.BICUBIC).crop((int(w * 0.03), int(h * 0.02), int(w * 0.97), int(h * 0.985)))
         return ImageEnhance.Brightness(im).enhance(0.92).filter(ImageFilter.GaussianBlur(0.6)), 82
+    if cond == "shadow-fill":
+        # Held close and a little crooked: the sheet runs past every edge of the frame, and the
+        # phone's shadow falls diagonally across the left side, darkest at the edge.
+        w, h = page.size
+        im = page.rotate(rnd.choice([-1, 1]) * rnd.uniform(2.5, 4), expand=False, fillcolor=(235, 235, 230), resample=Image.BICUBIC)
+        im = im.crop((int(w * 0.02), int(h * 0.015), int(w * 0.985), int(h * 0.985)))
+        a = arr(im)
+        hh, ww = a.shape[:2]
+        y, x = np.mgrid[0:hh, 0:ww]
+        d = (x / ww) + 0.35 * (y / hh)  # distance along the diagonal
+        shade = np.clip((0.55 - d) / 0.35, 0, 1) ** 1.3
+        a = a * (1 - 0.62 * shade[..., None])
+        return img(a).filter(ImageFilter.GaussianBlur(0.7)), 80
+    if cond == "screenshot":
+        # The PDF open in a dark viewer: toolbar and sidebar with their own text around the page.
+        W = int(page.width * 1.45)
+        H = int(page.height * 1.12)
+        canvas = Image.new("RGB", (W, H), (32, 33, 36))
+        d = ImageDraw.Draw(canvas)
+        d.rectangle((0, 0, W, int(H * 0.04)), fill=(45, 46, 50))
+        d.rectangle((0, 0, int(W * 0.18), H), fill=(40, 41, 45))
+        for i, label in enumerate(["Documents", "Recent", "Shared", "Downloads", "Invoices 2026", "Archive"]):
+            d.text((int(W * 0.02), int(H * 0.07) + i * 34), label, fill=(200, 200, 205))
+        d.text((int(W * 0.2), int(H * 0.012)), "Preview  -  page 1 of 1  -  100%", fill=(220, 220, 225))
+        small = page.resize((int(page.width * 0.95), int(page.height * 0.95)), Image.LANCZOS)
+        canvas.paste(small, (int(W * 0.18) + (W - int(W * 0.18) - small.width) // 2, int(H * 0.05)))
+        return canvas, 95
     if cond == "far-away":
         # A patterned table (wood grain), the page small in a 12-megapixel frame.
         W, H = 3000, 4000

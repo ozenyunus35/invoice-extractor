@@ -90,10 +90,13 @@ const toCanvas = (p: Pixels) => {
   return c;
 };
 
+/** Straightens by `radians` on a canvas grown to fit, so no corner of the page is cut off. */
 function rotate(canvas: HTMLCanvasElement, radians: number): HTMLCanvasElement {
   const c = document.createElement("canvas");
-  c.width = canvas.width;
-  c.height = canvas.height;
+  const cos = Math.abs(Math.cos(radians));
+  const sin = Math.abs(Math.sin(radians));
+  c.width = Math.ceil(canvas.width * cos + canvas.height * sin);
+  c.height = Math.ceil(canvas.width * sin + canvas.height * cos);
   const ctx = c.getContext("2d")!;
   ctx.fillStyle = "#fff";
   ctx.fillRect(0, 0, c.width, c.height);

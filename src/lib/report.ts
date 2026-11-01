@@ -29,18 +29,25 @@ const YEAR = /^(19|20)\d{2}$/;
 /** A number cell: 1.234,5 · (1,920) · -45 · %36,0 · 36.0% · +2.550 */
 const NUM = /^[(]?[-−+]?%?\d[\d.,]*%?[)]?$/;
 
+/** Set per report: true when no figure in its tables has decimals, so "27,900" and "17.100" are both thousands. */
+let wholeFigures = false;
+
 function cell(token: string, decimal: Decimal): { value: number; percent: boolean } | null {
   // "31.12.2026" in a header is a date, not 31,122,026.
   if (!NUM.test(token) || /^\d{1,2}[./-]\d{1,2}[./-]\d{2,4}$/.test(token)) return null;
   const negative = token.startsWith("(") || /^[-−]/.test(token);
   const percent = token.includes("%");
-  const v = parseNumber(token.replace(/[()%+−-]/g, ""), decimal);
+  const bare = token.replace(/[()%+−-]/g, "");
+  if (wholeFigures && /^\d{1,3}([.,]\d{3})+$/.test(bare)) return { value: (negative ? -1 : 1) * Number(bare.replace(/[.,]/g, "")), percent };
+  const v = parseNumber(bare, decimal);
   return v === null ? null : { value: negative ? -v : v, percent };
 }
 
 /** Splits "Net sales 40,500 48,600" into the label and its numeric cells. */
 function splitRow(text: string, decimal: Decimal) {
   const tokens = joinSpacedThousands(text).trim().split(/\s+/);
+  // OCR specks at the end of a row ("17.100  ¢€", "6.000  |"): no digit, at most two characters.
+  while (tokens.length > 1 && !/\d/.test(tokens[tokens.length - 1]) && (tokens[tokens.length - 1].length <= 2 || !/[\p{L}\d]/u.test(tokens[tokens.length - 1]))) tokens.pop();
   const values: { value: number; percent: boolean }[] = [];
   let cut = tokens.length;
   while (cut > 1) {
@@ -49,7 +56,13 @@ function splitRow(text: string, decimal: Decimal) {
     values.unshift(c);
     cut--;
   }
-  const label = tokens.slice(0, cut).join(" ");
+  // OCR specks around the label ("{ Total current liabilities", "Retained earnings 4 '").
+  const words = tokens.slice(0, cut);
+  const speck = (t: string) => !/[\p{L}\d]/u.test(t) || /^[\p{L}\d]$/u.test(t) || /^\d{1,2}$/.test(t);
+  while (words.length > 1 && speck(words[0])) words.shift();
+  while (words.length > 1 && speck(words[words.length - 1])) words.pop();
+  // Inside the label, a token with no letter is a speck too ("Taxes payable =30").
+  const label = words.filter((t, k) => k === 0 || /\p{L}/u.test(t) || /^[&/-]$/.test(t)).join(" ");
   // "Item 2025 2026" is a header: its only numbers are plain years.
   const yearsOnly = tokens.slice(cut).every((t) => YEAR.test(t));
   return { label, values, yearsOnly };
@@ -86,7 +99,27 @@ const KIND_RULES: [ReportTable["kind"], RegExp][] = [
 export function extractReport(lines: OcrLine[]): Report {
   const text = lines.map((l) => l.text).join("\n");
   const decimal = detectDecimal(text.replace(/\b(19|20)\d{2}\b/g, ""));
+  // A phone photo's OCR: specks on lines of their own. Only then are rows with missed figures
+  // and stray marks between rows expected; clean text (PDF, Word) keeps the strict reading.
+  const noisy = lines.filter((l) => l.text.replace(/[^\p{L}\d]/gu, "").length <= 3).length >= 3;
+  // A short line-item name with no figures ("Trade receivables"): part of the table around it.
+  const itemOnly = (k: number) => {
+    if (!noisy) return false;
+    const t = lines[k]?.text.trim() ?? "";
+    const r = splitRow(t, decimal);
+    return !r.values.length && /^[\p{Lu}{|]/u.test(t) && !/\b(amounts?|thousands?|millions?|tutarlar|bin (TL|USD|EUR))\b/i.test(t) && /\p{L}{3}/u.test(r.label) && r.label.split(/\s+/).length <= 7 && !/\d/.test(r.label) && !/[.:;]$/.test(t);
+  };
   const tables: ReportTable[] = [];
+  wholeFigures = false;
+  const figures = lines.flatMap((l) => {
+    const r = splitRow(l.text, decimal);
+    return isRow(r) ? l.text.trim().split(/\s+/).filter((t) => NUM.test(t) && /\d/.test(t)) : [];
+  });
+  // A blurred photo drops a digit now and then ("27.9" for "27,900"), so a stray one or two
+  // short-decimal figures among many thousands don't overrule the rest.
+  const decimals = figures.filter((t) => /[.,]\d{1,2}%?\)?$/.test(t)).length;
+  const groups = figures.filter((t) => /^\(?[-−+]?\d{1,3}([.,]\d{3})+\)?$/.test(t)).length;
+  wholeFigures = groups >= 4 && decimals <= (noisy ? Math.max(2, groups * 0.2) : 0);
   let i = 0;
   while (i < lines.length) {
     const first = splitRow(lines[i].text, decimal);
@@ -96,23 +129,43 @@ export function extractReport(lines: OcrLine[]): Report {
     }
     // Collect consecutive rows; a run of at least two makes a table.
     const rows: ReportTable["rows"] = [];
+    // Line items right above the first row whose figures were all missed (a pale column on a photo).
+    let start = i;
+    while (start - 1 >= 0 && i - start < 8 && (itemOnly(start - 1) || lines[start - 1].text.replace(/[^\p{L}\d]/gu, "").length <= 3)) start--;
+    while (start < i && !itemOnly(start)) start++;
+    for (let k = start; k < i; k++) if (itemOnly(k)) rows.push({ label: splitRow(lines[k].text, decimal).label, values: [], percent: false, line: k });
     let j = i;
     for (; j < lines.length; j++) {
       const r = splitRow(lines[j].text, decimal);
-      if (!isRow(r)) break;
+      if (!isRow(r)) {
+        // A photo's OCR leaves specks between rows ("|", "7", ") "): step over up to two of
+        // them when the table carries on right after.
+        const speck = (k: number) => noisy && k < lines.length && (lines[k].text.replace(/[^\p{L}\d]/gu, "").length <= 3 || itemOnly(k));
+        const next = [1, 2, 3, 4, 5, 6].find((d) => [...Array(d).keys()].every((e) => speck(j + e)) && j + d < lines.length && isRow(splitRow(lines[j + d].text, decimal)));
+        if (next === undefined) break;
+        // A line item whose figures the reader missed keeps its place in the table, empty.
+        for (let e = 0; e < next; e++) if (itemOnly(j + e)) rows.push({ label: splitRow(lines[j + e].text, decimal).label, values: [], percent: false, line: j + e });
+        j += next - 1;
+        continue;
+      }
       rows.push({ label: r.label, values: r.values.map((v) => v.value), percent: r.values.some((v) => v.percent), line: j });
     }
     if (rows.length >= 2) {
-      const counts = rows.map((r) => r.values.length);
-      const n = counts.sort((a, b) => counts.filter((c) => c === b).length - counts.filter((c) => c === a).length)[0];
-      const kept = rows.filter((r) => r.values.length === n);
+      // The table's width: the most figures that at least two rows have (a photo misses some cells,
+      // so the commonest count can be short).
+      const counts = rows.map((r) => r.values.length).filter((c) => c > 0);
+      const n = Math.max(...counts.filter((c) => counts.filter((d) => d === c).length >= 2), counts.sort((a, b) => counts.filter((c) => c === b).length - counts.filter((c) => c === a).length)[0] ?? 0);
+      // A row short of a figure (a faint or blank cell the reader missed) keeps the figures it
+      // has in the last columns, where numbers sit, rather than being dropped.
+      const kept = rows.filter((r) => r.values.length <= n).map((r) => (r.values.length === n ? r : { ...r, values: [...Array(n - r.values.length).fill(null), ...r.values] }));
       // The header sits right above the first row; wrapped headers take up to three short lines.
       const headerLine = (k: number) => k >= 0 && /\p{L}/u.test(lines[k].text) && lines[k].text.split(/\s+/).length <= 12 && !/[.,;]$/.test(lines[k].text.trim()) && !isRow(splitRow(lines[k].text, decimal));
-      let top = i;
-      while (top - 1 >= 0 && i - top < 3 && headerLine(top - 1)) top--;
-      const headerIdx = top < i ? i - 1 : -1;
+      const head = rows[0]?.line ?? i; // figure-less rows above the first full one belong to the table
+      let top = head;
+      while (top - 1 >= 0 && head - top < 3 && headerLine(top - 1)) top--;
+      const headerIdx = top < head ? head - 1 : -1;
       const header = headerIdx >= 0 ? lines[headerIdx].text : null;
-      const headerBlock = lines.slice(top, i).map((l) => l.text).join(" ");
+      const headerBlock = lines.slice(top, head).map((l) => l.text).join(" ");
       // The title is the heading of the section ("DOCUMENT 03 / 06" + "Comparative balance sheet"),
       // or a short heading right above a second table in the same section.
       let title = "";
@@ -122,16 +175,27 @@ export function extractReport(lines: OcrLine[]): Report {
       }
       // A short heading at the top of a wrapped header block names this table ("Margin comparison").
       const lead = lines[top]?.text.trim();
-      if (top < i - 1 && lead && lead.split(/\s+/).length <= 4 && !/\d/.test(lead)) title = lead;
+      if (top < head - 1 && lead && lead.split(/\s+/).length <= 4 && !/\d/.test(lead)) title = lead;
       const near = lines[top - 1]?.text.trim();
-      if (top < i && top - 1 >= 0 && near && near.split(/\s+/).length <= 6 && !/\d/.test(near) && !/[.,:;]$/.test(near) && near !== title && tables.some((t) => t.title === title)) title = near;
+      if (top < head && top - 1 >= 0 && near && near.split(/\s+/).length <= 6 && !/\d/.test(near) && !/[.,:;]$/.test(near) && near !== title && tables.some((t) => t.title === title)) title = near;
       if (!title) title = lines.slice(Math.max(0, top - 8), top).reverse().map((l) => l.text.trim()).find((t) => t.split(/\s+/).length <= 6 && !/\d/.test(t) && !/[.,:;]$/.test(t)) ?? "";
       const blob = fold([title, headerBlock, ...kept.map((r) => r.label)].join(" "));
       const kind = kept.every((r) => r.percent) ? "ratios" : (KIND_RULES.find(([, re]) => re.test(blob))?.[0] ?? "other");
       const columns = columnNames(header, n);
       // A wrapped header can't be split into columns from text alone; at least name the total.
       if (columns[n - 1] === `Column ${n}` && /\b(total|toplam)\b/i.test(headerBlock)) columns[n - 1] = /toplam/i.test(headerBlock) ? "Toplam" : "Total";
-      if (kept.length >= 2) tables.push({ title: title || "Table", kind, columns, rows: kept, line: headerIdx >= 0 ? headerIdx : i });
+      // On a noisy photo, stray digits can line up like a table ("DOCUMENT 03 / 06"): a real one
+      // has at least two real figures.
+      if (noisy) {
+        // A lone digit among figures in the thousands is a speck read as a number.
+        const big = kept.flatMap((r) => r.values).filter((v): v is number => v !== null && Math.abs(v) >= 100).length;
+        if (big >= 3) for (const r of kept) r.values = r.values.map((v) => (v !== null && Math.abs(v) < 10 ? null : v));
+        const words = title.split(/\s+/);
+        while (words.length > 1 && (!/\p{L}{2}/u.test(words[words.length - 1]) || /^\p{Ll}{1,2}$/u.test(words[words.length - 1]))) words.pop();
+        title = words.join(" ");
+      }
+      const real = kept.filter((r) => r.values.some((v) => v !== null && Math.abs(v) >= 100)).length >= 2;
+      if (kept.length >= 2 && (!noisy || real)) tables.push({ title: title || "Table", kind, columns, rows: kept, line: headerIdx >= 0 ? headerIdx : head });
     }
     i = Math.max(j, i + 1);
   }
@@ -236,6 +300,9 @@ function subtotals(t: ReportTable): Check | null {
   let ok = 0;
   const totals: (number | null)[][] = [];
   let since: ReportTable["rows"] = [];
+  // A photo whose reader missed figures (rows with none at all): a sum over a missing cell can't
+  // be checked either way, so those columns are skipped rather than failed.
+  const gappy = t.rows.some((r) => r.values.every((v) => v === null));
   for (const r of t.rows) {
     if (!isSubtotal(r.label)) {
       since.push(r);
@@ -243,6 +310,7 @@ function subtotals(t: ReportTable): Check | null {
     }
     const matches = r.values.map((v, c) => {
       if (v === null) return true;
+      if (gappy && (since.some((x) => x.values[c] === null) || totals.some((x) => x[c] === null))) return null;
       const run = since.reduce((s, x) => s + (x.values[c] ?? 0), 0);
       const prev = totals.at(-1)?.[c] ?? null;
       const prev2 = totals.at(-2)?.[c] ?? null;
@@ -250,8 +318,8 @@ function subtotals(t: ReportTable): Check | null {
       const candidates = [run, prev !== null ? prev + run : null, prev !== null && prev2 !== null && since.length === 0 ? prev + prev2 : null, totals.length >= 2 && since.length === 0 ? allTotals : null];
       return candidates.some((x) => x !== null && near(cents(x), v, Math.max(1, Math.abs(v) * 0.0005)));
     });
-    if (since.length || totals.length >= 2) {
-      if (matches.every(Boolean)) ok++;
+    if ((since.length || totals.length >= 2) && matches.some((m) => m !== null)) {
+      if (matches.every((m) => m !== false)) ok++;
       else bad.push(`"${r.label}" does not equal the lines above it`);
     }
     totals.push(r.values);

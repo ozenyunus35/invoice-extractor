@@ -79,18 +79,21 @@ Each one is read as a text PDF, as a page image and as a tilted, blurred, shadow
 
 ### Phone photos, condition by condition
 
-Ten invoices, receipts and a statement are each photographed under fifteen conditions (`scripts/corpus/conditions.py`); the share read with every field right:
+Ten invoices, receipts and a statement are each photographed under seventeen conditions (`scripts/corpus/conditions.py`); the share read with every field right:
 
 | Condition | Every field | Total | Condition | Every field | Total |
 | --- | --- | --- | --- | --- | --- |
-| Dark room, sensor noise | 100% | 100% | Steep angle | 100% | 100% |
-| Too much light | 90% | 100% | Curled, folded page | 100% | 100% |
+| Dark room, sensor noise | 100% | 100% | Steep angle | 90% | 100% |
+| Too much light | 90% | 100% | Curled, folded page | 90% | 100% |
 | Flash hot spot | 30% | 60% | Upside down | 90% | 100% |
-| Out of focus | 0% | 30% | Sideways | 80% | 100% |
+| Out of focus | 0% | 50% | Sideways | 80% | 100% |
 | Shaky hand | 0% | 0% | Yellow bulb | 90% | 100% |
-| Old low-res camera | 30% | 80% | Hand shadow across text | 20% | 70% |
-| Heavy WhatsApp compression | 80% | 100% | Far away on a patterned table | 90% | 100% |
-| | | | Close-up, edges cut | 90% | 100% |
+| Old low-res camera | 30% | 90% | Hand shadow across text | 30% | 70% |
+| Heavy WhatsApp compression | 80% | 100% | Far away on a patterned table | 80% | 90% |
+| Page fills the frame, tilted, shadow across it | 90% | 100% | Close-up, edges cut | 90% | 100% |
+| Screenshot of the document in a viewer | 90% | 100% | | | |
+
+The crop to the paper only cuts a border that is clearly background, dark and meeting the sheet at a sharp edge, and never a strip with writing in it; a straightened page is drawn on a canvas grown to fit, so no corner is lost. On a noisy photo, a statement table keeps its line items even when the reader misses a pale column, and a total that can't be checked is skipped rather than failed.
 
 Blur, camera shake, flash glare and hard shadows are the open problems: the app flags the values it is unsure of rather than guessing, and a retake fixes them.
 

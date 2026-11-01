@@ -70,14 +70,33 @@ export function paperBox(p: Pixels): { x0: number; y0: number; x1: number; y1: n
     }
     return bright / all;
   };
-  let y0 = 0;
-  while (y0 < h - 1 && rowFill(y0) < 0.5) y0 += step;
-  let y1 = h - 1;
-  while (y1 > y0 && rowFill(y1) < 0.5) y1 -= step;
-  let x0 = 0;
-  while (x0 < w - 1 && colFill(x0) < 0.5) x0 += step;
-  let x1 = w - 1;
-  while (x1 > x0 && colFill(x1) < 0.5) x1 -= step;
+  const rows: number[] = [];
+  for (let y = 0; y < h; y += step) rows.push(rowFill(y));
+  const cols: number[] = [];
+  for (let x = 0; x < w; x += step) cols.push(colFill(x));
+  // How many samples to cut from the start of a fill profile. Only a real background is cut:
+  // nearly no paper in the strip, then a sharp rise to paper (the sheet's edge). A shadow
+  // that darkens the page gradually, a page that fills the frame or a dark table header
+  // rise slowly or not at all, and are kept.
+  const cut = (fill: number[]) => {
+    let i = 0;
+    while (i < fill.length - 1 && fill[i] < 0.5) i++;
+    if (i === 0) return 0;
+    const strip = fill.slice(0, i);
+    if (strip.reduce((s, f) => s + f, 0) / strip.length > 0.15) return 0;
+    let j = i;
+    while (j > 0 && fill[j - 1] >= 0.25) j--;
+    return i - j <= Math.max(2, fill.length * 0.08) ? i : 0;
+  };
+  let y0 = cut(rows) * step;
+  let y1 = h - 1 - cut(rows.slice().reverse()) * step;
+  let x0 = cut(cols) * step;
+  let x1 = w - 1 - cut(cols.slice().reverse()) * step;
+  // And never a strip with writing in it.
+  if (y0 && hasText(p, 0, 0, w, y0)) y0 = 0;
+  if (y1 < h - 1 && hasText(p, 0, y1, w, h)) y1 = h - 1;
+  if (x0 && hasText(p, 0, 0, x0, h)) x0 = 0;
+  if (x1 < w - 1 && hasText(p, x1, 0, w, h)) x1 = w - 1;
   const margin = 0.015;
   const box = {
     x0: Math.max(0, Math.round(x0 - w * margin)),
@@ -89,6 +108,60 @@ export function paperBox(p: Pixels): { x0: number; y0: number; x1: number; y1: n
   // Nothing to crop, or a "sheet" too small to be the document.
   if (area > 0.97 || area < 0.25) return null;
   return box;
+}
+
+/**
+ * Whether a strip holds writing: along its rows or along its columns (a page photographed
+ * sideways), letter strokes, narrow dips clearly darker than the paper on both sides. Text has
+ * them even when it is small and in shadow; a table, a wooden desk, sensor noise or the single
+ * edge of the sheet does not.
+ */
+export function hasText(p: Pixels, x0: number, y0: number, x1: number, y1: number): boolean {
+  return strokesAlong(p, x0, y0, x1, y1, false) || strokesAlong(p, x0, y0, x1, y1, true);
+}
+
+function strokesAlong(p: Pixels, x0: number, y0: number, x1: number, y1: number, vertical: boolean): boolean {
+  const { width: w, data } = p;
+  const along = vertical ? y1 - y0 : x1 - x0;
+  const across = vertical ? x1 - x0 : y1 - y0;
+  if (along < 24 || across < 6) return false;
+  const pitch = Math.max(1, Math.round(Math.max(p.width, p.height) / 1800)); // about one stroke width
+  const reach = 4; // a stroke is at most this many samples wide
+  const lines = Math.max(1, Math.min(400, Math.floor(across / (pitch * 3))));
+  const v = new Float32Array(Math.ceil(along / pitch));
+  let texty = 0;
+  for (let k = 0; k < lines; k++) {
+    const c = Math.min(across - 2, Math.floor(((k + 0.5) * across) / lines));
+    let n = 0;
+    for (let t = 0; t < along; t += pitch, n++) {
+      // Average three pixels across the line: steadier against noise, still sharp along it.
+      let sum = 0;
+      for (let d = -1; d <= 1; d++) {
+        const cc = Math.max(0, Math.min(across - 1, c + d));
+        const x = vertical ? x0 + cc : x0 + t;
+        const y = vertical ? y0 + t : y0 + cc;
+        sum += luminance(data, (y * w + x) * 4);
+      }
+      v[n] = sum / 3;
+    }
+    let strokes = 0;
+    for (let t = reach; t < n - reach; t++) {
+      if (v[t] > v[t - 1] || v[t] > v[t + 1]) continue;
+      let left = 0;
+      let right = 0;
+      for (let d = 1; d <= reach; d++) {
+        left = Math.max(left, v[t - d]);
+        right = Math.max(right, v[t + d]);
+      }
+      const need = Math.max(20, 0.22 * Math.min(left, right));
+      if (left - v[t] > need && right - v[t] > need) {
+        strokes++;
+        t += reach;
+      }
+    }
+    if (strokes >= 5) texty++;
+  }
+  return texty / lines > 0.08;
 }
 
 /** Copies a rectangle out of an RGBA buffer. */
