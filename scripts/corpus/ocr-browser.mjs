@@ -23,6 +23,17 @@ for (const [dir, ext, type] of [["png", ".png", "image/png"], ["photo", ".jpg", 
   }
 }
 
+// Photos under named conditions (dark, blur, upside down…): corpus/conditions/<condition>/<name>.jpg
+if (existsSync(`${root}conditions`)) {
+  for (const cond of readdirSync(`${root}conditions`)) {
+    for (const f of readdirSync(`${root}conditions/${cond}`).filter((f) => f.endsWith(".jpg"))) {
+      const out = `${root}ocr/cond-${cond}-${f.replace(".jpg", ".json")}`;
+      if (only && !only.some((o) => `cond-${cond}-${f}`.startsWith(o))) continue;
+      if (force || only || !existsSync(out)) jobs.push({ file: `${root}conditions/${cond}/${f}`, name: f, type: "image/jpeg", out });
+    }
+  }
+}
+
 const browser = await chromium.launch();
 const page = await browser.newPage();
 await page.goto(base);

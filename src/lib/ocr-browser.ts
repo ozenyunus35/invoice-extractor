@@ -103,6 +103,48 @@ function rotate(canvas: HTMLCanvasElement, radians: number): HTMLCanvasElement {
   return c;
 }
 
+/** A quarter turn (1), half turn (2) or three quarters (3) clockwise. */
+function turn(canvas: HTMLCanvasElement, quarters: number): HTMLCanvasElement {
+  const c = document.createElement("canvas");
+  const side = quarters % 2 === 1;
+  c.width = side ? canvas.height : canvas.width;
+  c.height = side ? canvas.width : canvas.height;
+  const ctx = c.getContext("2d")!;
+  ctx.translate(c.width / 2, c.height / 2);
+  ctx.rotate((quarters * Math.PI) / 2);
+  ctx.drawImage(canvas, -canvas.width / 2, -canvas.height / 2);
+  return c;
+}
+
+function shrink(canvas: HTMLCanvasElement, side: number): HTMLCanvasElement {
+  const k = Math.min(1, side / Math.max(canvas.width, canvas.height));
+  const c = document.createElement("canvas");
+  c.width = Math.round(canvas.width * k);
+  c.height = Math.round(canvas.height * k);
+  c.getContext("2d")!.drawImage(canvas, 0, 0, c.width, c.height);
+  return c;
+}
+
+/** How much of a reading is real text: confident words of three or more letters or digits. */
+const legible = (words: OcrWord[]) => words.filter((w) => w.confidence >= 70 && /[\p{L}\d]{3,}/u.test(w.text)).length;
+
+/**
+ * A phone held the wrong way round: when the first reading is mostly noise,
+ * read a small copy turned a quarter, a half and three quarters, and keep
+ * the way up that reads best.
+ */
+async function uprightTurn(page: HTMLCanvasElement, first: OcrWord[]): Promise<number> {
+  const score = legible(first);
+  if (score >= Math.max(10, first.length * 0.45)) return 0;
+  const small = shrink(page, 1400);
+  let best = { quarters: 0, score };
+  for (const quarters of [2, 1, 3]) {
+    const s = legible(await recognize(turn(small, quarters), "eng"));
+    if (s > best.score * 1.5 && s >= 8) best = { quarters, score: s };
+  }
+  return best.quarters;
+}
+
 /**
  * Reads a page image the way a scanner app would: crop to the paper, even out
  * the light, read once to learn the language and the tilt, then straighten
@@ -119,18 +161,23 @@ async function ocrPage(source: HTMLCanvasElement, onProgress: (p: Progress) => v
   let page = photo ? toCanvas(px) : source;
 
   report = (p) => onProgress({ stage: p.stage === "Reading text" ? "Reading text (1 of 2)" : p.stage, value: 0.05 + p.value * 0.45 });
-  const first = await recognize(page, "eng");
+  let first = await recognize(page, "eng");
+  const quarters = await uprightTurn(page, first);
+  if (quarters) {
+    page = turn(page, quarters);
+    first = await recognize(page, "eng");
+  }
   const lang = guessLanguage(first);
   const angle = Math.atan(estimateSkew(first));
   const tilted = Math.abs(angle) > (0.6 * Math.PI) / 180;
   if (!lang && !tilted) {
     onProgress({ stage: "Done", value: 1 });
-    return { words: first, page, cleaned: photo };
+    return { words: first, page, cleaned: photo || quarters > 0 };
   }
   if (tilted) page = rotate(page, -angle);
   report = (p) => onProgress({ stage: p.stage === "Reading text" ? "Reading text (2 of 2)" : p.stage, value: 0.5 + p.value * 0.5 });
   const words = await recognize(page, lang ? `eng+${lang}` : "eng");
-  return { words, page, cleaned: photo || tilted };
+  return { words, page, cleaned: photo || tilted || quarters > 0 };
 }
 
 function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {

@@ -18,6 +18,7 @@ type Entry = { name: string; width: number; height: number; truth: Truth };
 
 const ROOT = "corpus/";
 const manifest = JSON.parse(readFileSync(`${ROOT}truth.json`, "utf8")) as Entry[];
+const CONDITIONS = existsSync(`${ROOT}conditions.json`) ? Object.keys(JSON.parse(readFileSync(`${ROOT}conditions.json`, "utf8"))) : [];
 
 async function pdfWords(path: string): Promise<OcrWord[]> {
   const doc = await pdfjs.getDocument({ data: new Uint8Array(readFileSync(path)), verbosity: 0 }).promise;
@@ -126,6 +127,11 @@ describe("corpus", () => {
         ["image", () => (existsSync(`${ROOT}ocr/png-${e.name}.json`) ? JSON.parse(readFileSync(`${ROOT}ocr/png-${e.name}.json`, "utf8")).words : null)],
         ["photo", () => (existsSync(`${ROOT}ocr/photo-${e.name}.json`) ? JSON.parse(readFileSync(`${ROOT}ocr/photo-${e.name}.json`, "utf8")).words : null)],
       ];
+      // The same page photographed in a dark room, out of focus, upside down…
+      for (const cond of CONDITIONS) {
+        const f = `${ROOT}ocr/cond-${cond}-${e.name}.json`;
+        if (existsSync(f)) sources.push([`cond:${cond}`, () => JSON.parse(readFileSync(f, "utf8")).words]);
+      }
       // Word, Excel, CSV, e-mail…: one reading, through the app's own pipeline.
       if (e.truth.office) sources.splice(0, sources.length, ["office", () => (existsSync(`${ROOT}ocr/office-${e.truth.office}.json`) ? JSON.parse(readFileSync(`${ROOT}ocr/office-${e.truth.office}.json`, "utf8")).words : null)]);
       for (const [source, load] of sources) {
@@ -154,8 +160,8 @@ describe("corpus", () => {
       if (!sel.length) return;
       const fields = [...new Set(sel.flatMap((r) => Object.keys(r.score)))];
       out.push(`## ${kind}`, "", `| source | n | ${fields.join(" | ")} | all fields |`, `| --- | --- | ${fields.map(() => "---").join(" | ")} | --- |`);
-      for (const source of ["pdf", "image", "photo", "office"]) {
-        const s = sel.filter((r) => r.source === source);
+      for (const source of ["pdf", "image", "photo", "office", "conditions"]) {
+        const s = sel.filter((r) => (source === "conditions" ? r.source.startsWith("cond:") : r.source === source));
         if (!s.length) continue;
         const pct = (f: string) => {
           const has = s.filter((r) => f in r.score);
@@ -167,6 +173,18 @@ describe("corpus", () => {
       out.push("");
     };
     ["invoice", "receipt", "statement", "report", "reject"].forEach(fieldTable);
+
+    // One row per photo condition: how many documents came out fully right, and the key fields.
+    if (CONDITIONS.length) {
+      out.push("## Phone photo conditions", "", "Invoices, receipts and a bank statement, each photographed under every condition.", "", "| condition | n | all fields | total | date | vendor / transactions |", "| --- | --- | --- | --- | --- | --- |");
+      for (const cond of CONDITIONS) {
+        const s = rows.filter((r) => r.source === `cond:${cond}`);
+        if (!s.length) continue;
+        const pct = (ok: (r: (typeof rows)[number]) => boolean, sel = s) => (sel.length ? `${Math.round((sel.filter(ok).length / sel.length) * 100)}%` : "–");
+        out.push(`| ${cond} | ${s.length} | ${pct((r) => Object.values(r.score).every(Boolean))} | ${pct((r) => r.score.total ?? r.score.amounts, s)} | ${pct((r) => r.score.date ?? r.score.dates, s)} | ${pct((r) => r.score.vendor ?? r.score["transaction count"], s)} |`);
+      }
+      out.push("");
+    }
 
     out.push("## Failures", "");
     for (const r of rows.filter((r) => !Object.values(r.score).every(Boolean))) {
