@@ -100,6 +100,8 @@ ITEMS = {
     "pl": ["Usługi doradcze (godz.)", "Papier ksero A4 (karton)", "Toner do drukarki", "Obsługa strony www", "Wynajem busa", "Stacja dokująca USB-C", "Roczna licencja oprogramowania", "Krzesło biurowe", "Druk ulotek (500 szt.)", "Poprawki graficzne"],
 }
 
+CREDIT = {"en": "Credit Note", "tr": "İade Faturası", "de": "Gutschrift", "fr": "Avoir", "es": "Factura rectificativa", "it": "Nota di credito", "nl": "Creditnota", "pt": "Nota de crédito", "pl": "Faktura korygująca"}
+
 CLIENTS = ["Meridian Health Group", "Ostrava Systems", "Kestrel Foods", "Lumen Architects", "Pinecrest Hotels", "Solace Dental"]
 
 
@@ -159,12 +161,16 @@ def make_invoice(locale: str, layout: str, idx: int) -> dict:
     number = rnd.choice(["INV-{y}-{n:04d}", "{y}/{n:05d}", "F{y}{n:06d}", "RE-{n:05d}", "FV/{n}/{m:02d}/{y}"]).format(y=issued.year, n=rnd.randint(1, 99999), m=issued.month)
     sales_tax = locale == "en-US"
     rates = loc["rates"]
-    n_items = rnd.randint(2, 7)
+    n_items = 22 if layout == "multipage" else rnd.randint(2, 7)
     items = []
-    for name in rnd.sample(ITEMS[lang], n_items):
+    names = rnd.sample(ITEMS[lang], len(ITEMS[lang]))
+    names = [names[k % len(names)] + (f" ({k // len(names) + 1})" if k >= len(names) else "") for k in range(n_items)]
+    for name in names:
         qty = rnd.choice([1, 1, 2, 3, 5, 10, 12, 25])
         unit = rnd.choice([4.5, 12.9, 18.0, 45.0, 89.99, 120.0, 249.0, 1250.0]) * (100 if jpy else 1)
         unit = round(unit) if jpy else unit
+        if layout == "credit":
+            unit = -unit
         amount = round(qty * unit) if jpy else r2(qty * unit)
         rate = 0 if sales_tax else (rates[0] if len(rates) == 1 or layout != "multi-vat" else rnd.choice(rates[:2]))
         items.append(dict(desc=name, qty=qty, unit=unit, amount=amount, rate=rate))
@@ -206,10 +212,28 @@ def make_invoice(locale: str, layout: str, idx: int) -> dict:
     meta = f"""<table class=meta><tr><td>{lab['no']}:</td><td>{escape(number)}</td></tr><tr><td>{lab['date']}:</td><td>{ds}</td></tr><tr><td>{lab['due']}:</td><td>{dd}</td></tr><tr><td>{lab['tax_id']}:</td><td>{rnd.randint(10**8, 10**9 - 1)}</td></tr></table>"""
     head = f"<tr><th>{lab['desc']}</th><th class=n>{lab['qty']}</th><th class=n>{lab['unit']}</th>" + (f"<th class=n>{lab['rate']}</th>" if layout == "multi-vat" else "") + f"<th class=n>{lab['amount']}</th></tr>"
     totals = f"""<div class=sum><div><span>{lab['sub']}</span><span>{m(subtotal)}</span></div>{vat_rows}<div class=grand><span>{lab['total']}</span><span>{m(total)}</span></div></div>"""
-    style = {"classic": "classic", "modern": "modern", "multi-vat": "modern", "discount": "classic"}[layout]
-    body = f"""<div class="top {style}"><div><div class=brand>{escape(vendor)}</div><div class=sub>{rnd.randint(1, 240)} {escape(rnd.choice(['Market Street', 'Hauptstraße', 'Rue de la Paix', 'Calle Mayor', 'Via Roma', 'Kerkstraat', 'Rua Augusta', 'ul. Długa', 'Atatürk Cad.']))} · info@{vendor.split()[0].lower().strip('&.,')}.example</div></div><div class=doc>{lab['title']}</div></div>
+    style = {"classic": "classic", "modern": "modern", "multi-vat": "modern", "discount": "classic", "credit": "classic", "dense": "dense", "leaders": "classic", "multipage": "classic"}[layout]
+    title = CREDIT[lang] if layout == "credit" else lab["title"]
+    if layout == "dense":
+        # Small type, everything on few lines, no table rules: the kind a small shop prints.
+        rows = "".join(f"<tr><td>{escape(i['desc'])}</td><td class=n>{i['qty']}</td><td class=n>{mn(i['unit'])}</td><td class=n>{mn(i['amount'])}</td></tr>" for i in items)
+        body = f"""<div class=dense><div class=dhead><div><b>{escape(vendor)}</b><br>{lab['tax_id']} {rnd.randint(10**8, 10**9 - 1)}</div><div class=dtitle>{title}</div></div>
+<p>{lab['no']}: {escape(number)} &nbsp;·&nbsp; {lab['date']}: {ds} &nbsp;·&nbsp; {lab['due']}: {dd}</p><p>{lab['bill']}: {escape(client)}</p>
+<table class=dt><tr><th>{lab['desc']}</th><th class=n>{lab['qty']}</th><th class=n>{lab['unit']}</th><th class=n>{lab['amount']}</th></tr>{rows}</table>
+<div class=dsum>{lab['sub']} {m(subtotal)}<br>{"<br>".join(f"{escape(vat_label(v))} {m(v['amount'])}" for v in vat_lines)}<br><b>{lab['total']} {m(total)}</b></div></div>"""
+        return dict(truth=truth, html=page(body, style), size=(1240, 1754))
+    if layout == "leaders":
+        # No table at all: "3 × Toner cartridge ........ 135,00" with dotted leaders.
+        lines = "".join(f"<div class=lead><span>{i['qty']} × {escape(i['desc'])}</span><i></i><span>{mn(i['amount'])}</span></div>" for i in items)
+        rows_html = f"<div class=leaders>{lines}</div>"
+    else:
+        rows_html = f"<table class=items>{head}{rows}</table>"
+    body = f"""<div class="top {style}"><div><div class=brand>{escape(vendor)}</div><div class=sub>{rnd.randint(1, 240)} {escape(rnd.choice(['Market Street', 'Hauptstraße', 'Rue de la Paix', 'Calle Mayor', 'Via Roma', 'Kerkstraat', 'Rua Augusta', 'ul. Długa', 'Atatürk Cad.']))} · info@{vendor.split()[0].lower().strip('&.,')}.example</div></div><div class=doc>{title}</div></div>
 <div class=metawrap><div><div class=label>{lab['bill']}</div>{escape(client)}<br>{rnd.randint(1, 99)} {escape(rnd.choice(['Oak Avenue', 'Lindenweg', 'Boulevard Haussmann', 'Gran Vía', 'Corso Italia', 'Damrak', 'Avenida da Liberdade', 'ul. Polna', 'İstiklal Cad.']))}</div>{meta}</div>
-<table class=items>{head}{rows}</table>{totals}<div class=foot>IBAN {rnd.choice(['DE','FR','ES','IT','NL','PT','PL','TR','GB'])}{rnd.randint(10,99)} 0000 0000 0000 0000 00 · {escape(lab['thanks'])}</div>"""
+{rows_html}{totals}<div class=foot>IBAN {rnd.choice(['DE','FR','ES','IT','NL','PT','PL','TR','GB'])}{rnd.randint(10,99)} 0000 0000 0000 0000 00 · {escape(lab['thanks'])}</div>"""
+    if layout == "multipage":
+        truth["pdf_only"] = True
+        return dict(truth=truth, html=page(body, style).replace("html, body { width: 1240px; height: 1754px;", "html, body { width: 1240px; min-height: 1754px;"), size=(1240, 1754))
     return dict(truth=truth, html=page(body, style), size=(1240, 1754))
 
 
@@ -281,6 +305,100 @@ def make_statement(locale: str, idx: int) -> dict:
                  transactions=[dict(date=t["date"].isoformat(), amount=t["amount"], balance=t["balance"]) for t in tx])
     return dict(truth=truth, html=page(body, "modern"), size=(1240, 1754))
 
+REPORT = {
+    "en": dict(loc="en-GB", company="Larkspur Components Ltd", doc="DOCUMENT", unit="Amounts in GBP thousands", item="Item",
+               inc="Income statement", bal="Balance sheet", cf="Cash flow statement", periods=["2025", "2026"], dates=["31 December 2025", "31 December 2026"],
+               rows=dict(revenue="Revenue", cogs="Cost of sales", gp="Gross profit", opex="Operating expenses", dep="Depreciation expense", op="Operating profit", fin="Net finance costs", pbt="Profit before tax", tax="Tax expense", np="Net profit for the period",
+                         cash="Cash and cash equivalents", rec="Trade receivables", inv="Inventories", tca="Total current assets", ppe="Property, plant and equipment, net", ta="Total assets",
+                         pay="Trade payables", std="Short-term borrowings", tcl="Total current liabilities", ltd="Long-term borrowings", tl="Total liabilities", cap="Paid-in capital", re="Retained earnings", te="Total equity", tle="Total liabilities and equity",
+                         cfo="Net cash from operating activities", capex="Purchases of property, plant and equipment", cfi="Net cash used in investing activities", debt="Net change in borrowings", cff="Net cash from financing activities", chg="Net increase in cash and cash equivalents", open="Cash and cash equivalents at beginning of period", close="Cash and cash equivalents at end of period", dadj="Depreciation adjustment", wc="Change in working capital")),
+    "tr": dict(loc="tr", company="Akdeniz Makine Sanayi AŞ", doc="BELGE", unit="Birim bin TL", item="Kalem",
+               inc="Gelir tablosu", bal="Bilanço", cf="Nakit akış tablosu", periods=["2025", "2026"], dates=["31 Aralık 2025", "31 Aralık 2026"],
+               rows=dict(revenue="Net satışlar", cogs="Satışların maliyeti", gp="Brüt kâr", opex="Faaliyet giderleri", dep="Amortisman giderleri", op="Faaliyet kârı", fin="Net finansman giderleri", pbt="Vergi öncesi kâr", tax="Vergi gideri", np="Dönem net kârı",
+                         cash="Nakit ve nakit benzerleri", rec="Ticari alacaklar", inv="Stoklar", tca="Dönen varlıklar toplamı", ppe="Maddi duran varlıklar net", ta="Toplam varlıklar",
+                         pay="Ticari borçlar", std="Kısa vadeli finansal borçlar", tcl="Kısa vadeli yükümlülükler toplamı", ltd="Uzun vadeli finansal borçlar", tl="Yükümlülükler toplamı", cap="Ödenmiş sermaye", re="Geçmiş yıllar kârları", te="Özkaynaklar toplamı", tle="Toplam kaynaklar",
+                         cfo="Faaliyetlerden sağlanan net nakit", capex="Maddi duran varlık alımları", cfi="Yatırımlarda kullanılan net nakit", debt="Net kredi kullanımı", cff="Finansmandan sağlanan net nakit", chg="Nakit ve nakit benzerlerindeki net artış", open="Dönem başı nakit ve nakit benzerleri", close="Dönem sonu nakit ve nakit benzerleri", dadj="Amortisman düzeltmesi", wc="İşletme sermayesindeki değişim")),
+    "de": dict(loc="de", company="Brenner Antriebstechnik GmbH", doc="DOKUMENT", unit="Angaben in TEUR", item="Posten",
+               inc="Gewinn- und Verlustrechnung", bal="Bilanz", cf="Kapitalflussrechnung", periods=["2025", "2026"], dates=["31.12.2025", "31.12.2026"],
+               rows=dict(revenue="Umsatzerlöse", cogs="Umsatzkosten", gp="Bruttoergebnis", opex="Betriebliche Aufwendungen", dep="Abschreibungen", op="Betriebsergebnis", fin="Zinsaufwand", pbt="Ergebnis vor Steuern", tax="Ertragsteuern", np="Jahresüberschuss",
+                         cash="Liquide Mittel", rec="Forderungen aus Lieferungen und Leistungen", inv="Vorräte", tca="Summe Umlaufvermögen", ppe="Sachanlagen", ta="Summe Aktiva",
+                         pay="Verbindlichkeiten aus Lieferungen und Leistungen", std="Kurzfristige Finanzverbindlichkeiten", tcl="Summe kurzfristige Verbindlichkeiten", ltd="Langfristige Finanzverbindlichkeiten", tl="Summe Verbindlichkeiten", cap="Gezeichnetes Kapital", re="Gewinnrücklagen", te="Summe Eigenkapital", tle="Summe Passiva",
+                         cfo="Cashflow aus laufender Geschäftstätigkeit", capex="Investitionen in Sachanlagen", cfi="Cashflow aus Investitionstätigkeit", debt="Veränderung Finanzverbindlichkeiten", cff="Cashflow aus Finanzierungstätigkeit", chg="Veränderung der liquiden Mittel", open="Liquide Mittel am Anfang der Periode", close="Liquide Mittel am Ende der Periode", dadj="Abschreibungen (Korrektur)", wc="Veränderung Working Capital")),
+    "fr": dict(loc="fr", company="Fonderie Marchand SAS", doc="DOCUMENT", unit="En milliers d'euros", item="Poste",
+               inc="Compte de résultat", bal="Bilan", cf="Tableau des flux de trésorerie", periods=["2025", "2026"], dates=["31 décembre 2025", "31 décembre 2026"],
+               rows=dict(revenue="Chiffre d'affaires", cogs="Coût des ventes", gp="Marge brute", opex="Charges d'exploitation", dep="Dotations aux amortissements", op="Résultat d'exploitation", fin="Charges financières nettes", pbt="Résultat avant impôt", tax="Impôt sur les sociétés", np="Résultat net",
+                         cash="Trésorerie", rec="Créances clients", inv="Stocks", tca="Total actif circulant", ppe="Immobilisations corporelles", ta="Total actif",
+                         pay="Dettes fournisseurs", std="Emprunts à court terme", tcl="Total passif courant", ltd="Emprunts à long terme", tl="Total dettes", cap="Capital social", re="Réserves", te="Total capitaux propres", tle="Total passif",
+                         cfo="Flux de trésorerie liés à l'activité", capex="Acquisitions d'immobilisations", cfi="Flux de trésorerie liés aux opérations d'investissement", debt="Variation des emprunts", cff="Flux de trésorerie liés aux opérations de financement", chg="Variation de trésorerie", open="Trésorerie d'ouverture", close="Trésorerie de clôture", dadj="Dotations aux amortissements (retraitement)", wc="Variation du besoin en fonds de roulement")),
+    "es": dict(loc="es", company="Talleres Iberia S.A.", doc="DOCUMENTO", unit="Importes en miles de euros", item="Partida",
+               inc="Cuenta de pérdidas y ganancias", bal="Balance de situación", cf="Estado de flujos de efectivo", periods=["2025", "2026"], dates=["31/12/2025", "31/12/2026"],
+               rows=dict(revenue="Ventas netas", cogs="Coste de ventas", gp="Margen bruto", opex="Gastos de explotación", dep="Amortización", op="Resultado de explotación", fin="Gastos financieros netos", pbt="Resultado antes de impuestos", tax="Impuesto sobre beneficios", np="Resultado del ejercicio",
+                         cash="Efectivo y equivalentes", rec="Deudores comerciales", inv="Existencias", tca="Total activo corriente", ppe="Inmovilizado material", ta="Total activo",
+                         pay="Acreedores comerciales", std="Deudas a corto plazo", tcl="Total pasivo corriente", ltd="Deudas a largo plazo", tl="Total pasivo", cap="Capital social", re="Reservas", te="Total patrimonio neto", tle="Total patrimonio neto y pasivo",
+                         cfo="Flujos de efectivo de las actividades de explotación", capex="Adquisición de inmovilizado", cfi="Flujos de efectivo de las actividades de inversión", debt="Variación de deudas", cff="Flujos de efectivo de las actividades de financiación", chg="Aumento neto de efectivo", open="Efectivo al inicio del periodo", close="Efectivo al final del periodo", dadj="Amortización (ajuste)", wc="Variación del capital circulante")),
+}
+
+
+def make_report(lang: str, broken: bool) -> dict:
+    R = REPORT[lang]
+    loc = LOCALE[R["loc"]]
+    r = R["rows"]
+
+    def n(x: int) -> str:
+        s2 = f"{abs(x):,}".replace(",", loc["thou"])
+        return f"({s2})" if x < 0 else s2
+
+    inc = []
+    for k in range(2):
+        rev = rnd.randint(20, 90) * 1000
+        cogs = -round(rev * rnd.uniform(0.55, 0.7))
+        gp = rev + cogs
+        opex = -round(rev * rnd.uniform(0.12, 0.2))
+        dep = -rnd.randint(4, 12) * 100
+        op = gp + opex + dep
+        fin = -rnd.randint(2, 9) * 100
+        pbt = op + fin
+        tax = -round(pbt * 0.25)
+        inc.append(dict(revenue=rev, cogs=cogs, gp=gp, opex=opex, dep=dep, op=op, fin=fin, pbt=pbt, tax=tax, np=pbt + tax))
+    bal = []
+    for k in range(2):
+        cash, rec, inv_ = rnd.randint(10, 60) * 100, rnd.randint(40, 120) * 100, rnd.randint(30, 90) * 100
+        tca = cash + rec + inv_
+        ppe = rnd.randint(80, 200) * 100
+        ta = tca + ppe
+        pay, std = rnd.randint(20, 60) * 100, rnd.randint(10, 40) * 100
+        tcl = pay + std
+        ltd = rnd.randint(20, 80) * 100
+        tl = tcl + ltd
+        cap = rnd.randint(30, 80) * 100
+        re_ = ta - tl - cap
+        bal.append(dict(cash=cash, rec=rec, inv=inv_, tca=tca, ppe=ppe, ta=ta, pay=pay, std=std, tcl=tcl, ltd=ltd, tl=tl, cap=cap, re=re_, te=cap + re_, tle=tl + cap + re_))
+    np_ = inc[1]["np"]
+    dadj = -inc[1]["dep"]
+    chg = bal[1]["cash"] - bal[0]["cash"]
+    capex = -rnd.randint(5, 30) * 100
+    debt = rnd.randint(-20, 20) * 100
+    cfi, cff = capex, debt
+    cfo = chg - cfi - cff
+    wc = cfo - np_ - dadj
+    cf = [("np", np_), ("dadj", dadj), ("wc", wc), ("cfo", cfo), ("capex", capex), ("cfi", cfi), ("debt", debt), ("cff", cff), ("chg", chg), ("open", bal[0]["cash"]), ("close", bal[1]["cash"])]
+    if broken:
+        bal[1]["te"] += 500  # the balance sheet no longer balances
+
+    def table(title: str, cols: list, rows: list) -> str:
+        head = f"<tr><th>{R['item']}</th>" + "".join(f"<th class=n>{c}</th>" for c in cols) + "</tr>"
+        body = "".join(f"<tr><td>{escape(r[k])}</td>" + "".join(f"<td class=n>{n(v)}</td>" for v in vals) + "</tr>" for k, vals in rows)
+        return f"<p class=dno>{R['doc']} {{no}} / 03</p><h2>{escape(title)}</h2><p class=unit>{R['unit']}</p><table class=items>{head}{body}</table>"
+
+    t1 = table(R["inc"], R["periods"], [(k, [inc[0][k], inc[1][k]]) for k in ["revenue", "cogs", "gp", "opex", "dep", "op", "fin", "pbt", "tax", "np"]]).replace("{no}", "01")
+    t2 = table(R["bal"], R["dates"], [(k, [bal[0][k], bal[1][k]]) for k in ["cash", "rec", "inv", "tca", "ppe", "ta", "pay", "std", "tcl", "ltd", "tl", "cap", "re", "te", "tle"]]).replace("{no}", "02")
+    t3 = table(R["cf"], [R["periods"][1]], [(k, [v]) for k, v in cf]).replace("{no}", "03")
+    body = f"<p class=co>{escape(R['company'])} | {escape(R['unit'])}</p>{t1}<div style='page-break-before:always'></div>{t2}<div style='page-break-before:always'></div>{t3}"
+    truth = dict(kind="report", lang=lang, locale=R["loc"], layout="report-broken" if broken else "report", pdf_only=True,
+                 kinds=["income", "balance", "cashflow"], net_profit=np_, broken=broken)
+    html = page(body, "plain").replace("html, body { width: 1240px; height: 1754px;", "html, body { width: 1240px; min-height: 1754px;")
+    return dict(truth=truth, html=html, size=(1240, 1754))
+
 
 REJECT = {
     "contract": "<h1>Service Agreement</h1><p>This agreement is made between Lumen Architects (the Client) and Northgate Analytics LLC (the Provider). The Provider agrees to deliver monthly reports. Either party may terminate this agreement with thirty days written notice.</p><p>1. Term. The term begins on the effective date and continues for twelve months.</p><p>2. Fees. Fees are set out in Schedule A and are payable within 30 days.</p><p>3. Confidentiality. Each party shall keep the other party's information confidential.</p><p>Signed: ____________________ Date: ____________</p>",
@@ -311,6 +429,12 @@ table.items .n { text-align: right; padding-left: 22px; white-space: nowrap; }
 .sum { margin-top: 30px; margin-left: auto; width: 540px; } .sum div { display: flex; justify-content: space-between; padding: 7px 0; }
 .sum .grand { border-top: 2px solid #1d1f23; margin-top: 8px; padding-top: 14px; font-size: 27px; font-weight: 700; }
 .foot { position: absolute; left: 100px; right: 100px; bottom: 80px; color: #555a63; font-size: 16px; border-top: 1px solid #e3e5e8; padding-top: 16px; }
+.dense { font-size: 14px; line-height: 1.35; } .dhead { display: flex; justify-content: space-between; } .dtitle { font-size: 22px; font-weight: 700; }
+.dense p { margin: 4px 0; } table.dt { width: 100%; border-collapse: collapse; margin-top: 18px; } .dt th { text-align: left; font-weight: 600; padding: 2px 0; } .dt td { padding: 1px 0; } .dt .n { text-align: right; padding-left: 14px; }
+.dsum { margin-top: 14px; text-align: right; }
+.leaders { margin-top: 60px; } .lead { display: flex; gap: 10px; align-items: baseline; padding: 6px 0; } .lead i { flex: 1; border-bottom: 2px dotted #999; }
+.foot { position: static; margin-top: 40px; }
+.co { color: #555a63; } .dno { margin-top: 30px; color: #555a63; letter-spacing: 2px; } .unit { color: #555a63; font-size: 17px; }
 h1 { font-size: 40px; margin-bottom: 24px; } h2 { font-size: 26px; margin: 26px 0 10px; } p, li { margin: 8px 0; } ul { padding-left: 28px; }"""
 
 
@@ -334,11 +458,21 @@ def main() -> None:
     for locale in LOCALE:
         for k, layout in enumerate(layouts):
             docs.append((f"inv-{locale}-{layout}", make_invoice(locale, layout, k)))
+    # Harder cases in a spread of languages.
+    for k, locale in enumerate(["en-GB", "tr", "de", "fr", "es", "it", "nl", "pt", "pl"]):
+        docs.append((f"inv-{locale}-credit", make_invoice(locale, "credit", k)))
+        docs.append((f"inv-{locale}-dense", make_invoice(locale, "dense", k + 1)))
+        docs.append((f"inv-{locale}-leaders", make_invoice(locale, "leaders", k)))
+    for k, locale in enumerate(["en-US", "de", "tr", "es"]):
+        docs.append((f"inv-{locale}-multipage", make_invoice(locale, "multipage", k)))
     for locale in ["en-GB", "tr", "de", "fr", "es", "it", "nl", "pt", "pl", "en-JP"]:
         docs.append((f"rcp-{locale}", make_receipt(locale, 0)))
     for k, locale in enumerate(STATEMENT):
         for v in range(2):
             docs.append((f"stm-{locale}-{v}", make_statement(locale, v)))
+    for lang in REPORT:
+        docs.append((f"rep-{lang}", make_report(lang, False)))
+        docs.append((f"rep-{lang}-broken", make_report(lang, True)))
     for name, html in REJECT.items():
         docs.append((f"rej-{name}", dict(truth=dict(kind="reject", layout=name), html=page(html, "plain"), size=(1240, 1754))))
 

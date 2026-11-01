@@ -37,10 +37,11 @@ export type NumberToken = {
 /**
  * Joins thousands written with spaces: "2 490,00", "12 345", "1 234 567,89".
  * Narrow and non-breaking spaces always group digits. A plain single space
- * only does on lines rebuilt from positions, where columns are two spaces apart.
+ * only does on lines rebuilt from positions, where columns are two spaces apart,
+ * or with `force` on totals lines, which hold a label and one amount.
  */
-export function joinSpacedThousands(line: string): string {
-  const spaced = / {2}/.test(line);
+export function joinSpacedThousands(line: string, force = false): string {
+  const spaced = force || / {2}/.test(line);
   const re = spaced ? /(?<![\d.,])(\d{1,3})((?:[ \u00a0\u202f]\d{3})+)(?![\d])/g : /(?<![\d.,])(\d{1,3})((?:[\u00a0\u202f]\d{3})+)(?![\d])/g;
   return line.replace(re, (_, head: string, groups: string) => head + groups.replace(/[ \u00a0\u202f]/g, ""));
 }

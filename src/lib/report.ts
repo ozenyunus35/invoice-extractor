@@ -30,7 +30,8 @@ const YEAR = /^(19|20)\d{2}$/;
 const NUM = /^[(]?[-−+]?%?\d[\d.,]*%?[)]?$/;
 
 function cell(token: string, decimal: Decimal): { value: number; percent: boolean } | null {
-  if (!NUM.test(token)) return null;
+  // "31.12.2026" in a header is a date, not 31,122,026.
+  if (!NUM.test(token) || /^\d{1,2}[./-]\d{1,2}[./-]\d{2,4}$/.test(token)) return null;
   const negative = token.startsWith("(") || /^[-−]/.test(token);
   const percent = token.includes("%");
   const v = parseNumber(token.replace(/[()%+−-]/g, ""), decimal);
@@ -74,12 +75,11 @@ function columnNames(header: string | null, n: number): string[] {
 }
 
 const KIND_RULES: [ReportTable["kind"], RegExp][] = [
-  ["cashflow", /(cash from operating|operating activities|faaliyetlerden saglanan|investing activities|yatirimlarda kullanilan|nakit akis)/],
-  ["balance", /(total assets|toplam varliklar|toplam kaynaklar|total liabilities and equity|balance sheet|bilanco)/],
-  ["ageing", /(ageing|yaslandirma|overdue|vadesi|gelmemis|gunu asan|days past)/],
-  ["budget", /\b(budget|butce)\b.*\b(actual|gerceklesen)\b/],
-  ["ratios", /(margin|marji|ratio|orani)/],
-  ["income", /(net sales|net satislar|revenue|hasilat|gross profit|brut kar)/],
+  ["cashflow", /(cash from operating|operating activities|faaliyetlerden saglanan|investing activities|yatirimlarda kullanilan|nakit akis|cashflow|kapitalflussrechnung|flux de tresorerie|flujos de efectivo|estado de flujos)/],
+  ["balance", /(total assets|toplam varliklar|toplam kaynaklar|total liabilities and equity|balance sheet|bilanco|bilanzsumme|summe aktiva|\bbilanz\b|total actif|\bbilan\b|total activo|balance de situacion)/],
+  ["ageing", /(ageing|yaslandirma|overdue|vadesi|gelmemis|gunu asan|days past|altersstruktur|uberfallig|echeancier|antiguedad)/],
+  ["budget", /\b(budget|butce|plan|presupuesto)\b.*\b(actual|gerceklesen|ist|reel|real)\b/],
+  ["income", /(net sales|net satislar|revenue|hasilat|gross profit|brut kar|umsatzerlose|gewinn- und verlustrechnung|chiffre d'affaires|compte de resultat|ventas netas|cuenta de perdidas)/],
 ];
 
 /** Reads every table in the report. */
@@ -118,7 +118,7 @@ export function extractReport(lines: OcrLine[]): Report {
       let title = "";
       for (let k = top - 1; k >= Math.max(0, top - 40) && !title; k--) {
         const t = lines[k].text.trim();
-        if (/^(document|belge|section|bolum|bölüm)\s*\d+/i.test(t) && lines[k + 1]) title = lines[k + 1].text.trim();
+        if (/^(document|belge|section|bolum|bölüm|dokument|abschnitt|documento|seccion|sección)\s*\d+/i.test(t) && lines[k + 1]) title = lines[k + 1].text.trim();
       }
       // A short heading at the top of a wrapped header block names this table ("Margin comparison").
       const lead = lines[top]?.text.trim();
@@ -151,35 +151,35 @@ type MetricKey =
   | "cfo" | "cfi" | "cff" | "netChange" | "openingCash" | "closingCash";
 
 const METRICS: [MetricKey, RegExp][] = [
-  ["revenue", /^(net sales|revenue|sales revenue|net satislar|hasilat)$/],
-  ["cogs", /^(cost of sales|cost of goods sold|satislarin maliyeti)$/],
-  ["grossProfit", /^(gross profit|brut kar)$/],
-  ["opex", /^(operating expenses|faaliyet giderleri)$/],
-  ["depreciation", /^(depreciation( expense)?|amortisman( giderleri)?)$/],
-  ["operatingProfit", /^(operating profit|faaliyet kari)$/],
-  ["financeCosts", /^((net )?finance costs|net finansman giderleri|finansman giderleri)$/],
-  ["pbt", /^(profit before tax|vergi oncesi kar)$/],
-  ["tax", /^(tax expense|income tax expense|vergi gideri)$/],
-  ["netProfit", /^(net profit( for the period)?|profit for the period|donem net kari|net kar)$/],
-  ["cash", /^(cash and cash equivalents|nakit ve nakit benzerleri)$/],
-  ["receivables", /^(trade receivables|ticari alacaklar)$/],
-  ["inventories", /^(inventories|stoklar)$/],
-  ["currentAssets", /^(total current assets|donen varliklar toplami|toplam donen varliklar)$/],
-  ["ppe", /^(property, plant and equipment(, net)?|maddi duran varliklar( net)?)$/],
-  ["totalAssets", /^(total assets|toplam varliklar|aktif toplami)$/],
-  ["payables", /^(trade payables|ticari borclar)$/],
-  ["stDebt", /^(short-term borrowings|kisa vadeli (finansal borclar|borclanmalar|krediler))$/],
-  ["currentLiabilities", /^(total current liabilities|kisa vadeli yukumlulukler toplami|toplam kisa vadeli yukumlulukler)$/],
-  ["ltDebt", /^(long-term borrowings|uzun vadeli (finansal borclar|borclanmalar|krediler))$/],
-  ["totalLiabilities", /^(total liabilities|yukumlulukler toplami|toplam yukumlulukler)$/],
-  ["equity", /^(total equity|ozkaynaklar toplami|toplam ozkaynaklar)$/],
-  ["totalLE", /^(total liabilities and equity|toplam kaynaklar|pasif toplami)$/],
-  ["cfo", /(net cash (from|generated from|used in) operating activities|faaliyetlerden saglanan net nakit|isletme faaliyetlerinden)/],
-  ["cfi", /(net cash (used in|from) investing activities|yatirimlarda kullanilan net nakit|yatirim faaliyetlerin)/],
-  ["cff", /(net cash (from|used in) financing activities|finansmandan saglanan net nakit|finansman faaliyetlerin)/],
-  ["netChange", /^(net (increase|decrease|change) in cash|nakit ve nakit benzerlerindeki net (artis|azalis|degisim))/],
-  ["openingCash", /(at (the )?beginning of (the )?period|donem basi nakit)/],
-  ["closingCash", /(at (the )?end of (the )?period|donem sonu nakit)/],
+  ["revenue", /^(net sales|revenue|sales revenue|net satislar|hasilat|umsatzerlose|umsatz|chiffre d'affaires|ventas netas|cifra de negocios|importe neto de la cifra de negocios)$/],
+  ["cogs", /^(cost of sales|cost of goods sold|satislarin maliyeti|umsatzkosten|herstellungskosten|cout des ventes|coste de ventas|costo de ventas)$/],
+  ["grossProfit", /^(gross profit|brut kar|bruttoergebnis|marge brute|margen bruto)$/],
+  ["opex", /^(operating expenses|faaliyet giderleri|betriebliche aufwendungen|charges d'exploitation|gastos de explotacion)$/],
+  ["depreciation", /^(depreciation( expense)?|amortisman( giderleri)?|abschreibungen|dotations aux amortissements|amortizacion)$/],
+  ["operatingProfit", /^(operating profit|faaliyet kari|betriebsergebnis|resultat d'exploitation|resultado de explotacion)$/],
+  ["financeCosts", /^((net )?finance costs|net finansman giderleri|finansman giderleri|finanzaufwand|zinsaufwand|charges financieres( nettes)?|gastos financieros( netos)?)$/],
+  ["pbt", /^(profit before tax|vergi oncesi kar|ergebnis vor steuern|resultat avant impot|resultado antes de impuestos)$/],
+  ["tax", /^(tax expense|income tax expense|vergi gideri|ertragsteuern|steuern vom einkommen und ertrag|impot sur les societes|impot sur le resultat|impuesto sobre beneficios)$/],
+  ["netProfit", /^(net profit( for the period)?|profit for the period|donem net kari|net kar|jahresuberschuss|periodenergebnis|resultat net|resultado del ejercicio|resultado neto)$/],
+  ["cash", /^(cash and cash equivalents|nakit ve nakit benzerleri|liquide mittel|tresorerie|efectivo y equivalentes)$/],
+  ["receivables", /^(trade receivables|ticari alacaklar|forderungen aus lieferungen und leistungen|creances clients|deudores comerciales)$/],
+  ["inventories", /^(inventories|stoklar|vorrate|stocks|existencias)$/],
+  ["currentAssets", /^(total current assets|donen varliklar toplami|toplam donen varliklar|summe umlaufvermogen|total actif circulant|total activo corriente)$/],
+  ["ppe", /^(property, plant and equipment(, net)?|maddi duran varliklar( net)?|sachanlagen|immobilisations corporelles|inmovilizado material)$/],
+  ["totalAssets", /^(total assets|toplam varliklar|aktif toplami|summe aktiva|bilanzsumme|total actif|total activo)$/],
+  ["payables", /^(trade payables|ticari borclar|verbindlichkeiten aus lieferungen und leistungen|dettes fournisseurs|acreedores comerciales)$/],
+  ["stDebt", /^(short-term borrowings|kisa vadeli (finansal borclar|borclanmalar|krediler)|kurzfristige finanzverbindlichkeiten|emprunts a court terme|deudas a corto plazo)$/],
+  ["currentLiabilities", /^(total current liabilities|kisa vadeli yukumlulukler toplami|toplam kisa vadeli yukumlulukler|summe kurzfristige verbindlichkeiten|total passif courant|total pasivo corriente)$/],
+  ["ltDebt", /^(long-term borrowings|uzun vadeli (finansal borclar|borclanmalar|krediler)|langfristige finanzverbindlichkeiten|emprunts a long terme|deudas a largo plazo)$/],
+  ["totalLiabilities", /^(total liabilities|yukumlulukler toplami|toplam yukumlulukler|summe verbindlichkeiten|total dettes|total pasivo)$/],
+  ["equity", /^(total equity|ozkaynaklar toplami|toplam ozkaynaklar|summe eigenkapital|total capitaux propres|total patrimonio neto)$/],
+  ["totalLE", /^(total liabilities and equity|toplam kaynaklar|pasif toplami|summe passiva|total passif|total patrimonio neto y pasivo)$/],
+  ["cfo", /(net cash (from|generated from|used in) operating activities|faaliyetlerden saglanan net nakit|isletme faaliyetlerinden|cashflow aus (der )?laufenden geschaftstatigkeit|flux de tresorerie (lies a|provenant de) l'activite|flujos de efectivo de las actividades de explotacion)/],
+  ["cfi", /(net cash (used in|from) investing activities|yatirimlarda kullanilan net nakit|yatirim faaliyetlerin|cashflow aus (der )?investitionstatigkeit|flux de tresorerie lies aux operations d'investissement|flujos de efectivo de las actividades de inversion)/],
+  ["cff", /(net cash (from|used in) financing activities|finansmandan saglanan net nakit|finansman faaliyetlerin|cashflow aus (der )?finanzierungstatigkeit|flux de tresorerie lies aux operations de financement|flujos de efectivo de las actividades de financiacion)/],
+  ["netChange", /^(net (increase|decrease|change) in cash|nakit ve nakit benzerlerindeki net (artis|azalis|degisim)|veranderung der liquiden mittel|variation de (la )?tresorerie|aumento neto de efectivo|variacion neta de efectivo)/],
+  ["openingCash", /(at (the )?beginning of (the )?period|donem basi nakit|liquide mittel am anfang|tresorerie d'ouverture|efectivo al inicio)/],
+  ["closingCash", /(at (the )?end of (the )?period|donem sonu nakit|liquide mittel am ende|tresorerie de cloture|efectivo al final)/],
 ];
 
 const metricOf = (label: string): MetricKey | null => {
@@ -222,7 +222,7 @@ function identity(t: ReportTable, label: string, parts: { v?: (number | null)[];
 
 const isSubtotal = (label: string) => {
   const f = fold(label);
-  return /^(total|toplam)\b|\btoplami$/.test(f) || /^net (cash|increase|decrease)|net nakit$|net (artis|azalis)$/.test(f);
+  return /^(total|toplam|summe)\b|\btoplami$|^bilanzsumme$/.test(f) || /^net (cash|increase|decrease)|net nakit$|net (artis|azalis)$|^cashflow aus|^flux de tresorerie|^flujos de efectivo|^variation de (la )?tresorerie|^veranderung der liquiden|^aumento neto/.test(f);
 };
 
 /**

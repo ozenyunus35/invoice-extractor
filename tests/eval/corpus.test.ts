@@ -10,6 +10,7 @@ import { extractInvoice } from "@/lib/extract";
 import { wordsToLines, type OcrWord } from "@/lib/layout";
 import { cents, near } from "@/lib/numbers";
 import { chronological, extractStatement, validateStatement } from "@/lib/statement";
+import { analyseReport, extractReport } from "@/lib/report";
 import { validateInvoice } from "@/lib/validate";
 
 type Truth = Record<string, unknown> & { kind: string; lang?: string; locale?: string; layout: string };
@@ -101,6 +102,21 @@ function scoreStatement(t: Truth, lines: ReturnType<typeof wordsToLines>) {
   return { score, got: { type, n: tx.length, amounts: tx.map((x) => cents(x.amount)), dates: tx.map((x) => x.date), checks: validateStatement(s).filter((c) => c.status === "fail").map((c) => c.detail) } };
 }
 
+function scoreReport(t: Truth, lines: ReturnType<typeof wordsToLines>) {
+  const type = classifyDocument(lines).type;
+  const r = extractReport(lines);
+  const a = analyseReport(r);
+  const failed = a.checks.filter((c) => c.status === "fail").map((c) => c.label);
+  const kinds = r.tables.map((x) => x.kind);
+  const score: Score = {
+    type: type === "report",
+    tables: (t.kinds as string[]).every((k) => kinds.includes(k)),
+    "net profit": a.headline.find((h) => h.label === "Net profit")?.value === t.net_profit,
+    checks: t.broken ? failed.some((l) => /assets = liabilities \+ equity|subtotals/.test(l)) : failed.length === 0,
+  };
+  return { score, got: { type, kinds, netProfit: a.headline.find((h) => h.label === "Net profit")?.value ?? null, failed } };
+}
+
 describe("corpus", () => {
   it("scores every document", async () => {
     const rows: { name: string; source: string; kind: string; lang: string; score: Score; got: Record<string, unknown>; truth: Truth }[] = [];
@@ -111,12 +127,16 @@ describe("corpus", () => {
         ["photo", () => (existsSync(`${ROOT}ocr/photo-${e.name}.json`) ? JSON.parse(readFileSync(`${ROOT}ocr/photo-${e.name}.json`, "utf8")).words : null)],
       ];
       for (const [source, load] of sources) {
+        // Multi-page documents are only read from the PDF; the page images show page 1.
+        if (e.truth.pdf_only && source !== "pdf") continue;
         const words = await load();
         if (!words) continue;
         const lines = wordsToLines(words);
         const t = e.truth;
         const result =
-          t.kind === "statement"
+          t.kind === "report"
+            ? scoreReport(t, lines)
+            : t.kind === "statement"
             ? scoreStatement(t, lines)
             : t.kind === "reject"
               ? { score: { type: classifyDocument(lines).type === "unknown" }, got: { type: classifyDocument(lines).type } }
@@ -144,7 +164,7 @@ describe("corpus", () => {
       }
       out.push("");
     };
-    ["invoice", "receipt", "statement", "reject"].forEach(fieldTable);
+    ["invoice", "receipt", "statement", "report", "reject"].forEach(fieldTable);
 
     out.push("## Failures", "");
     for (const r of rows.filter((r) => !Object.values(r.score).every(Boolean))) {
@@ -152,7 +172,9 @@ describe("corpus", () => {
       out.push(`- **${r.name}** (${r.source}): ${bad.join(", ")}`);
       const t = r.truth;
       const want =
-        r.kind === "statement"
+        r.kind === "report"
+          ? { type: "report", kinds: t.kinds, netProfit: t.net_profit, failed: t.broken ? ["(a balance check)"] : [] }
+          : r.kind === "statement"
           ? { n: (t.transactions as unknown[]).length, amounts: (t.transactions as { amount: number }[]).map((x) => x.amount), dates: (t.transactions as { date: string }[]).map((x) => x.date) }
           : r.kind === "reject"
             ? { type: "unknown" }

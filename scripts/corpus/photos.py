@@ -12,7 +12,7 @@ root = Path(sys.argv[1])
 rnd = random.Random(7)
 docs = json.loads((root / "truth.json").read_text())
 for i, d in enumerate(docs):
-    if i % 3 or d["truth"]["kind"] == "reject":
+    if i % 3 or d["truth"]["kind"] == "reject" or d["truth"].get("pdf_only"):
         continue
     im = Image.open(root / "png" / f"{d['name']}.png").convert("RGB")
     angle = rnd.uniform(-4, 4)

@@ -52,7 +52,7 @@ const empty = <T,>(): Field<T> => ({ value: null, line: null, confidence: 0 });
 /** The amount a totals line refers to: its last money-looking number. */
 function lineAmount(lines: OcrLine[], i: number, decimal: Decimal): { value: number; line: number } | null {
   const pick = (nums: NumberToken[]) => [...nums].reverse().find((n) => n.money) ?? nums.at(-1);
-  const own = pick(numbersIn(lines[i].text, decimal));
+  const own = pick(numbersIn(joinSpacedThousands(lines[i].text, true), decimal));
   if (own) return { value: own.value, line: i };
   // The amount sometimes lands on its own line right below the label.
   const next = lines[i + 1];
@@ -259,7 +259,8 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
   const startIdx = headerIdx !== -1 && headerIdx < totalsStart ? headerIdx + 1 : Math.min(3, totalsStart);
   for (let i = startIdx; i < totalsStart; i++) {
     const f = folded[i];
-    if (headerIdx === -1 && (BILL_TO.test(f) || INVOICE_NO.test(f) || DATE_LABEL.test(f) || TAX_ID.test(f))) continue;
+    // Without a column header, keep the address and reference block out of the items.
+    if (headerIdx === -1 && (BILL_TO.test(f) || INVOICE_NO.test(f) || DATE_LABEL.test(f) || DUE_LABEL.test(f) || TAX_ID.test(f) || datesIn(lines[i].text).length)) continue;
     const item = parseItem(lines[i].text, decimal, i);
     if (item === "continuation") {
       const prev = items.at(-1);
