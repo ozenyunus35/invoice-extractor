@@ -26,9 +26,14 @@ test("a password-protected PDF", async ({ page }) => {
   await alert(page, /password-protected/);
 });
 
-test("a Word document", async ({ page }) => {
+test("a damaged Word document", async ({ page }) => {
   await upload(page, { name: "contract.docx", mimeType: "application/vnd.openxmlformats-officedocument.wordprocessingml.document", buffer: Buffer.from("PK fake") });
-  await alert(page, /Use a PDF or an image/);
+  await alert(page, /could not be opened/);
+});
+
+test("a file type it does not read", async ({ page }) => {
+  await upload(page, { name: "drawing.dwg", mimeType: "application/octet-stream", buffer: Buffer.from("AC1032") });
+  await alert(page, /isn't supported/);
 });
 
 test("an iPhone HEIC photo", async ({ page }) => {

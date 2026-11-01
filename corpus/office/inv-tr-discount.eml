@@ -1,0 +1,8 @@
+From: billing@kuzeyrüzgarı.example
+To: ap@client.example
+Subject: F2026053898
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html><body><p>Kuzeyrüzgarı Danışmanlık A.Ş.</p><p>Fatura</p><p>Fatura No: F2026053898</p><p>Fatura Tarihi: 18.07.2026</p><p>Son Ödeme Tarihi: 17.08.2026</p><table><tr><td>Açıklama</td><td>Miktar</td><td>Birim Fiyat</td><td>Tutar</td></tr><tr><td>Item 1</td><td>10</td><td>120,00</td><td>1.200,00</td></tr><tr><td>Item 2</td><td>12</td><td>249,00</td><td>2.988,00</td></tr><tr><td>Item 3</td><td>5</td><td>45,00</td><td>225,00</td></tr><tr><td>Item 4</td><td>10</td><td>18,00</td><td>180,00</td></tr><tr><td>Item 5</td><td>12</td><td>89,99</td><td>1.079,88</td></tr><tr><td>Item 6</td><td>1</td><td>-283,64</td><td>-283,64</td></tr><tr><td>Item 7</td><td>1</td><td>15,00</td><td>15,00</td></tr><tr><td>Ara Toplam</td><td>5.404,24 TL</td></tr><tr><td>KDV %20</td><td>1.080,85 TL</td></tr><tr><td>Genel Toplam</td><td>6.485,09 TL</td></tr></table></body></html>

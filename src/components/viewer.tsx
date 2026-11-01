@@ -1,6 +1,6 @@
 "use client";
 
-import { Eye, EyeOff, Maximize2, Minimize2, RefreshCw, ScanText } from "lucide-react";
+import { Eye, EyeOff, FilePlus2, Maximize2, Minimize2, RefreshCw, ScanText } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Doc } from "@/lib/documents";
 import type { Invoice } from "@/lib/types";
@@ -22,10 +22,12 @@ type Props = {
   onHoverLine: (line: number | null) => void;
   scanning: Scanning | null;
   onRescan: () => void;
+  onAddPages: (files: File[]) => void;
   avgConfidence: number | null;
 };
 
-export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, avgConfidence }: Props) {
+export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, onAddPages, avgConfidence }: Props) {
+  const more = useRef<HTMLInputElement>(null);
   const [showAll, setShowAll] = useState(false);
   const [actual, setActual] = useState(false);
   const used = useMemo(
@@ -49,14 +51,34 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, avgCon
   return (
     <div className="flex min-h-0 flex-1 flex-col">
       <div className="flex h-11 shrink-0 items-center gap-2 border-b border-border px-3">
-        <span className="truncate font-medium">{doc.name}</span>
-        <span className="hidden items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[12px] text-muted sm:inline-flex">
+        <span className="min-w-0 truncate font-medium">{doc.name}</span>
+        <span className="hidden shrink-0 items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[12px] whitespace-nowrap text-muted sm:inline-flex">
           <ScanText className="size-3.5" aria-hidden />
           {doc.source === "pdf-text" ? "PDF text layer" : `OCR${avgConfidence !== null ? ` · ${avgConfidence}% confidence` : ""}`}
           {` · ${doc.lines.length} lines`}
         </span>
-        {doc.note && <span className="hidden rounded-full bg-warning-soft px-2 py-0.5 text-[12px] text-warning md:inline">{doc.note}</span>}
+        {doc.note && <span className="hidden max-w-[240px] truncate rounded-full bg-warning-soft px-2 py-0.5 text-[12px] whitespace-nowrap text-warning md:inline" title={doc.note}>{doc.note}</span>}
         <div className="ml-auto flex items-center gap-0.5">
+          {!doc.sample && (
+            <>
+              <input
+                ref={more}
+                type="file"
+                accept="image/*,application/pdf"
+                multiple
+                className="hidden"
+                data-testid="add-page-input"
+                onChange={(e) => {
+                  if (e.target.files?.length) onAddPages([...e.target.files]);
+                  e.target.value = "";
+                }}
+              />
+              <button onClick={() => more.current?.click()} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted hover:bg-surface-2 hover:text-text" title="Add the next page of this document (a photo or a PDF)">
+                <FilePlus2 className="size-4" aria-hidden />
+                <span className="hidden whitespace-nowrap xl:inline">Add page</span>
+              </button>
+            </>
+          )}
           {doc.sample && (
             <button onClick={onRescan} disabled={!!scanning} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted hover:bg-surface-2 hover:text-text disabled:opacity-50" title="Run OCR on this image again, in your browser">
               <RefreshCw className={cn("size-4", scanning && "animate-spin")} aria-hidden />

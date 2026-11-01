@@ -1,0 +1,15 @@
+Talleres Navarro S.A.
+Factura
+Nº de factura: F2026049784
+Fecha de factura: 25/04/2026
+Fecha de vencimiento: 25/05/2026
+Descripción    Cant.    Precio unitario    Importe
+Item 1    5    18,00    90,00
+Item 2    10    1.250,00    12.500,00
+Item 3    3    1.250,00    3.750,00
+Item 4    3    12,90    38,70
+Item 5    2    45,00    90,00
+Item 6    25    249,00    6.225,00
+Base imponible    22.693,70 €
+IVA 21%    4.765,68 €
+Total factura    27.459,38 €

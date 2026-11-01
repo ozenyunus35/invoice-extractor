@@ -1,0 +1,8 @@
+From: billing@harbor.example
+To: ap@client.example
+Subject: INV-2026-6610
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html><body><p>Harbor &amp; Finch Supply Co.</p><p>Invoice</p><p>Invoice No: INV-2026-6610</p><p>Invoice Date: 02/13/2026</p><p>Due Date: 02/27/2026</p><table><tr><td>Description</td><td>Qty</td><td>Unit Price</td><td>Amount</td></tr><tr><td>Item 1</td><td>10</td><td>4.50</td><td>45.00</td></tr><tr><td>Item 2</td><td>25</td><td>249.00</td><td>6,225.00</td></tr><tr><td>Item 3</td><td>1</td><td>1,250.00</td><td>1,250.00</td></tr><tr><td>Item 4</td><td>1</td><td>18.00</td><td>18.00</td></tr><tr><td>Item 5</td><td>1</td><td>120.00</td><td>120.00</td></tr><tr><td>Item 6</td><td>3</td><td>18.00</td><td>54.00</td></tr><tr><td>Item 7</td><td>5</td><td>120.00</td><td>600.00</td></tr><tr><td>Subtotal</td><td>$8,312.00</td></tr><tr><td>Sales Tax (8.875%)</td><td>$737.69</td></tr><tr><td>Total Due</td><td>$9,049.69</td></tr></table></body></html>

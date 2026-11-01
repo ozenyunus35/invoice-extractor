@@ -6272,5 +6272,1615 @@
    "kind": "reject",
    "layout": "timetable"
   }
+ },
+ {
+  "name": "off-inv-en-GB-classic-docx",
+  "file": "inv-en-GB-classic.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "office-docx",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-GB-classic.docx"
+  }
+ },
+ {
+  "name": "off-inv-en-GB-classic-xlsx",
+  "file": "inv-en-GB-classic.xlsx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "office-xlsx",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-GB-classic.xlsx"
+  }
+ },
+ {
+  "name": "off-inv-en-GB-classic-odt",
+  "file": "inv-en-GB-classic.odt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "office-odt",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-GB-classic.odt"
+  }
+ },
+ {
+  "name": "off-inv-en-GB-classic-csv",
+  "file": "inv-en-GB-classic.csv",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "office-csv",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-GB-classic.csv"
+  }
+ },
+ {
+  "name": "off-inv-en-GB-classic-txt",
+  "file": "inv-en-GB-classic.txt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "office-txt",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-GB-classic.txt"
+  }
+ },
+ {
+  "name": "off-inv-en-GB-classic-html",
+  "file": "inv-en-GB-classic.html",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "office-html",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-GB-classic.html"
+  }
+ },
+ {
+  "name": "off-inv-en-GB-classic-eml",
+  "file": "inv-en-GB-classic.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-GB",
+   "lang": "en",
+   "layout": "office-eml",
+   "vendor": "Copperline Studio Inc.",
+   "number": "RE-69802",
+   "date": "2026-02-05",
+   "due": "2026-03-22",
+   "currency": "GBP",
+   "subtotal": 1470.5,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 294.1
+    }
+   ],
+   "total": 1764.6,
+   "items": [
+    {
+     "qty": 25,
+     "unit": 4.5,
+     "amount": 112.5
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-GB-classic.eml"
+  }
+ },
+ {
+  "name": "off-inv-de-multi-vat-docx",
+  "file": "inv-de-multi-vat.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "office-docx",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-de-multi-vat.docx"
+  }
+ },
+ {
+  "name": "off-inv-de-multi-vat-xlsx",
+  "file": "inv-de-multi-vat.xlsx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "office-xlsx",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-de-multi-vat.xlsx"
+  }
+ },
+ {
+  "name": "off-inv-de-multi-vat-odt",
+  "file": "inv-de-multi-vat.odt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "office-odt",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-de-multi-vat.odt"
+  }
+ },
+ {
+  "name": "off-inv-de-multi-vat-csv",
+  "file": "inv-de-multi-vat.csv",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "office-csv",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-de-multi-vat.csv"
+  }
+ },
+ {
+  "name": "off-inv-de-multi-vat-txt",
+  "file": "inv-de-multi-vat.txt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "office-txt",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-de-multi-vat.txt"
+  }
+ },
+ {
+  "name": "off-inv-de-multi-vat-html",
+  "file": "inv-de-multi-vat.html",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "office-html",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-de-multi-vat.html"
+  }
+ },
+ {
+  "name": "off-inv-de-multi-vat-eml",
+  "file": "inv-de-multi-vat.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "de",
+   "lang": "de",
+   "layout": "office-eml",
+   "vendor": "Alpenblick Druck GmbH",
+   "number": "INV-2026-75819",
+   "date": "2026-07-11",
+   "due": "2026-08-10",
+   "currency": "EUR",
+   "subtotal": 15394.78,
+   "vat": [
+    {
+     "rate": 19,
+     "amount": 2548.85
+    },
+    {
+     "rate": 7,
+     "amount": 138.58
+    }
+   ],
+   "total": 18082.21,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    },
+    {
+     "qty": 10,
+     "unit": 89.99,
+     "amount": 899.9
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-de-multi-vat.eml"
+  }
+ },
+ {
+  "name": "off-inv-tr-discount-docx",
+  "file": "inv-tr-discount.docx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "office-docx",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-tr-discount.docx"
+  }
+ },
+ {
+  "name": "off-inv-tr-discount-xlsx",
+  "file": "inv-tr-discount.xlsx",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "office-xlsx",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-tr-discount.xlsx"
+  }
+ },
+ {
+  "name": "off-inv-tr-discount-odt",
+  "file": "inv-tr-discount.odt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "office-odt",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-tr-discount.odt"
+  }
+ },
+ {
+  "name": "off-inv-tr-discount-csv",
+  "file": "inv-tr-discount.csv",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "office-csv",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-tr-discount.csv"
+  }
+ },
+ {
+  "name": "off-inv-tr-discount-txt",
+  "file": "inv-tr-discount.txt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "office-txt",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-tr-discount.txt"
+  }
+ },
+ {
+  "name": "off-inv-tr-discount-html",
+  "file": "inv-tr-discount.html",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "office-html",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-tr-discount.html"
+  }
+ },
+ {
+  "name": "off-inv-tr-discount-eml",
+  "file": "inv-tr-discount.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "tr",
+   "lang": "tr",
+   "layout": "office-eml",
+   "vendor": "Kuzeyrüzgarı Danışmanlık A.Ş.",
+   "number": "F2026053898",
+   "date": "2026-07-18",
+   "due": "2026-08-17",
+   "currency": "TRY",
+   "subtotal": 5404.24,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 1080.85
+    }
+   ],
+   "total": 6485.09,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 12,
+     "unit": 249.0,
+     "amount": 2988.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 10,
+     "unit": 18.0,
+     "amount": 180.0
+    },
+    {
+     "qty": 12,
+     "unit": 89.99,
+     "amount": 1079.88
+    },
+    {
+     "qty": 1,
+     "unit": -283.64,
+     "amount": -283.64
+    },
+    {
+     "qty": 1,
+     "unit": 15.0,
+     "amount": 15.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-tr-discount.eml"
+  }
+ },
+ {
+  "name": "off-inv-fr-classic-csv",
+  "file": "inv-fr-classic.csv",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "office-csv",
+   "vendor": "Boulangerie Lefèvre SAS",
+   "number": "F2026094077",
+   "date": "2026-10-24",
+   "due": "2026-11-23",
+   "currency": "EUR",
+   "subtotal": 4169.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 833.8
+    }
+   ],
+   "total": 5002.8,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-fr-classic.csv"
+  }
+ },
+ {
+  "name": "off-inv-fr-classic-txt",
+  "file": "inv-fr-classic.txt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "fr",
+   "lang": "fr",
+   "layout": "office-txt",
+   "vendor": "Boulangerie Lefèvre SAS",
+   "number": "F2026094077",
+   "date": "2026-10-24",
+   "due": "2026-11-23",
+   "currency": "EUR",
+   "subtotal": 4169.0,
+   "vat": [
+    {
+     "rate": 20,
+     "amount": 833.8
+    }
+   ],
+   "total": 5002.8,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 249.0,
+     "amount": 1245.0
+    },
+    {
+     "qty": 5,
+     "unit": 45.0,
+     "amount": 225.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 10,
+     "unit": 120.0,
+     "amount": 1200.0
+    },
+    {
+     "qty": 1,
+     "unit": 249.0,
+     "amount": 249.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-fr-classic.txt"
+  }
+ },
+ {
+  "name": "off-inv-es-modern-txt",
+  "file": "inv-es-modern.txt",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "es",
+   "lang": "es",
+   "layout": "office-txt",
+   "vendor": "Talleres Navarro S.A.",
+   "number": "F2026049784",
+   "date": "2026-04-25",
+   "due": "2026-05-25",
+   "currency": "EUR",
+   "subtotal": 22693.7,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 4765.68
+    }
+   ],
+   "total": 27459.38,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 3,
+     "unit": 1250.0,
+     "amount": 3750.0
+    },
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-es-modern.txt"
+  }
+ },
+ {
+  "name": "off-inv-es-modern-html",
+  "file": "inv-es-modern.html",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "es",
+   "lang": "es",
+   "layout": "office-html",
+   "vendor": "Talleres Navarro S.A.",
+   "number": "F2026049784",
+   "date": "2026-04-25",
+   "due": "2026-05-25",
+   "currency": "EUR",
+   "subtotal": 22693.7,
+   "vat": [
+    {
+     "rate": 21,
+     "amount": 4765.68
+    }
+   ],
+   "total": 27459.38,
+   "items": [
+    {
+     "qty": 5,
+     "unit": 18.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 10,
+     "unit": 1250.0,
+     "amount": 12500.0
+    },
+    {
+     "qty": 3,
+     "unit": 1250.0,
+     "amount": 3750.0
+    },
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 2,
+     "unit": 45.0,
+     "amount": 90.0
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-es-modern.html"
+  }
+ },
+ {
+  "name": "off-inv-pl-classic-html",
+  "file": "inv-pl-classic.html",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "office-html",
+   "vendor": "Drukarnia Wiśniewski S.A.",
+   "number": "FV/54149/07/2026",
+   "date": "2026-07-19",
+   "due": "2026-08-18",
+   "currency": "PLN",
+   "subtotal": 1343.68,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 309.05
+    }
+   ],
+   "total": 1652.73,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-pl-classic.html"
+  }
+ },
+ {
+  "name": "off-inv-pl-classic-eml",
+  "file": "inv-pl-classic.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "pl",
+   "lang": "pl",
+   "layout": "office-eml",
+   "vendor": "Drukarnia Wiśniewski S.A.",
+   "number": "FV/54149/07/2026",
+   "date": "2026-07-19",
+   "due": "2026-08-18",
+   "currency": "PLN",
+   "subtotal": 1343.68,
+   "vat": [
+    {
+     "rate": 23,
+     "amount": 309.05
+    }
+   ],
+   "total": 1652.73,
+   "items": [
+    {
+     "qty": 3,
+     "unit": 12.9,
+     "amount": 38.7
+    },
+    {
+     "qty": 2,
+     "unit": 89.99,
+     "amount": 179.98
+    },
+    {
+     "qty": 25,
+     "unit": 45.0,
+     "amount": 1125.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-pl-classic.eml"
+  }
+ },
+ {
+  "name": "off-inv-en-US-classic-eml",
+  "file": "inv-en-US-classic.eml",
+  "width": 1240,
+  "height": 1754,
+  "truth": {
+   "kind": "invoice",
+   "locale": "en-US",
+   "lang": "en",
+   "layout": "office-eml",
+   "vendor": "Harbor & Finch Supply Co.",
+   "number": "INV-2026-6610",
+   "date": "2026-02-13",
+   "due": "2026-02-27",
+   "currency": "USD",
+   "subtotal": 8312.0,
+   "vat": [
+    {
+     "rate": 8.875,
+     "amount": 737.69
+    }
+   ],
+   "total": 9049.69,
+   "items": [
+    {
+     "qty": 10,
+     "unit": 4.5,
+     "amount": 45.0
+    },
+    {
+     "qty": 25,
+     "unit": 249.0,
+     "amount": 6225.0
+    },
+    {
+     "qty": 1,
+     "unit": 1250.0,
+     "amount": 1250.0
+    },
+    {
+     "qty": 1,
+     "unit": 18.0,
+     "amount": 18.0
+    },
+    {
+     "qty": 1,
+     "unit": 120.0,
+     "amount": 120.0
+    },
+    {
+     "qty": 3,
+     "unit": 18.0,
+     "amount": 54.0
+    },
+    {
+     "qty": 5,
+     "unit": 120.0,
+     "amount": 600.0
+    }
+   ],
+   "pdf_only": false,
+   "office": "inv-en-US-classic.eml"
+  }
  }
 ]

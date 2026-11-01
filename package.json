@@ -13,7 +13,7 @@
     "test:e2e": "playwright test",
     "serve": "node scripts/serve.mjs",
     "eval": "vitest run --config vitest.eval.config.ts",
-    "corpus": "python3 scripts/corpus/generate.py && node scripts/corpus/render.mjs && node scripts/corpus/ocr.mjs"
+    "corpus": "python3 scripts/corpus/generate.py && node scripts/corpus/render.mjs && node scripts/corpus/ocr-browser.mjs"
   },
   "dependencies": {
     "exceljs": "4.4.0",

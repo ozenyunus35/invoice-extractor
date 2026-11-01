@@ -1,0 +1,8 @@
+From: billing@copperline.example
+To: ap@client.example
+Subject: RE-69802
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html><body><p>Copperline Studio Inc.</p><p>Invoice</p><p>Invoice No: RE-69802</p><p>Invoice Date: 05/02/2026</p><p>Due Date: 22/03/2026</p><table><tr><td>Description</td><td>Qty</td><td>Unit Price</td><td>Amount</td></tr><tr><td>Item 1</td><td>25</td><td>4.50</td><td>112.50</td></tr><tr><td>Item 2</td><td>2</td><td>45.00</td><td>90.00</td></tr><tr><td>Item 3</td><td>1</td><td>18.00</td><td>18.00</td></tr><tr><td>Item 4</td><td>1</td><td>1,250.00</td><td>1,250.00</td></tr><tr><td>Subtotal</td><td>£1,470.50</td></tr><tr><td>VAT 20%</td><td>£294.10</td></tr><tr><td>Total Due</td><td>£1,764.60</td></tr></table></body></html>

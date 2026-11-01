@@ -8,7 +8,8 @@ Tally turns invoices, receipts and bank statements into checked, structured data
 
 ## What it does
 
-- **Reads documents on your device.** Text PDFs use their own text layer, which is exact and instant. Scans and photos go through [tesseract.js](https://github.com/naptha/tesseract.js) OCR in a Web Worker. Tilted phone photos are straightened before rows are rebuilt.
+- **Reads anything people send, on your device.** Phone photos (straight from the camera on a phone), scans, PDFs, Word and Excel files, OpenDocument, CSV, plain text, saved web pages and e-mails. Photos are cropped to the paper, shadows are evened out, the page is straightened, and the text is read with the model for its language. Long documents can be photographed page by page and joined.
+- **How it reads them.** Text PDFs use their own text layer, which is exact and instant. Scans and photos go through [tesseract.js](https://github.com/naptha/tesseract.js) OCR in a Web Worker. Tilted phone photos are straightened before rows are rebuilt.
 - **Knows what it is looking at.** It classifies each document as an invoice, a receipt or a bank statement before reading any fields. Anything else gets an honest "not recognised" with the text it found, never invented numbers. The reviewer can switch the type with one click.
 - **Invoices and receipts.** It reads:
   - vendor, tax ID, invoice number, issue and due dates, and currency;
@@ -65,15 +66,16 @@ There is no machine-learning service behind it: the pipeline is plain TypeScript
 - financial reports in 5 languages, half of them with a deliberately broken balance sheet;
 - documents it must refuse.
 
-Each one is read as a text PDF, as a page image through OCR, and as a tilted, blurred, shadowed phone photo. The full report, failures included, is in [`corpus/REPORT.md`](corpus/REPORT.md).
+Each one is read as a text PDF, as a page image and as a tilted, blurred, shadowed phone photo, through the app's own in-browser pipeline (`scripts/corpus/ocr-browser.mjs`), so the numbers are what a visitor gets. The full report, failures included, is in [`corpus/REPORT.md`](corpus/REPORT.md).
 
 | Every field right | Text PDF | Page image (OCR) | Phone photo (OCR) |
 | --- | --- | --- | --- |
-| Invoices (83) | 100% | 82% | 74% |
-| Receipts (10) | 100% | 80% | 40% |
-| Bank statements (16) | 100% | 100% | 83% |
+| Invoices (83) | 100% | 81% | 67% |
+| Receipts (10) | 100% | 80% | 100% |
+| Bank statements (16) | 100% | 94% | 83% |
 | Financial reports (10, incl. broken ones caught) | 100% | – | – |
 | Documents to refuse (6) | 100% | 100% | – |
+| Invoices as Word, Excel, OpenDocument, CSV, text, web page, e-mail (28) | 96% | | |
 
 Field by field, OCR'd invoices are 90–100% right. The misses come from the scan itself: a ₹ or ¥ sign OCR cannot read leaves the currency blank, and blurred thermal receipt photos lose digits (a single misread digit is repaired when the receipt's own total proves it). The checks and the "worth a quick look" hint show exactly which values to confirm. Damaged, empty, password-protected, oversized and unsupported files each get a plain message (`tests/e2e/robustness.spec.ts`).
 

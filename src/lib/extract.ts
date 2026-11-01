@@ -296,15 +296,21 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
     const t = Math.abs(v).toFixed(2);
     return t.length > 4 ? Math.sign(v) * Number(t.slice(1)) : null;
   };
+  // The other common misread: a decimal comma lost in a blurred photo ("51,41" read as 5141).
+  const candidates = (v: number) => [unprefix(v), cents(v / 100)].filter((x): x is number => x !== null);
   const repair = (f: Field<number>, expected: number | null): Field<number> => {
     if (f.value === null || expected === null || near(f.value, expected, 0.011)) return f;
-    const fixed = unprefix(f.value);
-    return fixed !== null && near(fixed, expected, 0.011) ? { ...f, value: fixed, confidence: Math.min(f.confidence, 0.6) } : f;
+    const fixed = candidates(f.value).find((c) => near(c, expected, 0.011));
+    return fixed !== undefined ? { ...f, value: fixed, confidence: Math.min(f.confidence, 0.6) } : f;
   };
   const itemsSum = items.length ? cents(items.reduce((a, it) => a + it.amount, 0)) : null;
   for (const it of items) {
-    const fixed = unprefix(it.amount);
-    if (fixed !== null && !near(it.quantity * it.unitPrice, it.amount, 0.011) && near(it.quantity * it.unitPrice, fixed, 0.011)) it.amount = fixed;
+    if (near(it.quantity * it.unitPrice, it.amount, 0.011)) continue;
+    const fixed = candidates(it.amount).find((c) => near(it.quantity * it.unitPrice, c, 0.011));
+    if (fixed !== undefined) {
+      it.amount = fixed;
+      it.repaired = true;
+    }
   }
   // Receipts and invoices carry a checksum: the items must add up to the subtotal (or the total
   // when prices include VAT). If exactly one item misses by a single misread digit (5→9, 3→8),

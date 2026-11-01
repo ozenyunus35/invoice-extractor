@@ -1,13 +1,13 @@
 "use client";
 
-import { AlertTriangle, CheckCircle2, FileQuestion, LayoutDashboard, Loader2, Trash2, Upload, X } from "lucide-react";
+import { AlertTriangle, Camera, CheckCircle2, FileQuestion, LayoutDashboard, Loader2, Trash2, Upload, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { docChecks, type Doc, type Pending } from "@/lib/documents";
 import { statementTotals } from "@/lib/statement";
 import { formatMoney } from "@/lib/format";
 import { cn } from "@/lib/cn";
 
-const ACCEPT = "application/pdf,image/png,image/jpeg,image/webp";
+const ACCEPT = "application/pdf,image/*,.heic,.heif,.docx,.xlsx,.odt,.ods,.csv,.tsv,.txt,.md,.html,.htm,.eml";
 
 function Status({ doc }: { doc: Doc }) {
   if (doc.type === "unknown")
@@ -43,6 +43,7 @@ type Props = {
 
 export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove, onDismiss }: Props) {
   const input = useRef<HTMLInputElement>(null);
+  const camera = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
 
   const pick = (list: FileList | null) => {
@@ -53,6 +54,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
   return (
     <nav aria-label="Documents" className="flex shrink-0 flex-col border-b border-border lg:w-[264px] lg:border-r lg:border-b-0">
       <input ref={input} type="file" accept={ACCEPT} multiple className="hidden" onChange={(e) => pick(e.target.files)} data-testid="file-input" />
+      <input ref={camera} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => pick(e.target.files)} data-testid="camera-input" />
 
       <div
         onDragOver={(e) => {
@@ -78,9 +80,17 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
             <Upload className="size-4" aria-hidden />
           </span>
           <span>
-            <span className="block font-medium">Add invoices, receipts or statements</span>
-            <span className="block text-[12px] text-muted">PDF, PNG or JPG · read on this device</span>
+            <span className="block font-medium">Add documents</span>
+            <span className="block text-[12px] text-muted">Photo, PDF, Word, Excel, CSV or e-mail · read on this device</span>
           </span>
+        </button>
+        {/* On a phone, the camera is the quickest way in: lay the receipt flat and shoot from above. */}
+        <button
+          onClick={() => camera.current?.click()}
+          className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2.5 font-medium text-accent-fg hover:opacity-90 lg:hidden"
+        >
+          <Camera className="size-4" aria-hidden />
+          Take a photo
         </button>
       </div>
 

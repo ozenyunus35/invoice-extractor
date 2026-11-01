@@ -126,6 +126,8 @@ describe("corpus", () => {
         ["image", () => (existsSync(`${ROOT}ocr/png-${e.name}.json`) ? JSON.parse(readFileSync(`${ROOT}ocr/png-${e.name}.json`, "utf8")).words : null)],
         ["photo", () => (existsSync(`${ROOT}ocr/photo-${e.name}.json`) ? JSON.parse(readFileSync(`${ROOT}ocr/photo-${e.name}.json`, "utf8")).words : null)],
       ];
+      // Word, Excel, CSV, e-mail…: one reading, through the app's own pipeline.
+      if (e.truth.office) sources.splice(0, sources.length, ["office", () => (existsSync(`${ROOT}ocr/office-${e.truth.office}.json`) ? JSON.parse(readFileSync(`${ROOT}ocr/office-${e.truth.office}.json`, "utf8")).words : null)]);
       for (const [source, load] of sources) {
         // Multi-page documents are only read from the PDF; the page images show page 1.
         if (e.truth.pdf_only && source !== "pdf") continue;
@@ -152,7 +154,7 @@ describe("corpus", () => {
       if (!sel.length) return;
       const fields = [...new Set(sel.flatMap((r) => Object.keys(r.score)))];
       out.push(`## ${kind}`, "", `| source | n | ${fields.join(" | ")} | all fields |`, `| --- | --- | ${fields.map(() => "---").join(" | ")} | --- |`);
-      for (const source of ["pdf", "image", "photo"]) {
+      for (const source of ["pdf", "image", "photo", "office"]) {
         const s = sel.filter((r) => r.source === source);
         if (!s.length) continue;
         const pct = (f: string) => {

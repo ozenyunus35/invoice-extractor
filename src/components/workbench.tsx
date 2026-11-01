@@ -13,7 +13,7 @@ import { Viewer, type Scanning } from "@/components/viewer";
 import { makeDoc, readLines, sampleDocs, type Doc, type Pending } from "@/lib/documents";
 import { download, toCsv, toXlsx } from "@/lib/export";
 import { wordsToLines } from "@/lib/layout";
-import { FileProblem, rescanUrl, scanFile } from "@/lib/ocr-browser";
+import { FileProblem, rescanUrl, scanFile, type Scan } from "@/lib/ocr-browser";
 import { findDuplicates, payStatus } from "@/lib/insights";
 import { clearAll, loadAll, remove, saveDoc } from "@/lib/store";
 import { Overview } from "@/components/overview";
@@ -178,6 +178,49 @@ export function Workbench() {
     [select, toast],
   );
 
+  /** Appends photographed or scanned pages to a document: stacked images, the rows read again as one. */
+  const addPages = useCallback(
+    async (id: string, files: File[]) => {
+      const target = docs.find((d) => d.id === id);
+      if (!target) return;
+      setScanning({ id, stage: "Reading the new page", value: 0 });
+      try {
+        const scans: Scan[] = [];
+        for (const f of files) scans.push(await scanFile(f, (p) => setScanning({ id, ...p })));
+        const images = [await createImageBitmap(target.image ?? (await (await fetch(target.imageUrl)).blob())), ...(await Promise.all(scans.map((s) => createImageBitmap(s.image))))];
+        const width = Math.max(target.width, ...scans.map((s) => s.width));
+        const heights = [target.height, ...scans.map((s) => s.height)];
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = heights.reduce((a, b) => a + b, 0);
+        const ctx = canvas.getContext("2d")!;
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        let y = 0;
+        images.forEach((im, k) => {
+          ctx.drawImage(im, 0, y, k === 0 ? target.width : scans[k - 1].width, heights[k]);
+          y += heights[k];
+        });
+        const image = await new Promise<Blob>((res, rej) => canvas.toBlob((b) => (b ? res(b) : rej(new Error("render"))), "image/png"));
+        let offset = target.height;
+        const lines = [...target.lines];
+        scans.forEach((s, k) => {
+          for (const l of wordsToLines(s.words)) lines.push({ ...l, bbox: l.bbox && { ...l.bbox, y0: l.bbox.y0 + offset, y1: l.bbox.y1 + offset } });
+          offset += heights[k + 1];
+        });
+        const read = readLines(lines);
+        const pages = (Number(/(\d+) pages/.exec(target.note ?? "")?.[1]) || 1) + scans.length;
+        setDocs((all) => all.map((d) => (d.id === id ? { ...d, ...read, image, imageUrl: URL.createObjectURL(image), width, height: canvas.height, note: `${pages} pages` } : d)));
+        toast(`Added ${scans.length} ${scans.length === 1 ? "page" : "pages"}`);
+      } catch (err) {
+        toast(err instanceof FileProblem ? err.message : "That page could not be read.", "error");
+      } finally {
+        setScanning(null);
+      }
+    },
+    [docs, toast],
+  );
+
   const rescan = useCallback(async () => {
     const target = doc;
     setScanning({ id: target.id, stage: "Starting", value: 0 });
@@ -267,7 +310,7 @@ export function Workbench() {
         </div>
 
         <main className={cn("min-h-0 min-w-0 flex-1", showOverview ? "hidden" : mobileTab === "document" ? "flex" : "hidden lg:flex")}>
-          <Viewer key={doc.id} doc={doc} focusLine={focusLine} onHoverLine={setFocusLine} scanning={scanning?.id === doc.id ? scanning : null} onRescan={rescan} avgConfidence={avgConfidence} />
+          <Viewer key={doc.id} doc={doc} focusLine={focusLine} onHoverLine={setFocusLine} scanning={scanning?.id === doc.id ? scanning : null} onRescan={rescan} onAddPages={(files) => addPages(doc.id, files)} avgConfidence={avgConfidence} />
         </main>
 
         <aside className={cn("min-h-0 w-full shrink-0 border-border lg:w-[440px] lg:border-l xl:w-[480px]", showOverview ? "hidden" : mobileTab === "data" ? "flex" : "hidden lg:flex")}>

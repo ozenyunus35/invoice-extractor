@@ -1,0 +1,8 @@
+From: billing@drukarnia.example
+To: ap@client.example
+Subject: FV/54149/07/2026
+MIME-Version: 1.0
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+<html><body><p>Drukarnia Wiśniewski S.A.</p><p>Faktura VAT</p><p>Numer faktury: FV/54149/07/2026</p><p>Data wystawienia: 19.07.2026</p><p>Termin płatności: 18.08.2026</p><table><tr><td>Nazwa towaru lub usługi</td><td>Ilość</td><td>Cena netto</td><td>Wartość netto</td></tr><tr><td>Item 1</td><td>3</td><td>12,90</td><td>38,70</td></tr><tr><td>Item 2</td><td>2</td><td>89,99</td><td>179,98</td></tr><tr><td>Item 3</td><td>25</td><td>45,00</td><td>1 125,00</td></tr><tr><td>Razem netto</td><td>1 343,68 zł</td></tr><tr><td>VAT 23%</td><td>309,05 zł</td></tr><tr><td>Do zapłaty</td><td>1 652,73 zł</td></tr></table></body></html>
