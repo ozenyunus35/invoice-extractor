@@ -70,12 +70,12 @@ Each one is read as a text PDF, as a page image through OCR, and as a tilted, bl
 | Every field right | Text PDF | Page image (OCR) | Phone photo (OCR) |
 | --- | --- | --- | --- |
 | Invoices (83) | 100% | 82% | 74% |
-| Receipts (10) | 100% | 80% | 3 photos, mostly misread |
-| Bank statements (16) | 100% | 100% | 100% |
+| Receipts (10) | 100% | 80% | 40% |
+| Bank statements (16) | 100% | 100% | 83% |
 | Financial reports (10, incl. broken ones caught) | 100% | – | – |
 | Documents to refuse (6) | 100% | 100% | – |
 
-Field by field, OCR'd invoices are 90–100% right. The misses come from the scan itself: a ₹ or ¥ sign OCR cannot read leaves the currency blank, and blurred thermal receipts lose digits. The checks and the "worth a quick look" hint show exactly which values to confirm. Damaged, empty, password-protected, oversized and unsupported files each get a plain message (`tests/e2e/robustness.spec.ts`).
+Field by field, OCR'd invoices are 90–100% right. The misses come from the scan itself: a ₹ or ¥ sign OCR cannot read leaves the currency blank, and blurred thermal receipt photos lose digits (a single misread digit is repaired when the receipt's own total proves it). The checks and the "worth a quick look" hint show exactly which values to confirm. Damaged, empty, password-protected, oversized and unsupported files each get a plain message (`tests/e2e/robustness.spec.ts`).
 
 ## Run it locally
 

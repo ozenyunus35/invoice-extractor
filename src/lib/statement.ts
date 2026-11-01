@@ -155,6 +155,18 @@ export function extractStatement(lines: OcrLine[]): Statement {
     const diff = cents(cur.balance - prevBalance);
     if (near(Math.abs(diff), Math.abs(cur.amount), 0.011)) cur.amount = diff;
   }
+  // OCR can drop a decimal point ("545.32" read as 54532). When this row's balance and the next
+  // row's both follow the chain, the balances are right and the amount is the misread one.
+  for (let i = 0; i < chrono.length; i++) {
+    const prevBalance = i === 0 ? opening.value : chrono[i - 1].balance;
+    const cur = chrono[i];
+    const next = chrono[i + 1];
+    if (prevBalance === null || cur.balance === null) continue;
+    const diff = cents(cur.balance - prevBalance);
+    if (near(diff, cur.amount, 0.011)) continue;
+    const nextAgrees = !next || next.balance === null || near(cents(cur.balance + next.amount), next.balance, 0.011) || near(cents(cur.balance - next.amount), next.balance, 0.011);
+    if (nextAgrees) cur.amount = diff;
+  }
 
   const bankIdx = folded.slice(0, 12).findIndex((f) => BANK.test(f));
   let holder: Field<string> = empty();

@@ -12,7 +12,8 @@ root = Path(sys.argv[1])
 rnd = random.Random(7)
 docs = json.loads((root / "truth.json").read_text())
 for i, d in enumerate(docs):
-    if i % 3 or d["truth"]["kind"] == "reject" or d["truth"].get("pdf_only"):
+    # Every receipt is photographed (that is how receipts arrive); a third of the rest.
+    if d["truth"]["kind"] in ("reject",) or d["truth"].get("pdf_only") or (i % 3 and d["truth"]["kind"] != "receipt"):
         continue
     im = Image.open(root / "png" / f"{d['name']}.png").convert("RGB")
     angle = rnd.uniform(-4, 4)

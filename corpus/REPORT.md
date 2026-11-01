@@ -1,6 +1,6 @@
 # Corpus evaluation
 
-Documents: 125 · readings: 272
+Documents: 125 · readings: 279
 
 ## invoice
 
@@ -16,7 +16,7 @@ Documents: 125 · readings: 272
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | pdf | 10 | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% | 100% |
 | image | 10 | 100% | 100% | 100% | 80% | 100% | 100% | 100% | 90% | 80% |
-| photo | 3 | 100% | 100% | 100% | 67% | 100% | 33% | 0% | 67% | 0% |
+| photo | 10 | 100% | 100% | 80% | 90% | 100% | 70% | 40% | 60% | 40% |
 
 ## statement
 
@@ -24,7 +24,7 @@ Documents: 125 · readings: 272
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | pdf | 16 | 100% | 100% | 100% | 100% | 100% | 100% |
 | image | 16 | 100% | 100% | 100% | 100% | 100% | 100% |
-| photo | 6 | 100% | 100% | 100% | 100% | 100% | 100% |
+| photo | 6 | 100% | 100% | 83% | 100% | 83% | 83% |
 
 ## report
 
@@ -104,36 +104,59 @@ Documents: 125 · readings: 272
   - vendor: got `"Nowak Serwis Sp. z 0.0."`, want `"Nowak Serwis Sp. z o.o."`
   - items: got `[0,18]`, want `[18,89.99,90]`
   - failed checks: Line items add up
+- **rcp-en-GB** (photo): date, vat, items, no false alarm
+  - number: got `"96142"`, want `undefined`
+  - date: got `null`, want `"2026-03-17"`
+  - due: got `null`, want `undefined`
+  - subtotal: got `null`, want `undefined`
+  - vat: got `[]`, want `[3.4]`
+  - items: got `[]`, want `[5.5,9.9,28,28]`
+  - failed checks: Required fields
 - **rcp-tr** (photo): vat, items
   - vendor: got `"MARMARA YAZILIM A.Ş"`, want `"MARMARA YAZILIM A.Ş."`
   - number: got `null`, want `undefined`
   - due: got `null`, want `undefined`
-  - subtotal: got `null`, want `undefined`
-  - vat: got `[]`, want `[0.93]`
+  - subtotal: got `80`, want `undefined`
+  - vat: got `[14]`, want `[0.93]`
   - items: got `[]`, want `[14,14,16.5,19.8,29.7]`
-- **rcp-es** (photo): currency, vat, items
-  - vendor: got `"GRÁFICAS ROMERO S.L"`, want `"GRÁFICAS ROMERO S.L."`
+- **rcp-de** (photo): items, no false alarm
   - number: got `null`, want `undefined`
   - due: got `null`, want `undefined`
-  - currency: got `null`, want `"EUR"`
-  - subtotal: got `69`, want `undefined`
-  - vat: got `[1]`, want `[6.36]`
-  - items: got `[]`, want `[28,42]`
-- **rcp-pt** (photo): items, no false alarm
-  - number: got `null`, want `undefined`
-  - due: got `null`, want `undefined`
-  - subtotal: got `33.58`, want `undefined`
-  - items: got `[4.8,5,5.5,19.8]`, want `[4.8,5.5,5.5,19.8]`
+  - subtotal: got `40.37`, want `undefined`
+  - items: got `[1.2,5.5,14,16]`, want `[5.5,7.2,14,16.5]`
   - failed checks: Line items add up
+- **rcp-it** (photo): items, no false alarm
+  - number: got `null`, want `undefined`
+  - due: got `null`, want `undefined`
+  - subtotal: got `44`, want `undefined`
+  - items: got `[4.8,5,14,16]`, want `[4.8,5.5,7.6,14,16.5]`
+  - failed checks: Line items add up
+- **rcp-nl** (photo): date, items, no false alarm
+  - number: got `null`, want `undefined`
+  - date: got `null`, want `"2026-01-14"`
+  - due: got `null`, want `undefined`
+  - subtotal: got `24.77`, want `undefined`
+  - items: got `[2.4,4.8,9.9]`, want `[2.4,4.8,9.9,9.9]`
+  - failed checks: Required fields; Line items add up
 - **rcp-pl** (image): currency
   - vendor: got `"DRUKARNIA WISNIEWSKI S.A."`, want `"DRUKARNIA WIŚNIEWSKI S.A."`
   - number: got `null`, want `undefined`
   - due: got `null`, want `undefined`
   - currency: got `null`, want `"PLN"`
   - subtotal: got `7.31`, want `undefined`
+- **rcp-pl** (photo): currency, vat, items
+  - vendor: got `"DRUKARNIA WISNIEWSKI S.A"`, want `"DRUKARNIA WIŚNIEWSKI S.A."`
+  - number: got `null`, want `undefined`
+  - due: got `null`, want `undefined`
+  - currency: got `null`, want `"PLN"`
+  - subtotal: got `-51.1`, want `undefined`
+  - vat: got `[59]`, want `[0.59]`
+  - items: got `[]`, want `[2.4,5.5]`
 - **rcp-en-JP** (image): currency, no false alarm
   - number: got `"6877"`, want `undefined`
   - due: got `null`, want `undefined`
   - currency: got `null`, want `"JPY"`
   - subtotal: got `1519`, want `undefined`
   - failed checks: VAT matches its rate
+- **stm-fr-0** (photo): amounts, no false alarm
+  - amounts: got `[874.94,-1479.07,-1481.52,-868,-1470.54,-1742.49,11225.96,711.29,562.92,395.77,1205.48,15318.71]`, want `[874.94,-1479.07,-1481.52,-868,-1470.54,-1742.49,-1416.2,-711.29,562.92,395.77,-1205.48,-760.39]`

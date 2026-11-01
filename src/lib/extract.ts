@@ -306,7 +306,27 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
     const fixed = unprefix(it.amount);
     if (fixed !== null && !near(it.quantity * it.unitPrice, it.amount, 0.011) && near(it.quantity * it.unitPrice, fixed, 0.011)) it.amount = fixed;
   }
-  subtotal = repair(subtotal, itemsSum);
+  // Receipts and invoices carry a checksum: the items must add up to the subtotal (or the total
+  // when prices include VAT). If exactly one item misses by a single misread digit (5→9, 3→8),
+  // and fixing that digit makes the sum agree, fix it and lower its confidence.
+  const target = subtotal.value ?? (vat.length === 0 || vat.every((v) => v.base === null) ? total.value : null);
+  if (itemsSum !== null && target !== null && !near(itemsSum, target, 0.011) && items.length >= 2) {
+    const oneDigitOff = (a: number, b: number) => {
+      const [x, y] = [Math.abs(a).toFixed(2), Math.abs(b).toFixed(2)];
+      return x.length === y.length && [...x].filter((ch, k) => ch !== y[k]).length === 1;
+    };
+    const fixes = items
+      .map((it) => ({ it, want: cents(target - (itemsSum - it.amount)) }))
+      .filter(({ it, want }) => want > 0 && oneDigitOff(it.amount, want));
+    if (fixes.length === 1) {
+      const { it, want } = fixes[0];
+      it.unitPrice = it.quantity ? cents(want / it.quantity) : want;
+      it.amount = want;
+      it.repaired = true;
+    }
+  }
+  const itemsTotal = items.length ? cents(items.reduce((a, it) => a + it.amount, 0)) : null;
+  subtotal = repair(subtotal, itemsTotal);
   for (const v of vat) {
     const base = vat.length === 1 && subtotal.value !== null ? subtotal.value : v.base;
     if (v.rate !== null && base !== null) {

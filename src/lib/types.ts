@@ -36,6 +36,8 @@ export type LineItem = {
   amount: number;
   vatRate: number | null;
   line: number;
+  /** The amount was corrected because one misread digit broke the document's own total. */
+  repaired?: boolean;
 };
 
 export type VatLine = {
