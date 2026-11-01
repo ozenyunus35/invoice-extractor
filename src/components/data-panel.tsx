@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, Braces, CalendarClock, CheckCircle2, CircleDashed, Copy, Crosshair, FileSpreadsheet, Landmark, Plus, RotateCcw, Trash2 } from "lucide-react";
+import { AlertTriangle, Braces, CalendarClock, CheckCircle2, CircleDashed, Copy, Crosshair, Eye, FileSpreadsheet, Landmark, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/components/toast";
 import { TypeSwitch } from "@/components/type-switch";
@@ -126,6 +126,19 @@ export function DataPanel({ doc, onChange, onType, duplicateOf, pay, onOpen, foc
   const failed = checks.filter((c) => c.status === "fail").length;
   const passed = checks.filter((c) => c.status === "pass").length;
   const cur = inv.currency.value;
+  // Fields read with low confidence (blurry scan, repaired currency sign, worked out from other values).
+  const lowConfidence = (
+    [
+      ["vendor", "vendor"],
+      ["invoiceNumber", "invoice number"],
+      ["date", "issue date"],
+      ["currency", "currency"],
+      ["subtotal", "subtotal"],
+      ["total", "total"],
+    ] as const
+  )
+    .filter(([k]) => (inv[k].value === null && k !== "invoiceNumber" ? doc.type === "invoice" || k === "total" : inv[k].value !== null && inv[k].confidence < 0.7))
+    .map(([, label]) => label);
 
   const setField = <K extends "vendor" | "taxId" | "invoiceNumber" | "date" | "dueDate" | "currency" | "subtotal" | "total">(key: K, value: Invoice[K]["value"]) =>
     onChange({ ...inv, [key]: { ...inv[key], value, confidence: 1, derived: false } });
@@ -184,6 +197,14 @@ export function DataPanel({ doc, onChange, onType, duplicateOf, pay, onOpen, foc
             {failed ? <AlertTriangle className="size-4 shrink-0" aria-hidden /> : <CheckCircle2 className="size-4 shrink-0" aria-hidden />}
             {failed ? `${failed} ${failed === 1 ? "check needs" : "checks need"} attention before posting` : `${passed} checks pass · ready to post`}
           </div>
+          {lowConfidence.length > 0 && (
+            <div className="mt-2 flex items-start gap-2 rounded-md border border-warning/30 px-2.5 py-2 text-[12px] text-warning" data-testid="review">
+              <Eye className="mt-0.5 size-4 shrink-0" aria-hidden />
+              <span>
+                Worth a quick look: {lowConfidence.join(", ")}. {doc.source === "ocr" ? "These were hard to read in the scan." : "These were worked out rather than printed."}
+              </span>
+            </div>
+          )}
           {pay.kind !== "none" && (
             <div
               data-testid="pay-status"

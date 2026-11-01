@@ -13,7 +13,7 @@ import { Viewer, type Scanning } from "@/components/viewer";
 import { makeDoc, readLines, sampleDocs, type Doc, type Pending } from "@/lib/documents";
 import { download, toCsv, toXlsx } from "@/lib/export";
 import { wordsToLines } from "@/lib/layout";
-import { rescanUrl, scanFile } from "@/lib/ocr-browser";
+import { FileProblem, rescanUrl, scanFile } from "@/lib/ocr-browser";
 import { findDuplicates, payStatus } from "@/lib/insights";
 import { clearAll, loadAll, remove, saveDoc } from "@/lib/store";
 import { Overview } from "@/components/overview";
@@ -145,6 +145,7 @@ export function Workbench() {
               id,
               name: file.name,
               kind: scan.source === "pdf-text" ? "PDF · text layer" : "Your document",
+              note: scan.note,
               sample: false,
               imageUrl: URL.createObjectURL(scan.image),
               image: scan.image,
@@ -161,7 +162,14 @@ export function Workbench() {
             else if (added.type === "unknown") toast(`${file.name} doesn't look like an invoice, receipt or statement`, "error");
           })
           .catch((err: unknown) => {
-            const message = err instanceof Error ? err.message : "Could not read this file";
+            // File problems are already worded for people; anything else is most likely the OCR engine failing to load.
+            const message =
+              err instanceof FileProblem
+                ? err.message
+                : /fetch|network|load/i.test(String((err as Error)?.message))
+                  ? "The OCR engine could not load. Check your connection and try again."
+                  : "This file could not be read. Try the original PDF or a sharper photo.";
+            console.error(err);
             setPending((p) => p.map((x) => (x.id === id ? { ...x, error: message } : x)));
             toast(`${file.name}: ${message}`, "error");
           });

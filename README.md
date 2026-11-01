@@ -1,4 +1,4 @@
-# Tally: invoice, receipt and bank statement reader
+# Tally: invoices, receipts, bank statements and financial reports, read in the browser
 
 **[Live demo](https://ozenyunus35.github.io/invoice-extractor/)** · runs entirely in your browser: no server, no API, nothing is uploaded.
 
@@ -57,6 +57,26 @@ There is no machine-learning service behind it: the pipeline is plain TypeScript
    - When OCR misreads `%20` as `420`, the VAT rate is recovered from the amounts and marked as worked out.
 4. **Checks**: `src/lib/validate.ts`, `validateStatement` and `src/lib/insights.ts`.
 
+## How well it reads: measured, not claimed
+
+`npm run eval` reads a generated corpus of 125 documents three ways and scores every field against the ground truth. The documents are:
+- invoices in 13 locales and 9 languages, in 8 layouts (classic, modern, several VAT rates, discounts and shipping, credit notes, dense small print, dotted leaders without a table, multi-page);
+- receipts and bank statements;
+- financial reports in 5 languages, half of them with a deliberately broken balance sheet;
+- documents it must refuse.
+
+Each one is read as a text PDF, as a page image through OCR, and as a tilted, blurred, shadowed phone photo. The full report, failures included, is in [`corpus/REPORT.md`](corpus/REPORT.md).
+
+| Every field right | Text PDF | Page image (OCR) | Phone photo (OCR) |
+| --- | --- | --- | --- |
+| Invoices (83) | 100% | 82% | 74% |
+| Receipts (10) | 100% | 80% | 3 photos, mostly misread |
+| Bank statements (16) | 100% | 100% | 100% |
+| Financial reports (10, incl. broken ones caught) | 100% | – | – |
+| Documents to refuse (6) | 100% | 100% | – |
+
+Field by field, OCR'd invoices are 90–100% right. The misses come from the scan itself: a ₹ or ¥ sign OCR cannot read leaves the currency blank, and blurred thermal receipts lose digits. The checks and the "worth a quick look" hint show exactly which values to confirm. Damaged, empty, password-protected, oversized and unsupported files each get a plain message (`tests/e2e/robustness.spec.ts`).
+
 ## Run it locally
 
 ```bash
@@ -65,6 +85,8 @@ npm run dev            # http://localhost:3000
 npm test               # unit tests: parsing, dates, VAT, statements, real OCR output
 npm run build && npm run serve   # static export, served like GitHub Pages
 npm run test:e2e       # Playwright: desktop Chrome, desktop Safari, iPhone, Android
+npm run corpus         # regenerate the evaluation corpus (PDFs, images, photos, OCR)
+npm run eval           # score every document, writes corpus/REPORT.md
 ```
 
 The sample documents are synthetic. Every company, person, address and account number in them is invented.

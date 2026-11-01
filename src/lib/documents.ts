@@ -34,6 +34,8 @@ export type Doc = {
   addedAt: number;
   /** Uploaded documents keep their image so they can be saved on this device. */
   image?: Blob;
+  /** How the file was read, when the reviewer should know (only part of a long PDF, say). */
+  note?: string;
 };
 
 export type Pending = { id: string; name: string; stage: string; value: number; error?: string };

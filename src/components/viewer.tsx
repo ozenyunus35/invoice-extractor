@@ -55,6 +55,7 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, avgCon
           {doc.source === "pdf-text" ? "PDF text layer" : `OCR${avgConfidence !== null ? ` · ${avgConfidence}% confidence` : ""}`}
           {` · ${doc.lines.length} lines`}
         </span>
+        {doc.note && <span className="hidden rounded-full bg-warning-soft px-2 py-0.5 text-[12px] text-warning md:inline">{doc.note}</span>}
         <div className="ml-auto flex items-center gap-0.5">
           {doc.sample && (
             <button onClick={onRescan} disabled={!!scanning} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted hover:bg-surface-2 hover:text-text disabled:opacity-50" title="Run OCR on this image again, in your browser">

@@ -162,6 +162,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
                   <span className="block truncate text-[12px] text-muted">
                     {d.type === "statement" ? `Statement · ${d.statement.transactions.length} transactions` : d.type === "report" ? `Financial report · ${d.report.tables.length} tables` : d.kind}
                   </span>
+                  {d.note && <span className="block truncate text-[11px] text-warning">{d.note}</span>}
                   <span className="mt-0.5 flex items-center justify-between gap-2">
                     <span className="truncate font-mono text-[12px] tabular-nums">
                       {d.type === "statement"

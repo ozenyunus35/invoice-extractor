@@ -38,10 +38,10 @@ const TITLE = /\b(tax invoice|invoice|e-arsiv fatura|e-fatura|fatura|rechnung|re
 const COMPANY = /\b(inc|llc|ltd|limited|gmbh|ag|plc|bv|b\.v|sas|sarl|sa|s\.a|s\.l|sl|srl|s\.r\.l|spa|s\.p\.a|snc|s\.n\.c|lda|vof|v\.o\.f|sp\. z o\.o|co|corp|a\.s|sti|ltd\. sti|kg|ohg|ug)\b\.?/;
 const HEADER_WORDS = /\b(description|item|items|qty|quantity|unit|price|amount|rate|hours|aciklama|urun|hizmet|miktar|birim|fiyat|tutar|beschreibung|artikel|leistung|menge|einzelpreis|preis|betrag|pos|designation|qte|quantite|prix|montant|descripcion|cant|cantidad|precio|importe|descrizione|q\.ta|quantita|prezzo|importo|omschrijving|aantal|prijs|bedrag|descricao|qtd|quantidade|preco|valor|nazwa|ilosc|cena|wartosc|stawka|tarief|aliquota|taux|tipo|satz)\b/g;
 
-const INVOICE_NO = /(invoice\s*(no|number|nr|#)|inv\s*(no|#)|fatura\s*(no|numarasi)|belge\s*no|rechnungs?-?\s*(nr|nummer|no)|receipt\s*(no|#)|fis\s*no|bill\s*no|order\s*(no|#)|n[°ºo]\.?\s*de\s*(facture|factura)|facture\s*n[°ºo]?|numero de (facture|factura)|n[°ºo]\.?\s*(facture|factura)|factura\s*n[°ºo.]*|fattura\s*(n\.?|nr\.?|numero)|numero fattura|factuurnummer|factuur\s*(nr|nummer)|fatura\s*n\.?\s*[°ºo]?|numer faktury|faktura\s*(vat\s*)?(nr|numer))\.?/;
+const INVOICE_NO = /(invoice\s*(no|number|nr|#)|inv\s*(no|#)|fatura\s*(no|numarasi)|belge\s*no|rechnungs?-?\s*(nr|nummer|no)|receipt\s*(no|#)|fis\s*no|bill\s*no|order\s*(no|#)|n[°ºoe*]\.?\s*de\s*(facture|factura)|facture\s*n[°ºo]?|numero de (facture|factura)|n[°ºoe*]\.?\s*(facture|factura)|factura\s*n[°ºo.]*|fattura\s*(n\.?|nr\.?|numero)|numero fattura|factuurnummer|factuur\s*(nr|nummer)|fatura\s*n\.?\s*[°ºo]?|numer faktury|faktura\s*(vat\s*)?(nr|numer))\.?/;
 const TAX_ID = /(vat\s*(no|number|id|reg(istration)?(\s*no)?)|tax\s*(id|no)|\bein\b|\bvkn\b|vergi\s*(no|numarasi|kimlik\s*no)|ust-?id(-?nr)?|steuer-?nr|steuernummer|n[°ºo]\.?\s*tva|numero de tva|\bnif\b|\bcif\b|p\.\s*iva|partita iva|btw-?(nr|nummer)|\bnip\b)\.?/;
 const DATE_LABEL = /(invoice date|date of issue|issue date|issued|fatura tarihi|duzenleme tarihi|tarih|rechnungsdatum|belegdatum|date de (la )?facture|date d'emission|fecha de (la )?factura|fecha de emision|data (della )?fattura|data di emissione|factuurdatum|data da fatura|data de emissao|data wystawienia|datum|fecha|data|date)/;
-const DUE_LABEL = /(due date|payment due|due|vade|son odeme|fallig|zahlbar bis|echeance|a payer avant|vencimiento|scadenza|vervaldatum|uiterste betaaldatum|vencimento|termin platnosci)/;
+const DUE_LABEL = /(due date|payment due|due|vade|son odeme|fallig|zahlbar bis|echeance|a payer avant|vencimiento|scadenza|vervaldatum|uiterste betaaldatum|vencimento|termin p[a-z]{6,}|termin zaplaty)/;
 
 /** VAT and sales tax rates in common use, to recover a rate OCR could not read. */
 const STANDARD_RATES = [1, 2.5, 3, 4, 5, 5.5, 6, 7, 8, 8.875, 9, 10, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 27];
@@ -119,7 +119,8 @@ const isNumericToken = (t: string) => {
 };
 
 function parseItem(text: string, decimal: Decimal, line: number): LineItem | "continuation" | null {
-  const tokens = joinSpacedThousands(text).trim().split(/\s+/);
+  // Dotted leaders ("Toner ........ 45,00") separate a description from its amount.
+  const tokens = joinSpacedThousands(text.replace(/(?:[.·…•_]\s?){4,}/g, "  ")).trim().split(/\s+/);
   let cut = tokens.length;
   while (cut > 0 && isNumericToken(tokens[cut - 1])) cut--;
   let description = tokens.slice(0, cut).join(" ");
@@ -330,8 +331,9 @@ export function extractInvoice(lines: OcrLine[]): Invoice {
 
   return {
     vendor: findVendor(lines, folded, headerIdx === -1 ? totalsStart : headerIdx),
-    taxId: afterLabel(lines, folded, TAX_ID, /^[\s:#.]*([A-Z]{0,2}\s?\d[\d\s-]{6,16}\d)/),
-    invoiceNumber: afterLabel(lines, folded, INVOICE_NO, /^[\s:#.]*([A-Z0-9][A-Z0-9\-/.]*\d[A-Z0-9\-/.]*)/i),
+    // OCR often puts a stray dash or bar between a label and its value ("Invoice No: — RE-16548").
+    taxId: afterLabel(lines, folded, TAX_ID, /^[\s:#.\-–—|]*([A-Z]{0,2}\s?\d[\d\s-]{6,16}\d)/),
+    invoiceNumber: afterLabel(lines, folded, INVOICE_NO, /^[\s:#.\-–—|]*([A-Z0-9][A-Z0-9\-/.]*\d[A-Z0-9\-/.]*)/i),
     date,
     dueDate: labelledDate(lines, folded, DUE_LABEL, us),
     currency,
