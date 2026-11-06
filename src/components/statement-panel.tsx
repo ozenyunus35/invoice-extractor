@@ -107,7 +107,7 @@ export function StatementPanel({ doc, onType, focusLine, onFocusLine }: Props) {
             <div className="min-w-0">
               <h1 className="truncate text-[17px] font-semibold tracking-tight">{s.bank.value ?? t("Bank statement")}</h1>
               <p className="truncate text-[12px] text-muted">
-                {[s.holder.value, s.iban.value].filter(Boolean).join(" · ") || t("Account details not found")}
+                {[s.holder.value, s.iban.value ?? (s.account.value && t("Account {number}", { number: s.account.value }))].filter(Boolean).join(" · ") || t("Account details not found")}
               </p>
             </div>
             <p className="shrink-0 text-right text-[12px] text-muted">

@@ -133,3 +133,24 @@ describe("statement sample through real OCR", () => {
     expect(statementTotals(s)).toMatchObject({ moneyIn: 11420.5, moneyOut: -15197.52, opening: 9842.35, closing: 6065.33 });
   });
 });
+
+describe("two-column header read onto one line by OCR", () => {
+  const s = extractStatement(
+    lines(`
+      Northshore Bank  STATEMENT
+      ACCOUNT HOLDER  Account number:  **** 4402
+      1900 NW nit rey  Statement period:  10/01/2026 to 10/31/2026
+      Date  Description  Debit  Credit  Balance
+      Opening balance  9,842.35
+      10/01/2026  Card purchase - Staples #2231  84.17  9,758.18
+    `),
+  );
+
+  it("does not take the next column's label as the account holder", () => {
+    expect(s.holder.value).toBeNull();
+  });
+
+  it("reads the masked account number instead", () => {
+    expect(s.account.value).toBe("**** 4402");
+  });
+});

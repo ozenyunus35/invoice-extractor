@@ -22,6 +22,8 @@ export type Statement = {
   bank: Field<string>;
   holder: Field<string>;
   iban: Field<string>;
+  /** Account number as printed, often masked ("**** 4402"), when there is no IBAN. */
+  account: Field<string>;
   currency: Field<string>;
   periodStart: Field<string>;
   periodEnd: Field<string>;
@@ -43,6 +45,9 @@ const DEBIT_TOTAL = /^\s*(total debits?|debits?|toplam borc|borc toplami|borc|su
 const CREDIT_TOTAL = /^\s*(total credits?|credits?|toplam alacak|alacak toplami|alacak|summe haben|haben|total (des )?credits?|total abonos|totale accrediti|totaal bij|suma uznan)\b/;
 const BANK = /\b(bank|banka|bankasi|sparkasse|volksbank|credit union|building society)\b/;
 const HOLDER = /\b(customer|account holder|account name|musteri|hesap sahibi|kontoinhaber|name)\b\s*[:：]?\s*(.+)$/;
+/** A value that is really the next column's label, read onto the same line by OCR. */
+const LABEL_LIKE = /^(account (number|no)|statement|period|currency|iban|branch|address|date|hesap no|ekstre|donem|para birimi|sube|adres|tarih)\b|[:：]$/;
+const ACCOUNT_NO = /\b(account (?:number|no)|acct\.? no|hesap no|kontonummer)\b\.?\s*[:：]?\s*([*xX•\d][*xX•\d -]{2,}\d)/;
 const IBAN = /\b([A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){3,7}(?:\s?[A-Z0-9]{1,4})?)\b/;
 const PERIOD = /\b(period|donem|zeitraum|statement period)\b/;
 
@@ -175,7 +180,7 @@ export function extractStatement(lines: OcrLine[]): Statement {
     if (m && m.index !== undefined) {
       const raw = lines[i].text.slice(m.index + m[0].length - m[2].length).replace(/^[:\s]+/, "");
       const value = raw.split(/\s{2,}|\b(?:Branch|Şube|Sube|IBAN|Address|Adres)\b/i)[0].trim();
-      if (value) {
+      if (value && !LABEL_LIKE.test(fold(value))) {
         holder = { value, line: i, confidence: conf(lines[i], 0.85) };
         break;
       }
@@ -184,6 +189,7 @@ export function extractStatement(lines: OcrLine[]): Statement {
       break;
     }
   }
+  const accountIdx = folded.slice(0, 20).findIndex((f) => ACCOUNT_NO.test(f));
   const ibanIdx = lines.findIndex((l) => IBAN.test(l.text.replace(/\s+/g, " ")));
   const periodIdx = folded.findIndex((f, i) => PERIOD.test(f) && datesIn(lines[i].text).length >= 2);
   const periodDates = periodIdx === -1 ? [] : datesIn(lines[periodIdx].text, us);
@@ -196,6 +202,7 @@ export function extractStatement(lines: OcrLine[]): Statement {
     bank: bankIdx === -1 ? empty() : { value: bankName(lines[bankIdx].text), line: bankIdx, confidence: conf(lines[bankIdx], 0.75) },
     holder,
     iban: ibanIdx === -1 ? empty() : { value: lines[ibanIdx].text.replace(/\s+/g, " ").match(IBAN)![1], line: ibanIdx, confidence: conf(lines[ibanIdx], 0.95) },
+    account: accountIdx === -1 ? empty() : { value: folded[accountIdx].match(ACCOUNT_NO)![2].trim(), line: accountIdx, confidence: conf(lines[accountIdx], 0.85) },
     currency: currencyCode ? { value: currencyCode, line: null, confidence: 0.9 } : empty(),
     periodStart: periodDates[0] ? { value: periodDates[0].iso, line: periodIdx, confidence: 0.95 } : txDates[0] ? { value: txDates[0], line: null, confidence: 0.6, derived: true } : empty(),
     periodEnd: periodDates[1] ? { value: periodDates[1].iso, line: periodIdx, confidence: 0.95 } : txDates.at(-1) ? { value: txDates.at(-1)!, line: null, confidence: 0.6, derived: true } : empty(),

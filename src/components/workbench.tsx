@@ -13,6 +13,7 @@ import { useToast } from "@/components/toast";
 import { Viewer, type Scanning } from "@/components/viewer";
 import { makeDoc, readLines, sampleDocs, TYPE_LABEL, type Doc, type Pending } from "@/lib/documents";
 import { LangToggle, useLang } from "@/lib/i18n";
+
 import { download, toCsv, toXlsx } from "@/lib/export";
 import { wordsToLines } from "@/lib/layout";
 import { FileProblem, rescanUrl, scanFile, type Scan } from "@/lib/ocr-browser";
@@ -22,6 +23,8 @@ import { Overview } from "@/components/overview";
 import type { DocType } from "@/lib/classify";
 import type { Invoice } from "@/lib/types";
 import { cn } from "@/lib/cn";
+
+const capitalize = (s: string, lang: string) => s.charAt(0).toLocaleUpperCase(lang) + s.slice(1);
 
 /** lucide-react no longer ships brand icons, so the GitHub mark is drawn inline. */
 const GithubMark = () => (
@@ -298,7 +301,7 @@ export function Workbench() {
     ];
     if (!showOverview)
       for (const ty of DOC_TYPES)
-        if (ty !== doc.type) list.push({ id: `as:${ty}`, label: t("Read as {type}", { type: t(TYPE_LABEL[ty]).toLocaleLowerCase(lang) }), group: t("This document"), icon: FileText, run: () => setType(doc.id, ty) });
+        if (ty !== doc.type) list.push({ id: `as:${ty}`, label: capitalize(t("Read as {type}", { type: t(TYPE_LABEL[ty]).toLocaleLowerCase(lang) }), lang), group: t("This document"), icon: FileText, run: () => setType(doc.id, ty) });
     if (!showOverview && doc.sample) list.push({ id: "ocr", label: t("Run OCR live"), group: t("This document"), icon: RefreshCw, run: () => void rescan() });
     list.push(
       { id: "add", label: t("Add documents"), group: act, icon: FilePlus2, hint: t("Photo, PDF, Office, e-mail"), run: () => window.dispatchEvent(new Event("tally:add-files")) },

@@ -47,6 +47,7 @@ export const TR: Record<string, string> = {
   Receipt: "Fiş",
   "Bank statement": "Banka ekstresi",
   "Financial report": "Finansal rapor",
+  "Account {number}": "Hesap {number}",
   "Not recognised": "Tanınmadı",
   "Read this document as": "Bu belgeyi şöyle oku",
   "Detected: {type}": "Algılanan: {type}",
