@@ -1,16 +1,18 @@
 "use client";
 
-import { FileSpreadsheet, FileText, ShieldCheck } from "lucide-react";
+import { Code2, FilePlus2, FileSpreadsheet, FileText, Landmark, Languages, LayoutDashboard, Link2, Moon, Receipt, RefreshCw, RotateCcw, Search, ShieldCheck, Table2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { DataPanel } from "@/components/data-panel";
 import { DocList } from "@/components/doc-list";
 import { ReportPanel } from "@/components/report-panel";
 import { StatementPanel } from "@/components/statement-panel";
 import { UnknownPanel } from "@/components/unknown-panel";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { ThemeToggle, toggleTheme } from "@/components/theme-toggle";
+import { Palette, usePaletteShortcut, type Command } from "@/components/palette";
 import { useToast } from "@/components/toast";
 import { Viewer, type Scanning } from "@/components/viewer";
-import { makeDoc, readLines, sampleDocs, type Doc, type Pending } from "@/lib/documents";
+import { makeDoc, readLines, sampleDocs, TYPE_LABEL, type Doc, type Pending } from "@/lib/documents";
+import { LangToggle, useLang } from "@/lib/i18n";
 import { download, toCsv, toXlsx } from "@/lib/export";
 import { wordsToLines } from "@/lib/layout";
 import { FileProblem, rescanUrl, scanFile, type Scan } from "@/lib/ocr-browser";
@@ -28,8 +30,15 @@ const GithubMark = () => (
   </svg>
 );
 
+const DOC_TYPES: DocType[] = ["invoice", "receipt", "statement", "report"];
+const docTitle = (d: Doc) => (d.type === "statement" ? d.statement.bank.value : d.type === "report" ? d.report.company : d.type === "unknown" ? null : d.invoice.vendor.value) ?? d.name;
+
 export function Workbench() {
   const { toast } = useToast();
+  const { t, lang, setLang } = useLang();
+  const [paletteOpen, setPaletteOpen] = useState(false);
+  const openPalette = useCallback(() => setPaletteOpen(true), []);
+  usePaletteShortcut(openPalette);
   const [docs, setDocs] = useState<Doc[]>(sampleDocs);
   const [pending, setPending] = useState<Pending[]>([]);
   const [selectedId, setSelectedId] = useState("halcyon");
@@ -66,6 +75,9 @@ export function Workbench() {
         return next;
       });
       setLoaded(true);
+      // Open the document a shared link points at; uploads only exist on the device that added them.
+      const id = decodeURIComponent(location.hash.slice(1));
+      if (id && (id === "overview" || sampleDocs().some((d) => d.id === id) || records.some((r) => r.id === id && !r.sample))) setSelectedId(id);
     });
     // Runs once: the initial sample docs are the baseline.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -83,7 +95,22 @@ export function Workbench() {
   const select = useCallback((id: string) => {
     setSelectedId(id);
     setFocusLine(null);
+    // The view lives in the URL, so a copied link opens the same document.
+    try {
+      history.replaceState(history.state, "", `${location.pathname}${location.search}#${id}`);
+    } catch {}
   }, []);
+
+  const copyLink = useCallback(async () => {
+    const current = docs.find((d) => d.id === selectedId);
+    const url = `${location.origin}${location.pathname}${lang === "tr" ? "?lang=tr" : ""}#${selectedId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast(current && !current.sample ? t("Link copied. Your uploads stay on this device, so it opens here only.") : t("Link copied. It opens this view with the sample documents."));
+    } catch {
+      toast(t("The link could not be copied. Copy it from the address bar."), "error");
+    }
+  }, [docs, selectedId, lang, toast, t]);
 
   // ↑/↓ (or j/k) move through the list when no field has focus.
   const order = useMemo(() => ["overview", ...docs.map((d) => d.id)], [docs]);
@@ -120,9 +147,9 @@ export function Workbench() {
       });
       void remove(id);
       if (selectedId === id) select("overview");
-      toast("Document removed from this device");
+      toast(t("Document removed from this device"));
     },
-    [select, selectedId, toast],
+    [select, selectedId, toast, t],
   );
 
   const resetDemo = useCallback(async () => {
@@ -131,8 +158,15 @@ export function Workbench() {
     saved.current = new WeakSet(fresh);
     setDocs(fresh);
     select("halcyon");
-    toast("Demo reset: your uploads and edits were cleared");
-  }, [select, toast]);
+    toast(t("Demo reset: your uploads and edits were cleared"));
+  }, [select, toast, t]);
+
+  // The command palette resets through an event, so its list never holds the save-tracking ref.
+  useEffect(() => {
+    const onReset = () => void resetDemo();
+    window.addEventListener("tally:reset", onReset);
+    return () => window.removeEventListener("tally:reset", onReset);
+  }, [resetDemo]);
 
   const addFiles = useCallback(
     (files: File[]) => {
@@ -158,8 +192,8 @@ export function Workbench() {
             setDocs((all) => [added, ...all]);
             setPending((p) => p.filter((x) => x.id !== id));
             select(id);
-            if (!added.lines.length) toast("No text found. Try a sharper photo or the original PDF.", "error");
-            else if (added.type === "unknown") toast(`${file.name} doesn't look like an invoice, receipt or statement`, "error");
+            if (!added.lines.length) toast(t("No text found. Try a sharper photo or the original PDF."), "error");
+            else if (added.type === "unknown") toast(t("{name} doesn't look like an invoice, receipt or statement", { name: file.name }), "error");
           })
           .catch((err: unknown) => {
             // File problems are already worded for people; anything else is most likely the OCR engine failing to load.
@@ -171,11 +205,11 @@ export function Workbench() {
                   : "This file could not be read. Try the original PDF or a sharper photo.";
             console.error(err);
             setPending((p) => p.map((x) => (x.id === id ? { ...x, error: message } : x)));
-            toast(`${file.name}: ${message}`, "error");
+            toast(`${file.name}: ${t(message)}`, "error");
           });
       }
     },
-    [select, toast],
+    [select, toast, t],
   );
 
   /** Appends photographed or scanned pages to a document: stacked images, the rows read again as one. */
@@ -211,14 +245,14 @@ export function Workbench() {
         const read = readLines(lines);
         const pages = (Number(/(\d+) pages/.exec(target.note ?? "")?.[1]) || 1) + scans.length;
         setDocs((all) => all.map((d) => (d.id === id ? { ...d, ...read, image, imageUrl: URL.createObjectURL(image), width, height: canvas.height, note: `${pages} pages` } : d)));
-        toast(`Added ${scans.length} ${scans.length === 1 ? "page" : "pages"}`);
+        toast(t(scans.length === 1 ? "Added {n} page" : "Added {n} pages", { n: scans.length }));
       } catch (err) {
-        toast(err instanceof FileProblem ? err.message : "That page could not be read.", "error");
+        toast(t(err instanceof FileProblem ? err.message : "That page could not be read."), "error");
       } finally {
         setScanning(null);
       }
     },
-    [docs, toast],
+    [docs, toast, t],
   );
 
   const rescan = useCallback(async () => {
@@ -228,13 +262,13 @@ export function Workbench() {
       const words = await rescanUrl(target.imageUrl, (p) => setScanning({ id: target.id, ...p }));
       const read = readLines(wordsToLines(words));
       setDocs((all) => all.map((d) => (d.id === target.id ? { ...d, ...read } : d)));
-      toast(`Read ${read.lines.length} lines in your browser`);
+      toast(t("Read {n} lines in your browser", { n: read.lines.length }));
     } catch {
-      toast("OCR could not start. Check your connection: the engine loads from a CDN the first time.", "error");
+      toast(t("OCR could not start. Check your connection: the engine loads from a CDN the first time."), "error");
     } finally {
       setScanning(null);
     }
-  }, [doc, toast]);
+  }, [doc, toast, t]);
 
   const exportAll = useCallback(
     async (format: "xlsx" | "csv") => {
@@ -242,10 +276,42 @@ export function Workbench() {
       const statements = docs.filter((d) => d.type === "statement").map((d) => ({ name: d.name, statement: d.statement }));
       if (format === "csv") download(new Blob([toCsv(invoices)], { type: "text/csv" }), "invoices.csv");
       else download(await toXlsx(invoices, statements), "tally-export.xlsx");
-      toast(format === "csv" ? `Exported ${invoices.length} invoices` : `Exported ${invoices.length} invoices and ${statements.length} statements`);
+      toast(format === "csv" ? t("Exported {n} invoices", { n: invoices.length }) : t("Exported {n} invoices and {m} statements", { n: invoices.length, m: statements.length }));
     },
-    [docs, toast],
+    [docs, toast, t],
   );
+
+  const commands = ((): Command[] => {
+    const go = t("Go to");
+    const act = t("Actions");
+    const list: Command[] = [
+      { id: "overview", label: t("Overview"), group: go, icon: LayoutDashboard, hint: t("Payments, VAT and cash flow"), run: () => select("overview") },
+      ...docs.map((d) => ({
+        id: `doc:${d.id}`,
+        label: docTitle(d),
+        group: t("Documents"),
+        icon: d.type === "statement" ? Landmark : d.type === "receipt" ? Receipt : d.type === "report" ? Table2 : FileText,
+        hint: t(TYPE_LABEL[d.type]),
+        keywords: `${d.name} ${d.kind} ${t(d.kind)} ${t(TYPE_LABEL[d.type])}`,
+        run: () => select(d.id),
+      })),
+    ];
+    if (!showOverview)
+      for (const ty of DOC_TYPES)
+        if (ty !== doc.type) list.push({ id: `as:${ty}`, label: t("Read as {type}", { type: t(TYPE_LABEL[ty]).toLocaleLowerCase(lang) }), group: t("This document"), icon: FileText, run: () => setType(doc.id, ty) });
+    if (!showOverview && doc.sample) list.push({ id: "ocr", label: t("Run OCR live"), group: t("This document"), icon: RefreshCw, run: () => void rescan() });
+    list.push(
+      { id: "add", label: t("Add documents"), group: act, icon: FilePlus2, hint: t("Photo, PDF, Office, e-mail"), run: () => window.dispatchEvent(new Event("tally:add-files")) },
+      { id: "xlsx", label: t("Export everything to Excel"), group: act, icon: FileSpreadsheet, run: () => void exportAll("xlsx") },
+      { id: "csv", label: t("Export invoices as CSV"), group: act, icon: FileSpreadsheet, run: () => void exportAll("csv") },
+      { id: "link", label: t("Copy a link to this view"), group: act, icon: Link2, run: () => void copyLink() },
+      { id: "theme", label: t("Switch light or dark theme"), group: act, icon: Moon, run: toggleTheme },
+      { id: "lang", label: lang === "tr" ? "Switch to English" : "Türkçeye geç", group: act, icon: Languages, run: () => setLang(lang === "tr" ? "en" : "tr") },
+      { id: "reset", label: t("Reset demo"), group: act, icon: RotateCcw, hint: t("Clears uploads and edits"), run: () => window.dispatchEvent(new Event("tally:reset")) },
+      { id: "source", label: t("Source code on GitHub"), group: act, icon: Code2, run: () => window.open("https://github.com/ozenyunus35/invoice-extractor", "_blank", "noopener") },
+    );
+    return list;
+  })();
 
   const avgConfidence = useMemo(() => {
     const ls = doc.lines.filter((l) => l.confidence !== undefined);
@@ -260,23 +326,32 @@ export function Workbench() {
             <FileText className="size-3.5" />
           </span>
           <span className="text-[14px] font-semibold tracking-tight">Tally</span>
-          <span className="hidden text-muted sm:inline">Invoice reader</span>
+          <span className="hidden text-muted sm:inline">{t("Invoice reader")}</span>
         </div>
         <span className="hidden items-center gap-1.5 rounded-full border border-border px-2 py-0.5 text-[12px] text-muted md:inline-flex">
           <ShieldCheck className="size-3.5 text-success" aria-hidden />
-          Runs in your browser · nothing is uploaded
+          {t("Runs in your browser · nothing is uploaded")}
         </span>
         <div className="ml-auto flex items-center gap-1">
+          <button onClick={openPalette} className="inline-flex h-8 items-center gap-2 rounded-md border border-border px-2 text-muted hover:bg-surface-2 hover:text-text sm:min-w-44" aria-label={t("Search and commands")} aria-keyshortcuts="Meta+K Control+K">
+            <Search className="size-4" aria-hidden />
+            <span className="hidden flex-1 text-left sm:inline">{t("Search…")}</span>
+            <kbd className="hidden rounded border border-border px-1 text-[10.5px] text-faint sm:inline">⌘K</kbd>
+          </button>
           <button onClick={() => exportAll("xlsx")} className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 font-medium hover:bg-surface-2">
             <FileSpreadsheet className="size-4 text-success" aria-hidden />
-            <span className="hidden sm:inline">Export all</span>
+            <span className="hidden sm:inline">{t("Export all")}</span>
             <span className="sm:hidden">Excel</span>
           </button>
           <button onClick={() => exportAll("csv")} className="hidden h-8 items-center rounded-md px-2.5 text-muted hover:bg-surface-2 hover:text-text sm:inline-flex">
             CSV
           </button>
+          <button onClick={copyLink} className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-text max-sm:hidden" aria-label={t("Copy a link to this view")} title={t("Copy a link to this view")}>
+            <Link2 className="size-4" />
+          </button>
+          <LangToggle />
           <ThemeToggle />
-          <a href="https://github.com/ozenyunus35/invoice-extractor" target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-text" aria-label="Source code on GitHub">
+          <a href="https://github.com/ozenyunus35/invoice-extractor" target="_blank" rel="noreferrer" className="rounded-md p-1.5 text-muted hover:bg-surface-2 hover:text-text" aria-label={t("Source code on GitHub")}>
             <GithubMark />
           </a>
         </div>
@@ -295,21 +370,21 @@ export function Workbench() {
 
         {showOverview && <Overview docs={docs} onOpen={select} onExport={exportAll} onReset={resetDemo} />}
 
-        <div className={cn("flex shrink-0 border-b border-border p-1 lg:hidden", showOverview && "hidden")} role="tablist" aria-label="View">
-          {(["data", "document"] as const).map((t) => (
+        <div className={cn("flex shrink-0 border-b border-border p-1 lg:hidden", showOverview && "hidden")} role="tablist" aria-label={t("View")}>
+          {(["data", "document"] as const).map((tab) => (
             <button
-              key={t}
+              key={tab}
               role="tab"
-              aria-selected={mobileTab === t}
-              onClick={() => setMobileTab(t)}
-              className={cn("flex-1 rounded-md py-1.5 font-medium capitalize", mobileTab === t ? "bg-surface-2 text-text" : "text-muted")}
+              aria-selected={mobileTab === tab}
+              onClick={() => setMobileTab(tab)}
+              className={cn("flex-1 rounded-md py-1.5 font-medium", mobileTab === tab ? "bg-surface-2 text-text" : "text-muted")}
             >
-              {t === "data" ? "Extracted data" : "Document"}
+              {tab === "data" ? t("Extracted data") : t("Document")}
             </button>
           ))}
         </div>
 
-        <main className={cn("min-h-0 min-w-0 flex-1", showOverview ? "hidden" : mobileTab === "document" ? "flex" : "hidden lg:flex")}>
+        <main className={cn("min-h-0 min-w-0 flex-1 overflow-hidden", showOverview ? "hidden" : mobileTab === "document" ? "flex" : "hidden lg:flex")}>
           <Viewer key={doc.id} doc={doc} focusLine={focusLine} onHoverLine={setFocusLine} scanning={scanning?.id === doc.id ? scanning : null} onRescan={rescan} onAddPages={(files) => addPages(doc.id, files)} avgConfidence={avgConfidence} />
         </main>
 
@@ -339,6 +414,7 @@ export function Workbench() {
           )}
         </aside>
       </div>
+      <Palette open={paletteOpen} onClose={() => setPaletteOpen(false)} commands={commands} />
     </div>
   );
 }

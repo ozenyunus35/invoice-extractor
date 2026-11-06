@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { Doc } from "@/lib/documents";
 import type { Invoice } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { useT } from "@/lib/i18n";
 
 export type Scanning = { id: string; stage: string; value: number };
 
@@ -28,6 +29,7 @@ type Props = {
 
 export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, onAddPages, avgConfidence }: Props) {
   const more = useRef<HTMLInputElement>(null);
+  const t = useT();
   const [showAll, setShowAll] = useState(false);
   const [actual, setActual] = useState(false);
   const used = useMemo(
@@ -49,15 +51,15 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, onAddP
   }, [focusLine]);
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col">
+    <div className="flex min-h-0 min-w-0 flex-1 flex-col">
       <div className="flex h-11 shrink-0 items-center gap-2 border-b border-border px-3">
         <span className="min-w-0 truncate font-medium">{doc.name}</span>
         <span className="hidden shrink-0 items-center gap-1 rounded-full bg-surface-2 px-2 py-0.5 text-[12px] whitespace-nowrap text-muted sm:inline-flex">
           <ScanText className="size-3.5" aria-hidden />
-          {doc.source === "pdf-text" ? (/\.pdf$/i.test(doc.name) ? "PDF text layer" : "Text read from the file") : `OCR${avgConfidence !== null ? ` · ${avgConfidence}% confidence` : ""}`}
-          {` · ${doc.lines.length} lines`}
+          {doc.source === "pdf-text" ? (/\.pdf$/i.test(doc.name) ? t("PDF text layer") : t("Text read from the file")) : `OCR${avgConfidence !== null ? ` · ${t("{n}% confidence", { n: avgConfidence })}` : ""}`}
+          {` · ${t("{n} lines", { n: doc.lines.length })}`}
         </span>
-        {doc.note && <span className={`hidden max-w-[240px] truncate rounded-full px-2 py-0.5 text-[12px] whitespace-nowrap md:inline ${/first \d+/.test(doc.note) ? "bg-warning-soft text-warning" : "bg-surface-2 text-muted"}`} title={doc.note}>{doc.note}</span>}
+        {doc.note && <span className={`hidden max-w-[240px] truncate rounded-full px-2 py-0.5 text-[12px] whitespace-nowrap md:inline ${/first \d+/.test(doc.note) ? "bg-warning-soft text-warning" : "bg-surface-2 text-muted"}`} title={t(doc.note)}>{t(doc.note)}</span>}
         <div className="ml-auto flex items-center gap-0.5">
           {!doc.sample && (
             <>
@@ -73,22 +75,22 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, onAddP
                   e.target.value = "";
                 }}
               />
-              <button onClick={() => more.current?.click()} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted hover:bg-surface-2 hover:text-text" title="Add the next page of this document (a photo or a PDF)">
+              <button onClick={() => more.current?.click()} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted hover:bg-surface-2 hover:text-text" title={t("Add the next page of this document (a photo or a PDF)")}>
                 <FilePlus2 className="size-4" aria-hidden />
-                <span className="hidden whitespace-nowrap xl:inline">Add page</span>
+                <span className="hidden whitespace-nowrap xl:inline">{t("Add page")}</span>
               </button>
             </>
           )}
           {doc.sample && (
-            <button onClick={onRescan} disabled={!!scanning} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted hover:bg-surface-2 hover:text-text disabled:opacity-50" title="Run OCR on this image again, in your browser">
+            <button onClick={onRescan} disabled={!!scanning} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2 text-muted hover:bg-surface-2 hover:text-text disabled:opacity-50" title={t("Run OCR on this image again, in your browser")}>
               <RefreshCw className={cn("size-4", scanning && "animate-spin")} aria-hidden />
-              <span className="hidden xl:inline">Run OCR live</span>
+              <span className="hidden xl:inline">{t("Run OCR live")}</span>
             </button>
           )}
-          <button onClick={() => setShowAll((v) => !v)} aria-pressed={showAll} className="rounded-md p-2 text-muted hover:bg-surface-2 hover:text-text" title={showAll ? "Hide detected lines" : "Show every detected line"}>
+          <button onClick={() => setShowAll((v) => !v)} aria-pressed={showAll} className="rounded-md p-2 text-muted hover:bg-surface-2 hover:text-text" title={showAll ? t("Hide detected lines") : t("Show every detected line")} aria-label={showAll ? t("Hide detected lines") : t("Show every detected line")}>
             {showAll ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
           </button>
-          <button onClick={() => setActual((v) => !v)} className="rounded-md p-2 text-muted hover:bg-surface-2 hover:text-text max-sm:hidden" title={actual ? "Fit to width" : "Actual size"}>
+          <button onClick={() => setActual((v) => !v)} className="rounded-md p-2 text-muted hover:bg-surface-2 hover:text-text max-sm:hidden" title={actual ? t("Fit to width") : t("Actual size")} aria-label={actual ? t("Fit to width") : t("Actual size")}>
             {actual ? <Minimize2 className="size-4" /> : <Maximize2 className="size-4" />}
           </button>
         </div>
@@ -97,7 +99,7 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, onAddP
       <div className="min-h-0 flex-1 overflow-auto bg-surface-2 p-3 sm:p-6">
         <div className="relative mx-auto animate-rise rounded-sm bg-white shadow-pop" style={actual ? { width: doc.width } : { maxWidth: Math.min(860, doc.width) }}>
           {/* eslint-disable-next-line @next/next/no-img-element -- the document itself, at its own size */}
-          <img src={doc.imageUrl} alt={`Scan of ${doc.name}`} width={doc.width} height={doc.height} className="block h-auto w-full select-none" draggable={false} />
+          <img src={doc.imageUrl} alt={t("Scan of {name}", { name: doc.name })} width={doc.width} height={doc.height} className="block h-auto w-full select-none" draggable={false} />
           <div className="absolute inset-0" onMouseLeave={() => onHoverLine(null)}>
             {doc.lines.map((l, i) => {
               if (!l.bbox) return null;
@@ -138,7 +140,7 @@ export function Viewer({ doc, focusLine, onHoverLine, scanning, onRescan, onAddP
             <div className="absolute inset-0 overflow-hidden rounded-sm bg-[rgb(12_13_15/0.35)]" role="status">
               <div className="scan-line absolute inset-x-0 h-0.5 bg-[#7c82ee] shadow-[0_0_12px_2px_rgb(124_130_238/0.6)]" />
               <div className="absolute inset-x-0 top-6 mx-auto w-fit rounded-full bg-surface px-3 py-1.5 text-[12px] font-medium shadow-pop">
-                {scanning.stage} · {Math.round(scanning.value * 100)}%
+                {t(scanning.stage)} · {Math.round(scanning.value * 100)}%
               </div>
             </div>
           )}

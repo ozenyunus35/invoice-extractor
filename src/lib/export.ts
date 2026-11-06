@@ -3,6 +3,12 @@ import type { Report, ReportAnalysis } from "./report";
 import { chronological, type Statement } from "./statement";
 import type { Invoice } from "./types";
 import { validateInvoice } from "./validate";
+import { uiLang } from "./format";
+import { translateKnown } from "./i18n";
+
+/** Headers, sheet names and check text follow the interface language; document data stays as read. */
+const tx = (s: string) => translateKnown(uiLang(), s);
+const txAll = (xs: string[]) => xs.map(tx);
 
 export type Exportable = { name: string; invoice: Invoice };
 export type ExportableStatement = { name: string; statement: Statement };
@@ -24,7 +30,7 @@ export function summaryRows(docs: Exportable[]): (string | number | null)[][] {
       inv.subtotal.value,
       cents(inv.vat.reduce((s, v) => s + v.amount, 0)),
       inv.total.value,
-      failed.length ? failed.map((c) => c.label).join("; ") : "OK",
+      failed.length ? failed.map((c) => tx(c.label)).join("; ") : tx("OK"),
     ];
   });
 }
@@ -44,7 +50,7 @@ const csvCell = (v: string | number | null) => {
 };
 
 export function toCsv(docs: Exportable[]): string {
-  return [HEADER, ...summaryRows(docs)].map((r) => r.map(csvCell).join(",")).join("\n") + "\n";
+  return [txAll(HEADER), ...summaryRows(docs)].map((r) => r.map(csvCell).join(",")).join("\n") + "\n";
 }
 
 type Sheet = { name: string; header: string[]; rows: (string | number | null)[][]; money: number[] };
@@ -56,7 +62,7 @@ export function transactionRows(docs: ExportableStatement[]): (string | number |
 }
 
 export function statementCsv(docs: ExportableStatement[]): string {
-  return [TX_HEADER, ...transactionRows(docs)].map((r) => r.map(csvCell).join(",")).join("\n") + "\n";
+  return [txAll(TX_HEADER), ...transactionRows(docs)].map((r) => r.map(csvCell).join(",")).join("\n") + "\n";
 }
 
 /** Builds an .xlsx with frozen headers, filters and money formats. ExcelJS loads only when needed. */
@@ -64,7 +70,10 @@ async function workbook(sheets: Sheet[]): Promise<Blob> {
   const { default: ExcelJS } = await import("exceljs");
   const wb = new ExcelJS.Workbook();
   wb.creator = "Tally";
-  for (const { name, header, rows, money } of sheets) {
+  for (const sheet of sheets) {
+    const { rows, money } = sheet;
+    const name = tx(sheet.name);
+    const header = txAll(sheet.header);
     const ws = wb.addWorksheet(name, { views: [{ state: "frozen", ySplit: 1 }] });
     ws.addRow(header).font = { bold: true };
     rows.forEach((r) => ws.addRow(r));
@@ -108,9 +117,9 @@ export function reportXlsx(r: Report, a: ReportAnalysis): Promise<Blob> {
   }));
   if (a.ratios.length) {
     const columns = [...new Set(a.ratios.flatMap((x) => x.values.map((v) => v.column)))];
-    sheets.push({ name: "Ratios", header: ["Ratio", ...columns], rows: a.ratios.map((x) => [x.label, ...columns.map((c) => x.values.find((v) => v.column === c)?.value ?? null)]), money: [] });
+    sheets.push({ name: "Ratios", header: ["Ratio", ...columns], rows: a.ratios.map((x) => [tx(x.label), ...columns.map((c) => x.values.find((v) => v.column === c)?.value ?? null)]), money: [] });
   }
-  sheets.push({ name: "Checks", header: ["Check", "Result", "Detail"], rows: a.checks.map((c) => [c.label, c.status, c.detail]), money: [] });
+  sheets.push({ name: "Checks", header: ["Check", "Result", "Detail"], rows: a.checks.map((c) => [tx(c.label), tx(c.status), tx(c.detail)]), money: [] });
   return workbook(sheets);
 }
 

@@ -7,6 +7,7 @@ import { formatDate, formatMoney } from "@/lib/format";
 import { overview, payStatus, type PayStatus } from "@/lib/insights";
 import { statementTotals } from "@/lib/statement";
 import { cn } from "@/lib/cn";
+import { useT } from "@/lib/i18n";
 
 type Props = {
   docs: Doc[];
@@ -16,17 +17,19 @@ type Props = {
 };
 
 function PayBadge({ status, receipt }: { status: PayStatus; receipt: boolean }) {
+  const t = useT();
   if (status.kind === "paid")
-    return <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2 py-0.5 text-[11px] font-medium text-success">Paid {formatDate(status.payment.tx.date)}</span>;
-  if (status.kind === "overdue") return <span className="inline-flex rounded-full bg-danger-soft px-2 py-0.5 text-[11px] font-medium text-danger">Overdue {status.days}d</span>;
-  if (status.kind === "due") return <span className="inline-flex rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-muted">Due in {status.days}d</span>;
-  return <span className="text-[11px] text-faint">{receipt ? "Paid at till" : "No due date"}</span>;
+    return <span className="inline-flex items-center gap-1 rounded-full bg-success-soft px-2 py-0.5 text-[11px] font-medium text-success">{t("Paid {date}", { date: formatDate(status.payment.tx.date) })}</span>;
+  if (status.kind === "overdue") return <span className="inline-flex rounded-full bg-danger-soft px-2 py-0.5 text-[11px] font-medium text-danger">{t("Overdue {n}d", { n: status.days })}</span>;
+  if (status.kind === "due") return <span className="inline-flex rounded-full bg-surface-2 px-2 py-0.5 text-[11px] font-medium text-muted">{t("Due in {n}d", { n: status.days })}</span>;
+  return <span className="text-[11px] text-faint">{receipt ? t("Paid at till") : t("No due date")}</span>;
 }
 
 const card = "rounded-lg border border-border bg-surface p-4 shadow-card";
 const h2 = "text-[11px] font-medium tracking-wide text-faint uppercase";
 
 export function Overview({ docs, onOpen, onExport, onReset }: Props) {
+  const t = useT();
   const o = useMemo(() => overview(docs, (d) => docChecks(d).some((c) => c.status === "fail")), [docs]);
   const statuses = useMemo(() => new Map(o.bills.map((d) => [d.id, payStatus(d, docs)])), [o.bills, docs]);
   const overdue = o.bills.filter((d) => statuses.get(d.id)?.kind === "overdue");
@@ -38,27 +41,27 @@ export function Overview({ docs, onOpen, onExport, onReset }: Props) {
       <div className="mx-auto max-w-6xl animate-enter p-4 sm:p-6">
         <div className="flex flex-wrap items-end gap-3">
           <div>
-            <h1 className="text-[20px] font-semibold tracking-tight">Overview</h1>
-            <p className="text-muted">Everything Tally has read, checked and matched across your documents.</p>
+            <h1 className="text-[20px] font-semibold tracking-tight">{t("Overview")}</h1>
+            <p className="text-muted">{t("Everything Tally has read, checked and matched across your documents.")}</p>
           </div>
           <div className="ml-auto flex gap-1.5">
             <button onClick={onReset} className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-muted hover:bg-surface-2 hover:text-text">
               <RotateCcw className="size-4" aria-hidden />
-              Reset demo
+              {t("Reset demo")}
             </button>
             <button onClick={() => onExport("xlsx")} className="inline-flex h-8 items-center gap-1.5 rounded-md bg-accent px-3 font-medium text-accent-fg hover:opacity-90">
               <FileSpreadsheet className="size-4" aria-hidden />
-              Export workbook
+              {t("Export workbook")}
             </button>
           </div>
         </div>
 
         <div className="mt-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
           {[
-            { label: "Invoices & receipts", value: o.bills.length, sub: `${o.statements.length} bank ${o.statements.length === 1 ? "statement" : "statements"}`, Icon: FileText, tone: "text-accent" },
-            { label: "Matched to a payment", value: paid.length, sub: `of ${o.bills.filter((d) => d.type === "invoice").length} invoices`, Icon: Landmark, tone: "text-success" },
-            { label: "Overdue", value: overdue.length, sub: overdue.length ? overdue.map((d) => formatMoney(d.invoice.total.value, d.invoice.currency.value)).join(" · ") : "Nothing overdue", Icon: CalendarClock, tone: overdue.length ? "text-danger" : "text-muted" },
-            { label: "Need attention", value: o.attention, sub: o.attention ? "Checks failed" : "All checks pass", Icon: AlertTriangle, tone: o.attention ? "text-warning" : "text-muted" },
+            { label: t("Invoices & receipts"), value: o.bills.length, sub: t(o.statements.length === 1 ? "{n} bank statement" : "{n} bank statements", { n: o.statements.length }), Icon: FileText, tone: "text-accent" },
+            { label: t("Matched to a payment"), value: paid.length, sub: t("of {n} invoices", { n: o.bills.filter((d) => d.type === "invoice").length }), Icon: Landmark, tone: "text-success" },
+            { label: t("Overdue"), value: overdue.length, sub: overdue.length ? overdue.map((d) => formatMoney(d.invoice.total.value, d.invoice.currency.value)).join(" · ") : t("Nothing overdue"), Icon: CalendarClock, tone: overdue.length ? "text-danger" : "text-muted" },
+            { label: t("Need attention"), value: o.attention, sub: o.attention ? t("Checks failed") : t("All checks pass"), Icon: AlertTriangle, tone: o.attention ? "text-warning" : "text-muted" },
           ].map(({ label, value, sub, Icon, tone }) => (
             <div key={label} className={card}>
               <div className="flex items-center justify-between text-[12px] text-muted">
@@ -74,17 +77,17 @@ export function Overview({ docs, onOpen, onExport, onReset }: Props) {
         <div className="mt-3 grid gap-3 lg:grid-cols-5">
           <section className={cn(card, "lg:col-span-3")} aria-labelledby="payables-h">
             <h2 id="payables-h" className={h2}>
-              Invoices and receipts
+              {t("Invoices and receipts")}
             </h2>
             <div className="mt-2 overflow-x-auto">
               <table className="w-full min-w-[520px] text-left">
                 <thead className="text-[11px] text-faint">
                   <tr>
-                    <th className="py-1.5 font-medium">Vendor</th>
-                    <th className="py-1.5 font-medium">Number</th>
-                    <th className="py-1.5 font-medium">Due</th>
-                    <th className="py-1.5 font-medium">Status</th>
-                    <th className="py-1.5 text-right font-medium">Total</th>
+                    <th className="py-1.5 font-medium">{t("Vendor")}</th>
+                    <th className="py-1.5 font-medium">{t("Number")}</th>
+                    <th className="py-1.5 font-medium">{t("Due")}</th>
+                    <th className="py-1.5 font-medium">{t("Status")}</th>
+                    <th className="py-1.5 text-right font-medium">{t("Total")}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -111,7 +114,7 @@ export function Overview({ docs, onOpen, onExport, onReset }: Props) {
 
           <section className={cn(card, "lg:col-span-2")} aria-labelledby="vendors-h">
             <h2 id="vendors-h" className={h2}>
-              Spend by vendor
+              {t("Spend by vendor")}
             </h2>
             <ul className="mt-3 space-y-2.5">
               {o.byVendor.map((v) => (
@@ -126,25 +129,25 @@ export function Overview({ docs, onOpen, onExport, onReset }: Props) {
                 </li>
               ))}
             </ul>
-            <p className="mt-3 text-[11px] text-faint">Bars compare amounts in their own currency; no exchange rates are applied.</p>
+            <p className="mt-3 text-[11px] text-faint">{t("Bars compare amounts in their own currency; no exchange rates are applied.")}</p>
           </section>
         </div>
 
         <div className="mt-3 grid gap-3 lg:grid-cols-2">
           <section className={card} aria-labelledby="vat-h">
             <h2 id="vat-h" className={h2}>
-              VAT summary
+              {t("VAT summary")}
             </h2>
             {o.vatByRate.length === 0 ? (
-              <p className="mt-2 text-[12px] text-muted">No VAT found yet.</p>
+              <p className="mt-2 text-[12px] text-muted">{t("No VAT found yet.")}</p>
             ) : (
               <table className="mt-2 w-full text-left">
                 <thead className="text-[11px] text-faint">
                   <tr>
-                    <th className="py-1.5 font-medium">Currency</th>
-                    <th className="py-1.5 font-medium">Rate</th>
-                    <th className="py-1.5 text-right font-medium">Net</th>
-                    <th className="py-1.5 text-right font-medium">VAT</th>
+                    <th className="py-1.5 font-medium">{t("Currency")}</th>
+                    <th className="py-1.5 font-medium">{t("Rate")}</th>
+                    <th className="py-1.5 text-right font-medium">{t("Net")}</th>
+                    <th className="py-1.5 text-right font-medium">{t("VAT")}</th>
                   </tr>
                 </thead>
                 <tbody className="font-mono tabular-nums">
@@ -163,14 +166,14 @@ export function Overview({ docs, onOpen, onExport, onReset }: Props) {
 
           <section className={card} aria-labelledby="cash-h">
             <h2 id="cash-h" className={h2}>
-              Bank statements
+              {t("Bank statements")}
             </h2>
             {o.statements.length === 0 ? (
-              <p className="mt-2 text-[12px] text-muted">Add a bank statement to match payments and see cash flow.</p>
+              <p className="mt-2 text-[12px] text-muted">{t("Add a bank statement to match payments and see cash flow.")}</p>
             ) : (
               <ul className="mt-2 divide-y divide-border">
                 {o.statements.map((d) => {
-                  const t = statementTotals(d.statement);
+                  const tot = statementTotals(d.statement);
                   const cur = d.statement.currency.value;
                   return (
                     <li key={d.id}>
@@ -182,9 +185,9 @@ export function Overview({ docs, onOpen, onExport, onReset }: Props) {
                           </span>
                         </div>
                         <div className="mt-1 grid grid-cols-3 gap-2 font-mono text-[12px] tabular-nums">
-                          <span className="text-success">+{formatMoney(t.moneyIn, cur)}</span>
-                          <span>{formatMoney(t.moneyOut, cur)}</span>
-                          <span className="text-right">= {formatMoney(t.closing, cur)}</span>
+                          <span className="text-success">+{formatMoney(tot.moneyIn, cur)}</span>
+                          <span>{formatMoney(tot.moneyOut, cur)}</span>
+                          <span className="text-right">= {formatMoney(tot.closing, cur)}</span>
                         </div>
                       </button>
                     </li>

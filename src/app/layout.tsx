@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ToastProvider } from "@/components/toast";
+import { LangProvider } from "@/lib/i18n";
 import "./globals.css";
 
 const inter = Inter({ variable: "--font-inter", subsets: ["latin", "latin-ext"] });
@@ -29,7 +30,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }} />
       </head>
       <body className="h-full font-sans text-[13px] leading-5">
-        <ToastProvider>{children}</ToastProvider>
+        <LangProvider>
+          <ToastProvider>{children}</ToastProvider>
+        </LangProvider>
       </body>
     </html>
   );

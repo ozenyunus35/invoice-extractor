@@ -29,7 +29,11 @@ Tally turns invoices, receipts and bank statements into checked, structured data
 - **Review and fix.** Hover a field to see where it was read on the page. Edit any value and the checks re-run as you type. Each field shows a confidence dot.
 - **Export.** One workbook with Invoices, Line items and Transactions sheets, using frozen headers, filters and money formats. CSV and JSON are also available.
 - **Remembers your work.** Uploads and edits stay in IndexedDB on your device. You can delete a document or reset the demo at any time.
-- **Built for everyday use.** Light and dark themes, keyboard navigation (↑/↓ or j/k between documents) and a phone layout.
+- **Built for everyday use.**
+  - An English and Turkish interface, including the checks, the error messages and the Excel headers. Numbers and dates follow the language (1,234.50 or 1.234,50).
+  - A ⌘K command palette: jump to any document by vendor, file name or type, read a document as another type, export, copy a link, switch theme or language.
+  - Share links: the open document is in the URL, so a link opens the same view.
+  - Light and dark themes, keyboard navigation (↑/↓ or j/k between documents), a balance chart that shows each day on hover, and a phone layout.
 
 | Bank statement | Overview |
 | --- | --- |

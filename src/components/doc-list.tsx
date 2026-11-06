@@ -1,30 +1,32 @@
 "use client";
 
 import { AlertTriangle, Camera, CheckCircle2, FileQuestion, LayoutDashboard, Loader2, Trash2, Upload, X } from "lucide-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { docChecks, type Doc, type Pending } from "@/lib/documents";
 import { statementTotals } from "@/lib/statement";
 import { formatMoney } from "@/lib/format";
+import { useT } from "@/lib/i18n";
 import { cn } from "@/lib/cn";
 
 function Status({ doc }: { doc: Doc }) {
+  const t = useT();
   if (doc.type === "unknown")
     return (
       <span className="inline-flex shrink-0 items-center gap-1 text-[12px] text-muted">
         <FileQuestion className="size-3.5" aria-hidden />
-        Unknown
+        {t("Unknown")}
       </span>
     );
   const failed = docChecks(doc).filter((c) => c.status === "fail").length;
   return failed ? (
     <span className="inline-flex shrink-0 items-center gap-1 text-[12px] text-warning">
       <AlertTriangle className="size-3.5" aria-hidden />
-      {failed} {failed === 1 ? "issue" : "issues"}
+      {t(failed === 1 ? "{n} issue" : "{n} issues", { n: failed })}
     </span>
   ) : (
-    <span className="inline-flex shrink-0 items-center gap-1 text-[12px] text-success" title="All checks pass">
+    <span className="inline-flex shrink-0 items-center gap-1 text-[12px] text-success" title={t("All checks pass")}>
       <CheckCircle2 className="size-3.5" aria-hidden />
-      OK
+      {t("OK")}
     </span>
   );
 }
@@ -43,6 +45,14 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
   const input = useRef<HTMLInputElement>(null);
   const camera = useRef<HTMLInputElement>(null);
   const [over, setOver] = useState(false);
+  const t = useT();
+
+  // The command palette asks for the file picker this way.
+  useEffect(() => {
+    const open = () => input.current?.click();
+    window.addEventListener("tally:add-files", open);
+    return () => window.removeEventListener("tally:add-files", open);
+  }, []);
 
   const pick = (list: FileList | null) => {
     if (list?.length) onFiles([...list]);
@@ -50,7 +60,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
   };
 
   return (
-    <nav aria-label="Documents" className="flex shrink-0 flex-col border-b border-border lg:w-[264px] lg:border-r lg:border-b-0">
+    <nav aria-label={t("Documents")} className="flex shrink-0 flex-col border-b border-border lg:w-[264px] lg:border-r lg:border-b-0">
       {/* No accept filter: what a file is comes from its contents, so a WhatsApp download without an extension works too. */}
       <input ref={input} type="file" multiple className="hidden" onChange={(e) => pick(e.target.files)} data-testid="file-input" />
       <input ref={camera} type="file" accept="image/*" capture="environment" className="hidden" onChange={(e) => pick(e.target.files)} data-testid="camera-input" />
@@ -79,8 +89,8 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
             <Upload className="size-4" aria-hidden />
           </span>
           <span>
-            <span className="block font-medium">Add documents</span>
-            <span className="block text-[12px] text-muted">Photo, PDF, Word, Excel, e-mail or e-invoice · read on this device</span>
+            <span className="block font-medium">{t("Add documents")}</span>
+            <span className="block text-[12px] text-muted">{t("Photo, PDF, Word, Excel, e-mail or e-invoice · read on this device")}</span>
           </span>
         </button>
         {/* On a phone, the camera is the quickest way in: lay the receipt flat and shoot from above. */}
@@ -89,7 +99,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
           className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-3 py-2.5 font-medium text-accent-fg hover:opacity-90 lg:hidden"
         >
           <Camera className="size-4" aria-hidden />
-          Take a photo
+          {t("Take a photo")}
         </button>
       </div>
 
@@ -100,11 +110,11 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
           className={cn("flex w-full items-center gap-2 rounded-lg px-2 py-1.5 font-medium transition-colors", selectedId === "overview" ? "bg-surface shadow-card ring-1 ring-border-strong" : "text-muted hover:bg-surface-2 hover:text-text")}
         >
           <LayoutDashboard className="size-4" aria-hidden />
-          Overview
+          {t("Overview")}
         </button>
       </div>
       <div className="px-3 pb-1 text-[11px] font-medium tracking-wide text-faint uppercase max-lg:hidden">
-        Documents · {docs.length}
+        {t("Documents · {n}", { n: docs.length })}
       </div>
 
       <ul className="flex gap-2 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:gap-0.5 lg:overflow-x-visible lg:overflow-y-auto lg:pb-3">
@@ -115,7 +125,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
             className={cn("flex h-full items-center gap-2 rounded-lg border p-2 font-medium", selectedId === "overview" ? "border-border-strong bg-surface shadow-card" : "border-border bg-surface")}
           >
             <LayoutDashboard className="size-4" aria-hidden />
-            Overview
+            {t("Overview")}
           </button>
         </li>
         {pending.map((p) => (
@@ -124,20 +134,20 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
               {p.error ? <AlertTriangle className="size-4 shrink-0 text-danger" aria-hidden /> : <Loader2 className="size-4 shrink-0 animate-spin text-accent" aria-hidden />}
               <span className="truncate font-medium">{p.name}</span>
               {p.error && (
-                <button onClick={() => onDismiss(p.id)} className="ml-auto text-muted hover:text-text" aria-label={`Dismiss ${p.name}`}>
+                <button onClick={() => onDismiss(p.id)} className="ml-auto text-muted hover:text-text" aria-label={t("Dismiss {name}", { name: p.name })}>
                   <X className="size-3.5" />
                 </button>
               )}
             </div>
             {p.error ? (
-              <p className="mt-1 text-[12px] text-danger">{p.error}</p>
+              <p className="mt-1 text-[12px] text-danger">{t(p.error)}</p>
             ) : (
               <>
                 <div className="mt-2 h-1 overflow-hidden rounded-full bg-surface-3">
                   <div className="h-full rounded-full bg-accent transition-[width] duration-300" style={{ width: `${Math.round(p.value * 100)}%` }} />
                 </div>
                 <p className="mt-1 text-[12px] text-muted">
-                  {p.stage} · {Math.round(p.value * 100)}%
+                  {t(p.stage)} · {Math.round(p.value * 100)}%
                 </p>
               </>
             )}
@@ -151,7 +161,7 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
                 <button
                   onClick={() => onRemove(d.id)}
                   className="absolute top-1.5 right-1.5 z-10 rounded p-1 text-faint opacity-0 group-hover:opacity-100 hover:bg-surface-2 hover:text-danger focus:opacity-100 max-lg:opacity-100"
-                  aria-label={`Remove ${d.name}`}
+                  aria-label={t("Remove {name}", { name: d.name })}
                 >
                   <Trash2 className="size-3.5" />
                 </button>
@@ -169,9 +179,9 @@ export function DocList({ docs, pending, selectedId, onSelect, onFiles, onRemove
                 <span className="min-w-0 flex-1">
                   <span className="block truncate font-medium">{(d.type === "statement" ? d.statement.bank.value : d.type === "report" ? d.report.company : d.type === "unknown" ? null : d.invoice.vendor.value) ?? d.name}</span>
                   <span className="block truncate text-[12px] text-muted">
-                    {d.type === "statement" ? `Statement · ${d.statement.transactions.length} transactions` : d.type === "report" ? `Financial report · ${d.report.tables.length} tables` : d.kind}
+                    {d.type === "statement" ? t("Statement · {n} transactions", { n: d.statement.transactions.length }) : d.type === "report" ? t("Financial report · {n} tables", { n: d.report.tables.length }) : t(d.kind)}
                   </span>
-                  {d.note && d.note !== d.kind && <span className={`block truncate text-[11px] ${/first \d+/.test(d.note) ? "text-warning" : "text-faint"}`}>{d.note}</span>}
+                  {d.note && d.note !== d.kind && <span className={`block truncate text-[11px] ${/first \d+/.test(d.note) ? "text-warning" : "text-faint"}`}>{t(d.note)}</span>}
                   <span className="mt-0.5 flex items-center justify-between gap-2">
                     <span className="truncate font-mono text-[12px] tabular-nums">
                       {d.type === "statement"

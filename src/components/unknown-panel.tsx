@@ -4,9 +4,11 @@ import { FileQuestion } from "lucide-react";
 import { TypeSwitch } from "@/components/type-switch";
 import type { DocType } from "@/lib/classify";
 import type { Doc } from "@/lib/documents";
+import { useT } from "@/lib/i18n";
 
 /** Shown when the text does not look like an invoice, receipt or statement: say so instead of guessing. */
 export function UnknownPanel({ doc, onType, onFocusLine }: { doc: Doc; onType: (t: DocType) => void; onFocusLine: (l: number | null) => void }) {
+  const t = useT();
   return (
     <div className="flex min-h-0 w-full flex-col overflow-y-auto">
       <section className="animate-enter border-b border-border p-4">
@@ -16,9 +18,9 @@ export function UnknownPanel({ doc, onType, onFocusLine }: { doc: Doc; onType: (
           </span>
           <div>
             <h1 className="text-[15px] font-semibold" data-testid="summary">
-              This doesn&apos;t look like an invoice, receipt or bank statement
+              {t("This doesn't look like an invoice, receipt or bank statement")}
             </h1>
-            <p className="mt-1 text-muted">{doc.detected.reason}. Nothing was filled in, so no wrong numbers end up in your books. If it is one of these, pick the type and Tally will read it that way.</p>
+            <p className="mt-1 text-muted">{t(doc.detected.reason)}. {t("Nothing was filled in, so no wrong numbers end up in your books. If it is one of these, pick the type and Tally will read it that way.")}</p>
           </div>
         </div>
         <div className="mt-4">
@@ -26,9 +28,9 @@ export function UnknownPanel({ doc, onType, onFocusLine }: { doc: Doc; onType: (
         </div>
       </section>
       <section className="p-3">
-        <h2 className="px-1.5 pb-1 text-[11px] font-medium tracking-wide text-faint uppercase">Text found · {doc.lines.length} lines</h2>
+        <h2 className="px-1.5 pb-1 text-[11px] font-medium tracking-wide text-faint uppercase">{t("Text found · {n} lines", { n: doc.lines.length })}</h2>
         {doc.lines.length === 0 ? (
-          <p className="px-1.5 text-[12px] text-muted">No text could be read. A sharper, well-lit photo or the original PDF works best.</p>
+          <p className="px-1.5 text-[12px] text-muted">{t("No text could be read. A sharper, well-lit photo or the original PDF works best.")}</p>
         ) : (
           <ol className="font-mono text-[12px]">
             {doc.lines.map((l, i) => (
