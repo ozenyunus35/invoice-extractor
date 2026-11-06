@@ -43,6 +43,10 @@ Tally turns invoices, receipts and bank statements into checked, structured data
 | --- | --- |
 | ![An invoice whose line items do not add up to the printed subtotal](docs/check-failed.png) | <img src="docs/mobile.png" alt="Tally on an iPhone" width="300"> |
 
+| In Turkish | Command palette |
+| --- | --- |
+| ![Bank statement with the interface in Turkish](docs/turkish.png) | ![Command palette listing views, documents and actions](docs/palette.png) |
+
 ## How the extraction works
 
 There is no machine-learning service behind it: the pipeline is plain TypeScript you can read and test.
